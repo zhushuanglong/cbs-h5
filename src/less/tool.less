@@ -1,0 +1,83 @@
+@rem: 50rem;
+// fontsize
+.fontSize(@px) {
+  font-size: @px/@rem;
+}
+
+// line
+.line1() {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.line1-cut() {
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+
+.line2() {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-line-clamp: 2;
+  /* autoprefixer: off*/
+  -webkit-box-orient: vertical;
+  /* autoprefixer: on*/
+}
+
+.clearfix() {
+  *zoom: 1;
+  &:before,
+  &:after {
+    display: table;
+    content: "";
+  }
+  &:after {
+    clear: both;
+  }
+}
+
+// 动画
+.keyframes (@prefix,@name,@content) when (@prefix=def) {
+  @keyframes @name {
+    @content();
+  }
+}
+.keyframes (@prefix,@name,@content) when (@prefix=moz) {
+  @-moz-keyframes @name {
+    @content();
+  }
+}
+.keyframes (@prefix,@name,@content) when (@prefix=o) {
+  @-o-keyframes @name {
+    @content();
+  }
+}
+.keyframes (@prefix,@name,@content) when (@prefix=webkit) {
+  @-webkit-keyframes  @name {
+    @content();
+  }
+}
+.keyframes (@prefix,@name,@content) when (@prefix=all) {
+  .keyframes(moz,@name,@content);
+  .keyframes(o,@name,@content);
+  .keyframes(webkit,@name,@content);
+  .keyframes(def,@name,@content);
+}
+
+.transformStyle() {
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+  -moz-transform: preserve-3d;
+  -ms-transform: preserve-3d;
+  -o-transform: preserve-3d;
+}
+
+// 6色
+@red: #ff473c;
+@yellow: #ffb400;
+@black: #333;
+@gray1: #969696;
+@gray2: #908F95;
+@gray3: #d3d3d3;

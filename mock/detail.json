@@ -1,0 +1,67 @@
+{
+  "status": true,
+  "messages": "",
+  "data": {
+    "max_stock": "1616",
+    "id": "123132321",
+    "name": "2017秋季新款上新修身新款外套",
+    "summary": "",
+    "brand": "6",
+    "store": "129",
+    "integral_status": "2",
+    "store_name": "wufly",
+    "store_address": "fa ",
+    "store_summary": "faf",
+    "coupon": [],
+    "images": [
+      "http://images.cucoe.net/goods/20171013/thumb/201710131916131507893373888.jpg",
+      "http://images.cucoe.net/goods/20171013/thumb/201710131916131507893373985.jpg",
+      "http://images.cucoe.net/goods/20171013/thumb/201710131916141507893374062.jpg",
+      "http://images.cucoe.net/goods/20171013/thumb/201710131916141507893374132.jpg",
+      "http://images.cucoe.net/goods/20171013/thumb/201710131916141507893374214.png"
+    ],
+    "video": "",
+    "promotion": {},
+    "style": [
+      {
+        "id": "233",
+        "name": "颜色",
+        "value": "红色",
+        "img": [
+          "http://images.cucoe.net/goods/20171012/thumb/201710121424221507789462314.jpg"
+        ],
+        "supply_price": "190.00",
+        "stock": "105",
+        "value_ids": "5",
+        "sub": [],
+        "max_price": "190.00"
+      },
+      {
+        "id": "234",
+        "name": "颜色",
+        "value": "白色",
+        "img": [
+          "http://images.cucoe.net/goods/20171012/thumb/201710121424221507789462360.jpg"
+        ],
+        "supply_price": "185.00",
+        "stock": "1230",
+        "value_ids": "6",
+        "sub": []
+      },
+      {
+        "id": "235",
+        "name": "颜色",
+        "value": "黄色",
+        "img": [
+          "http://images.cucoe.net/goods/20171012/thumb/201710121424221507789462423.jpg"
+        ],
+        "supply_price": "180.00",
+        "stock": "1616",
+        "value_ids": "7",
+        "sub": []
+      }
+    ],
+    "max_integral": "vip下单最多可获得190积分，100积分等于1元",
+    "prop": ["洗涤说明:不能用热水洗", "产地:杭州"]
+  }
+}
