@@ -1,4 +1,8 @@
 export default {
+  // 设置topbar的title
+  SET_TOPBARTITLE (state, platform) {
+    state.topbarTitle = platform;
+  },
   // 设置是否在加载
   SET_LOADING (state, platform) {
     state.isLoading = platform;
@@ -11,21 +15,14 @@ export default {
   SET_USERNAME (state, platform) {
     state.username = platform;
   },
-  // 设置当前所在页面标记
-  SET_WHICHPAGE (state, platform) {
-    state.whichPage = platform;
-  },
-  SET_Avator (state, url) {
-    state.avator = url;
-  },
   SET_LOGINOUT (state, self) {
     state.username = '';
     state.isLogin = false;
     state.isLoading = false;
-    state.avator = '';
-    self.$cookie.delete('_dragon_sea');
-    self.$cookie.delete('_coll_ci');
-    window.MailaApp && window.MailaApp.logout();
+    // state.avator = '';
+    // self.$cookie.delete('_dragon_sea');
+    // self.$cookie.delete('_coll_ci');
+    // window.MailaApp && window.MailaApp.logout();
   },
   SET_USERTYPE (state, status) {
     state.isOldUser = status;

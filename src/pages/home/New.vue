@@ -2,9 +2,9 @@
 <template>
   <div class="new-main">
     <div class="title">
-      <i class="iconfont">.</i>
+      <i class="iconfont">&#xe619;</i>
       <p>店铺上新！</p>
-      <a href="/newlist?store_id=9">查看全部</a>
+      <a href="/newlist/129">查看全部</a>
     </div>
     <div class="new-list" if="data.length">
       <router-link v-for="item in data" :to="{path: item.url}" class="new-link" active-class="cur">
@@ -47,6 +47,8 @@ export default {
       position: absolute;
       top: 0;
       left: 10/@rem;
+      font-size: 30/@rem;
+      color: @red;
     }
     a {
       display: inline-block;
@@ -58,7 +60,7 @@ export default {
     }
     p {
       font-size: 14/@rem;
-      padding-left: 50/@rem;
+      padding-left: 30/@rem;
     }
   }
   .new-list {

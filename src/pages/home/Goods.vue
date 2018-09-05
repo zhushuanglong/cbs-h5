@@ -57,7 +57,7 @@ export default {
       display: block;
       position: relative;
       width: 185 / @rem;
-      height: 280 / @rem;
+      height: 260 / @rem;
       margin-right: 5 / @rem;
       &:nth-child(2n) {
         margin-right: 0;

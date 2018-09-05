@@ -8,7 +8,6 @@
 <script>
 import Goods from './home/Goods.vue';
 import New from './home/New.vue';
-// import { mapState, mapActions } from 'vuex';
 
 export default {
   name: 'home',
@@ -26,12 +25,7 @@ export default {
   mounted () {
     this.getHomeData();
   },
-  watch: {
-    // 'isLogin': function () {
-    //   this.pageInit();
-    //   this.popupShow();
-    // }
-  },
+  watch: {},
   methods: {
     getHomeData () {
       this.$http.post('/home', {}).then((res) => {
@@ -39,6 +33,7 @@ export default {
           let {data} = res.data;
           this.store_goods = data.store_goods; // 商品数据
           this.new_goods = data.new_goods;
+          this.$store.dispatch('setTopbarTitle', data.brand_name);
         } else {
           // @TODO 数据错误
         }
@@ -55,7 +50,6 @@ export default {
 @import '~less/tool.less';
 .goods-info {
   padding: 10/@rem 10/@rem 20/@rem;
-  height: 95/@rem;
   .text {
     .line1();
     text-align: center;

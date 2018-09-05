@@ -5,8 +5,6 @@ c<template>
 </template>
 
 <script>
-// import { loginHandler } from '../components/basic/loginHandler';
-// import { mapState, mapActions } from 'vuex';
 
 export default {
   name: 'home',
@@ -15,6 +13,9 @@ export default {
     return {};
   },
   computed: {},
+  created () {
+    this.$store.dispatch('setTopbarTitle', '购物车');
+  },
   mounted () {},
   watch: {
     // 'isLogin': function () {

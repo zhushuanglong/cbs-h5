@@ -9,11 +9,29 @@ export default new Router({
     {
       name: 'home',
       path: '*',
-      redict: '/home',
+      redict: '/home/:storeid/:pagenum',
       component: function (resolve) {
         require.ensure([], function () {
           resolve(require('pages/Home'));
         }, 'home');
+      }
+    },
+    {
+      name: 'home', // 为了点亮icon
+      path: '/newlist/:storeid', // 店铺ID
+      component: function (resolve) {
+        require.ensure([], function () {
+          resolve(require('pages/home/NewList'));
+        }, 'newlist');
+      }
+    },
+    {
+      name: 'detail', // 私有H5
+      path: '/detail/:storeid/:id', // 店铺ID和商品ID
+      component: function (resolve) {
+        require.ensure([], function () {
+          resolve(require('pages/home/Detail'));
+        }, 'detail');
       }
     },
     {

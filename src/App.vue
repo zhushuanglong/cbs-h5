@@ -3,7 +3,7 @@
     <div class="global-topbar">
       <div class="global-center">
         <i class="iconfont back">&#xe602;</i>
-        <div class="title">东京</div>
+        <div class="title">{{$store.getters.getTopbarTitle}}</div>
       </div>
     </div>
     <div class="global-main">
@@ -16,7 +16,7 @@
         <li v-for="(item, index) in tabs">
           <router-link :to="{path: item.url}" active-class="cur">
             <i class="iconfont" v-html="highlight(index, item)"></i>
-            <p>{{ item.name }}</p>
+            <p>{{item.name}}</p>
           </router-link>
         </li>
       </ul>
@@ -25,6 +25,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
   name: 'app',
   data () {
@@ -47,11 +49,15 @@ export default {
       }]
     };
   },
+  computed: {
+    ...mapGetters([
+      'topbarTitle'
+    ])
+  },
   methods: {
     // bottombar icon高亮
     highlight (index, item) {
-      let arr = ['home', 'cart', 'my'];
-      return arr[index] === this.$route.name ? item.aicon : item.icon;
+      return ['home', 'cart', 'my'][index] === this.$route.name ? item.aicon : item.icon;
     }
   }
 };
