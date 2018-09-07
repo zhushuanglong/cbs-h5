@@ -9,7 +9,7 @@ export default new Router({
     {
       name: 'home',
       path: '*',
-      redict: '/home/:storeid/:pagenum',
+      redict: '/home/:pagenum',
       component: function (resolve) {
         require.ensure([], function () {
           resolve(require('pages/Home'));
@@ -17,8 +17,8 @@ export default new Router({
       }
     },
     {
-      name: 'home', // 为了点亮icon
-      path: '/newlist/:storeid', // 店铺ID
+      name: 'newlist',
+      path: '/newlist',
       component: function (resolve) {
         require.ensure([], function () {
           resolve(require('pages/home/NewList'));
@@ -27,7 +27,7 @@ export default new Router({
     },
     {
       name: 'detail', // 私有H5
-      path: '/detail/:storeid/:id', // 店铺ID和商品ID
+      path: '/detail/:id', // 商品ID
       component: function (resolve) {
         require.ensure([], function () {
           resolve(require('pages/home/Detail'));

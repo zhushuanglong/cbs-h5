@@ -65,7 +65,7 @@ var staticPath = path.posix.join(config.dev.assetsPublicPath, config.dev.assetsS
 app.use(staticPath, express.static('./static'));
 
 var utils = require('./utils');
-var uri = `http://${utils.getIPAdress()}:${port}/home/129/1`;
+var uri = `http://${utils.getIPAdress()}:${port}/home/1`;
 
 devMiddleware.waitUntilValid(function () {
   console.log('> Listening at ' + uri + '\n')

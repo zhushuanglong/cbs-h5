@@ -2,8 +2,9 @@
   <div id="app">
     <div class="global-topbar">
       <div class="global-center">
-        <i class="iconfont back">&#xe602;</i>
+        <i class="iconfont back">&#xe62f;</i>
         <div class="title">{{$store.getters.getTopbarTitle}}</div>
+        <i v-if="$route.name === 'detail'" class="iconfont cart">&#xe624;</i>
       </div>
     </div>
     <div class="global-main">
@@ -11,7 +12,7 @@
         <router-view></router-view>
       </transition>
     </div>
-    <div class="global-bottombar">
+    <div class="global-bottombar" v-if="$route.name !== 'detail'">
       <ul class="global-center">
         <li v-for="(item, index) in tabs">
           <router-link :to="{path: item.url}" active-class="cur">

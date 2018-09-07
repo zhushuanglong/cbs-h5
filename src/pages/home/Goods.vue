@@ -5,7 +5,7 @@
       <p>PRODUCT SHOW</p>
     </div>
     <div class="goods-list" if="data.length">
-      <router-link v-for="item in data" :to="{path: item.url}" class="goods-link fl" active-class="cur">
+      <router-link v-for="item in data" :to="{path: '/detail/' + item.good_id}" class="goods-link fl" active-class="cur">
         <div class="goods-img">
           <img :src="item.good_image" />
         </div>
@@ -34,20 +34,20 @@ export default {
 @import "~less/tool.less";
 .goods-main {
   background-color: #fff;
-  margin-top: 10 / @rem;
+  margin-top: 20/@rem;
 
   .title {
     text-align: center;
-    padding: 15 / @rem 0;
+    padding: 30/@rem 0;
     h3,
     p {
-      height: 22 / @rem;
-      line-height: 22 / @rem;
+      height: 44/@rem;
+      line-height: 44/@rem;
       text-align: center;
-      font-size: 12 / @rem;
+      font-size: 24/@rem;
     }
     h3 {
-      font-size: 14 / @rem;
+      font-size: 28/@rem;
     }
   }
 
@@ -56,9 +56,9 @@ export default {
     .goods-link {
       display: block;
       position: relative;
-      width: 185 / @rem;
-      height: 260 / @rem;
-      margin-right: 5 / @rem;
+      width: 370/@rem;
+      height: 520/ @rem;
+      margin-right: 10/@rem;
       &:nth-child(2n) {
         margin-right: 0;
       }
@@ -66,8 +66,8 @@ export default {
     .goods-img {
       img {
         display: block;
-        width: 185 / @rem;
-        height: 185 / @rem;
+        width: 370/@rem;
+        height: 370/@rem;
       }
     }
   }

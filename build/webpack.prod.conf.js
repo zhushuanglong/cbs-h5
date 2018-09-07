@@ -18,10 +18,10 @@ var webpackConfig = merge(baseWebpackConfig, {//merge连接webpack基本配置�
   devtool: config.build.productionSourceMap ? '#source-map' : false,
   output: {
     path: config.build.assetsRoot,
-    filename: utils.assetsPath('js/[name].[chunkhash].js'),
-    chunkFilename: utils.assetsPath('js/[name].[chunkhash].js')
-    // filename: utils.assetsPath('js/[name]_debug.js'), // debug 模式
-    // chunkFilename: utils.assetsPath('js/[name]_debug.js') // debug 模式
+    // filename: utils.assetsPath('js/[name].[chunkhash].js'),
+    // chunkFilename: utils.assetsPath('js/[name].[chunkhash].js')
+    filename: utils.assetsPath('js/[name]_debug.js'), // debug 模式
+    chunkFilename: utils.assetsPath('js/[name]_debug.js') // debug 模式
   },
   plugins: [
     // http://vuejs.github.io/vue-loader/en/workflow/production.html
@@ -36,7 +36,8 @@ var webpackConfig = merge(baseWebpackConfig, {//merge连接webpack基本配置�
     }),
     // extract css into its own file
     new ExtractTextPlugin({
-      filename: utils.assetsPath('css/[name].[chunkhash].css')
+      // filename: utils.assetsPath('css/[name].[chunkhash].css')
+      filename: utils.assetsPath('css/[name]_debug.css') // debug 模式
     }),
     // generate dist index.html with correct asset hash for caching.
     // you can customize output by editing /index.html

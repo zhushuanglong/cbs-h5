@@ -49,22 +49,22 @@ export default {
 <style lang="less">
 @import '~less/tool.less';
 .goods-info {
-  padding: 10/@rem 10/@rem 20/@rem;
+  padding: 20/@rem 20/@rem 40/@rem;
   .text {
     .line1();
     text-align: center;
-    font-size: 14/@rem;
-    height: 25/@rem;
-    line-height: 25/@rem;
+    font-size: 28/@rem;
+    height: 50/@rem;
+    line-height: 50/@rem;
   }
   .price {
     text-align: center;
     display: block;
-    height: 20/@rem;
-    line-height: 20/@rem;
-    font-size: 14/@rem;
+    height: 40/@rem;
+    line-height: 40/@rem;
+    font-size: 28/@rem;
     color: @red;
-    padding-right: 5/@rem;
+    padding-right: 10/@rem;
   }
 }
 </style>

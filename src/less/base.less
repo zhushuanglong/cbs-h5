@@ -1,4 +1,4 @@
-@rem: 50rem;
+@rem: 100rem;
 *, :before, :after {
   box-sizing: border-box;
   -webkit-tap-highlight-color: rgba(0,0,0,0);
@@ -28,7 +28,7 @@ body {
   -webkit-tap-highlight-color: transparent;
   tap-highlight-color: transparent;
   overflow-x: hidden;
-  font-size: 12/@rem;
+  font-size: 26/@rem;
 }
 #app {
   position: relative;
@@ -100,37 +100,22 @@ input {
   display: none!important;
 }
 
-.ell {
+.ellipsis {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
 
-.flex_align {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-  -ms-flex-align: center;
-  align-items: center;
-}
-
-// bg-black 黑底
-.bg-black {
+// bg-mask 黑底
+.bg-mask {
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(0, 0, 0, 0.4);
   position: fixed;
   left: 0;
   top: 0;
   bottom: 0;
-  z-index: 10;
+  z-index: 100;
 }
 
 // ---- 公用样式 ---- //
@@ -155,28 +140,30 @@ input {
   top: 0;
   z-index: 99;
   width: 100%;
-  height: 46/@rem;
-  .back {
-    position: absolute;
-    z-index: 1;
+  height: 90/@rem;
+  i {
     display: inline-block;
-    width: 30/@rem;
-    height: 30/@rem;
-    margin: 12/@rem 0 0 10/@rem;
-
-    // background: url(@com_icon_page_back) no-repeat;
-    background-size: 100% auto;
+    position: absolute;
+    top: 16/@rem;
+    z-index: 1;
+    font-size: 52/@rem;
+  }
+  .back {
+    left: 20/@rem;
+  }
+  .cart {
+    right: 20/@rem;
   }
   .title {
     position: relative;
-    height: 46/@rem;
-    line-height: 46/@rem;
+    height: 92/@rem;
+    line-height: 92/@rem;
     text-align: center;
-    font-size: 18/@rem;
+    font-size: 36/@rem;
   }
 }
 .global-main {
-  padding: 46/@rem 0;
+  padding: 92/@rem 0;
 }
 .global-bottombar {
   position: fixed;
@@ -184,33 +171,33 @@ input {
   bottom: 0;
   z-index: 99;
   width: 100%;
-  height: 46/@rem;
-  border-top: 1px solid #d3d3db;
+  height: 92/@rem;
   ul {
     display: block;
     height: 100%;
+    border-top: 1px solid #d3d3db;
     li {
       float: left;
-      width: 33%;
-      height: 98/@rem;
+      width: 33.33%;
+      height: 196/@rem;
       a {
         position: relative;
         display: block;
         width: 100%;
         height: 100%;
         color: #d3d3d3;
-        padding-top: 6.5/@rem;
+        padding-top: 13/@rem;
       }
       i {
         display: block;
-        width: 20/@rem;
-        height: 20/@rem;
+        width: 40/@rem;
+        height: 40/@rem;
         margin: 0 auto;
       }
       p {
-        height: 20/@rem;
-        line-height: 20/@rem;
-        font-size: 12/@rem;
+        height: 40/@rem;
+        line-height: 40/@rem;
+        font-size: 24/@rem;
         text-align: center;
         color: @gray3;
       }

@@ -16,6 +16,6 @@ export default {
 @import "~less/tool.less";
 .new-list-main {
   // background-color: #fff;
-  margin-top: 10 / @rem;
+  margin-top: 20 / @rem;
 }
 </style>

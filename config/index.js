@@ -6,9 +6,9 @@ module.exports = {
     env: require('./prod.env'),
     index: path.resolve(__dirname, '../dist/index.html'),
     assetsRoot: path.resolve(__dirname, '../dist'),
-    assetsSubDirectory: 'jqg',
-    assetsPublicPath: '//yun.duiba.com.cn/',
-    assetsPublicPathDebug: '//yun.dui88.com/',
+    assetsSubDirectory: 'qiho-h5/cbs',
+    // assetsPublicPath: '//yun.duiba.com.cn/',
+    assetsPublicPath: '//yun.dui88.com/',
     productionSourceMap: false, // 设为true生成map可以作调试
     // productionGzip: false,
     // productionGzipExtensions: ['js', 'css'],
