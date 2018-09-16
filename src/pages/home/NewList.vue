@@ -7,7 +7,7 @@
 export default {
   props: {},
   created () {
-    this.$store.dispatch('setTopbarTitle', '店铺上新');
+    // this.$store.dispatch('setTopbarTitle', '店铺上新');
   }
 };
 </script>

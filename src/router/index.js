@@ -50,6 +50,15 @@ export default new Router({
           resolve(require('pages/My'));
         }, 'my');
       }
+    },
+    {
+      name: 'profile',
+      path: '/my/profile',
+      component: function (resolve) {
+        require.ensure([], function () {
+          resolve(require('pages/my/Profile'));
+        }, 'my');
+      }
     }
   ]
 });

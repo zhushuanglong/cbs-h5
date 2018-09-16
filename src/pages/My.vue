@@ -1,21 +1,62 @@
 <template>
-  <div class="home_main" ref="indexMain">
-    MY
+  <div class="my-main" ref="indexMain">
+    <div class="my-top">
+      <div class="my-top-info">
+        <router-link :to="{path: '/my/profile'}" class="img fl"><img class="head" src="~img/my/head.png"></router-link>
+        <div class="nickname fl">Sign In / Register</div>
+      </div>
+      <ul class="my-top-des">
+        <li v-for="item in tabs">
+          <router-link :to="{path: item.url}">
+            <i class="iconfont" v-html="item.icon"></i>
+            <p>{{item.name}}</p>
+          </router-link>
+        </li>
+      </ul>
+    </div>
+    <Card></Card>
+    <div class="my-order-title">
+      <router-link :to="{path: '/'}">
+        <div class="label">Order List</div>
+        <div class="btn">All</div>
+        <i class="iconfont">&#xe62e;</i>
+      </router-link>
+    </div>
+    <Order></Order>
+    <BottomBar></BottomBar>
   </div>
 </template>
 
 <script>
-
+import BottomBar from './common/BottomBar.vue';
+import Card from './my/Card.vue';
+import Order from './my/Order.vue';
 export default {
-  name: 'home',
-  components: {},
+  name: 'my',
+  components: {
+    BottomBar,
+    Card,
+    Order
+  },
   data () {
-    return {};
+    return {
+      tabs: [{
+        name: 'Points',
+        url: '/my/points',
+        icon: '&#xe64a;'
+      }, {
+        name: 'Coupons',
+        url: '/my/coupons',
+        icon: '&#xe64a;'
+      }, {
+        name: 'History View',
+        url: '/my/historyview',
+        icon: '&#xe64a;'
+      }]
+    };
   },
   computed: {},
-  created () {
-    this.$store.dispatch('setTopbarTitle', '个人中心');
-  },
+  created () {},
   mounted () {},
   watch: {
     // 'isLogin': function () {
@@ -32,4 +73,94 @@ export default {
 
 <style lang="less">
 @import '~less/tool.less';
+.my-main {
+  .my-top {
+    width: 100%;
+    // height: 400/@rem;
+    height: 350/@rem;
+    background-color: #fe4c45;
+    background: url('~img/my/my_topbg.png') no-repeat;
+    background-size: 100%;
+    padding-top: 75/@rem;
+    padding-bottom: 20/@rem;
+    .my-top-info {
+      padding-left: 28/@rem;
+      .clearfix();
+      .img {
+        background-color: #fff;
+        width: 120/@rem;
+        height: 120/@rem;
+        border-radius: 50%;
+        background-attachment: fixed;
+        .head {
+          margin: 2/@rem;
+          width: 116/@rem;
+          height: 116/@rem;
+          background-size: 100% auto;
+        }
+      }
+      .nickname {
+        height: 60/@rem;
+        line-height: 60/@rem;
+        margin-left: 20/@rem;
+        margin-top: 30/@rem;
+        font-size: 32/@rem;
+        color: #fff;
+      }
+    }
+    .my-top-des {
+      width: 100%;
+      margin-top: 45/@rem;
+      display: block;
+      .clearfix();
+      li {
+        float: left;
+        width: 250/@rem;
+        height: 85/@rem;
+        text-align: center;
+        a {
+          display: block;
+          color: #fff;
+        }
+        i {
+          font-size: 45/@rem;
+          display: block;
+        }
+        p {
+          font-size: 28/@rem;
+        }
+      }
+    }
+  }
+  .my-order-title {
+    margin-top: 20/@rem;
+    width: 100%;
+    height: 88/@rem;
+    background-color: #fff;
+    padding: 0 20/@rem;
+    margin-bottom: 1px;
+
+    .label {
+      line-height: 88/@rem;
+    }
+    a {
+      position: relative;
+      display: block;
+    }
+    .btn, i {
+      position: absolute;
+      color: @gray2;
+    }
+    .btn {
+      height: 88/@rem;
+      line-height: 88/@rem;
+      top: 0;
+      right: 35/@rem;
+    }
+    i {
+      top: 22/@rem;
+      right: -10/@rem;
+    }
+  }
+}
 </style>

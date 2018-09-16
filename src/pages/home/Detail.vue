@@ -48,7 +48,7 @@
       <ul class="a-fadeinB" :class="{'show': isBackMenuShow}">
         <li>
           <div class="name">HOME</div>
-          <router-link :to="{path: '/'}"><i class="iconfont">&#xe618;</i></router-link>
+          <router-link :to="{path: '/home'}"><i class="iconfont">&#xe618;</i></router-link>
         </li>
         <li>
           <div class="name">SEARCH</div>
@@ -60,7 +60,7 @@
         </li>
         <li>
           <div class="name">SHARE</div>
-          <router-link :to="{path: '/sharec'}"><i class="iconfont">&#xe684;</i></router-link>
+          <router-link :to="{path: '/share'}"><i class="iconfont">&#xe684;</i></router-link>
         </li>
       </ul>
     </div>
@@ -139,7 +139,7 @@ export default {
     }
   },
   created () {
-    this.$store.dispatch('setTopbarTitle', 'Goods details');
+    // this.$store.dispatch('setTopbarTitle', 'Goods details');
     this.getDetailData();
   },
   mounted () {},

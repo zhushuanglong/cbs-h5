@@ -28,7 +28,7 @@ body {
   -webkit-tap-highlight-color: transparent;
   tap-highlight-color: transparent;
   overflow-x: hidden;
-  font-size: 26/@rem;
+  font-size: 24/@rem;
 }
 #app {
   position: relative;
@@ -145,17 +145,19 @@ input {
   z-index: 99;
   width: 100%;
   height: 90/@rem;
-  i {
-    display: inline-block;
+  .back, .cart {
+    display: block;
     position: absolute;
-    top: 16/@rem;
+    top: 0;
     z-index: 1;
     font-size: 52/@rem;
   }
   .back {
-    left: 20/@rem;
+    top: 5/@rem;
+    left: 15/@rem;
   }
   .cart {
+    top: 16/@rem;
     right: 20/@rem;
   }
   .title {
@@ -167,7 +169,7 @@ input {
   }
 }
 .global-main {
-  padding: 92/@rem 0;
+  padding-bottom: 100/@rem;
 }
 .global-bottombar {
   position: fixed;
@@ -201,7 +203,6 @@ input {
       p {
         height: 40/@rem;
         line-height: 40/@rem;
-        font-size: 24/@rem;
         text-align: center;
         color: @gray3;
       }

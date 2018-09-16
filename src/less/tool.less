@@ -3,7 +3,22 @@
 .fontSize(@px) {
   font-size: @px/@rem;
 }
-
+// width && height
+.wh(@w, @h) {
+  width: @w/@rem;
+  height: @h/@rem;
+}
+// width && height && line-height
+.whl (@w, @h) {
+  width: @w/@rem;
+  height: @h/@rem;
+  line-height: @h/@rem;
+}
+// height
+.height(@px) {
+  height: @px/@rem;
+  line-height: @px/@rem;
+}
 // line
 .line1() {
   overflow: hidden;

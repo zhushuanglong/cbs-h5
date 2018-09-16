@@ -34,7 +34,6 @@ export default {
 @import "~less/tool.less";
 .goods-main {
   background-color: #fff;
-  margin-top: 20/@rem;
 
   .title {
     text-align: center;

@@ -1,4 +1,3 @@
-
 <template>
   <div class="new-main">
     <div class="title">
