@@ -8,8 +8,7 @@ export default new Router({
   routes: [
     {
       name: 'home',
-      path: '*',
-      redict: '/home/:pagenum',
+      path: '/home',
       component: function (resolve) {
         require.ensure([], function () {
           resolve(require('pages/Home'));

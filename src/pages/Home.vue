@@ -1,6 +1,6 @@
 <template>
   <div class="home_main" ref="indexMain">
-    <New :data="new_goods"></New>
+    <!-- <New :data="new_goods"></New> -->
     <Goods :data="store_goods"></Goods>
   </div>
 </template>

@@ -6,5 +6,7 @@ export default {
   // 是否在加载中
   isLoading: false,
   // 用户名
-  username: ''
+  username: '',
+  // 是否退出
+  isLoginOut: false,
 };

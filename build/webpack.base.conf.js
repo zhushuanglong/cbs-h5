@@ -46,16 +46,6 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(js|vue)$/,
-        // loader: 'happypack/loader?id=eslint',
-        loader: 'eslint-loader',
-        enforce: 'pre',
-        include: [resolve('src'), resolve('test')],
-        options: {
-          formatter: require('eslint-friendly-formatter')
-        }
-      },
-      {
         test: /\.vue$/,
         loader: 'vue-loader',
         options: vueLoaderConfig
@@ -84,13 +74,6 @@ module.exports = {
     ]
   },
   plugins: [
-    // new HappyPack({
-    //   id: 'eslint',
-    //   loaders: [ 'eslint-loader' ],
-    //   threadPool: happyThreadPool,
-    //   cache: true,
-    //   verbose: true
-    // }),
     // new HappyPack({
     //   id: 'happyvue',
     //   loaders: [ 'vue-loader' ],

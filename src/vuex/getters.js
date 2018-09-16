@@ -6,5 +6,7 @@ export default {
   // 得到假用户名
   getUsername: (state) => state.username,
   // 得到是否加载中
-  getLoading: (state) => state.isLoading
+  getLoading: (state) => state.isLoading,
+  // 得到退出状态
+  getLoginout: (state) => state.isLoginOut
 };

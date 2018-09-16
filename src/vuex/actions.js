@@ -16,11 +16,7 @@ export default {
     commit('SET_USERNAME', platform);
   },
   // 改变当前页
-  loginOut ({commit}, self) {
+  setLoginOut ({commit}, self) {
     commit('SET_LOGINOUT', self);
-  },
-  // 改变当前页
-  UserType ({commit}, status) {
-    commit('SET_USERTYPE', status);
   }
 };

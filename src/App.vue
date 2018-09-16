@@ -33,17 +33,17 @@ export default {
   data () {
     return {
       tabs: [{
-        name: '首页',
+        name: 'Home',
         url: '/home',
         icon: '&#xe618;',
         aicon: '&#xe617;'
       }, {
-        name: '购物车',
+        name: 'Cart',
         url: '/cart',
         icon: '&#xe624;',
         aicon: '&#xe626;'
       }, {
-        name: '我',
+        name: 'Account',
         url: '/my',
         icon: '&#xe62b;',
         aicon: '&#xe627;'

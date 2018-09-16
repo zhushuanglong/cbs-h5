@@ -1,74 +1,152 @@
 <template>
-<div class="detail-main">
-  <div class="detail-swipe">
-    <div class="big-img-list">
+  <div class="detail-main">
+    <div class="detail-swipe">
+      <Swipe class="my-swipe big-img-swipe" ref="bigImgSwipeRef" :nextCallback="nextCallback">
+        <SwipeItem v-for="img in imgSwipe">
+          <img :src="img">
+        </SwipeItem>
+      </Swipe>
+      <div class="small-img-list" ref="smallImgListRef">
+        <Swipe class="my-swipe small-img-swipe" ref="smallImgSwipeRef" :showIndicators="false" :operator="true">
+          <SwipeItem v-for="(smallImgs, index) in smallImgSwipe">
+            <img v-for="(simg, sindex) in smallImgs" :src="simg" @click="smallImgClick(index * 4 + sindex)" :class="{'cur': index * 4 + sindex === 0}">
+          </SwipeItem>
+        </Swipe>
+        <div class="des">
+          <p>{{data.name}}</p>
+          <p>{{goodsData.name}}&nbsp;{{goodsData.oneValue}}</p>
+        </div>
+      </div>
+    </div>
+    <div class="detail-sku">
+      <div class="sku-label fl">Select {{this.goodsData.oneValue || `Color`}}{{this.goodsData.twoValue ||` , Size`}}{{this.goodsData.twoValue && this.goodsData.saleNum || ` & Quantiy`}}</div>
+      <i class="iconfont">&#xe62e;</i>
+    </div>
+    <div class="detail-info">
+      <div class="title">Description</div>
+      <ul class="info-main">
+        <li v-for="(prop, index) in data.prop">
+          <div class="label fl">{{prop.split(':') && prop.split(':')[0]}}</div>
+          <div class="des fl">{{prop.split(':') && prop.split(':')[1]}}</div>
+        </li>
+      </ul>
+    </div>
+    <div class="detail-imglist">
       <img src="http://img.alicdn.com/imgextra/i1/792382564/TB2cX1GoRHH8KJjy0FbXXcqlpXa_!!792382564.jpg_640x640q85s150_.webp">
+      <img src="https://img.alicdn.com/imgextra/i4/792382564/TB263aGoRHH8KJjy0FbXXcqlpXa_!!792382564.jpg_640x0q85s150_.webp">
+      <img src="https://img.alicdn.com/imgextra/i1/792382564/TB2HK5JoJrJ8KJjSspaXXXuKpXa_!!792382564.jpg_640x0q85s150_.webp">
+      <img src="https://img.alicdn.com/imgextra/i2/792382564/TB27rsfnz3z9KJjy0FmXXXiwXXa_!!792382564.jpg_640x0q85s150_.webp">
     </div>
-    <div class="small-img-list">
-      <i class="iconfont left">&#xe62f;</i>
-      <div class="list">
-        <img src="http://img.alicdn.com/imgextra/i1/792382564/TB2cX1GoRHH8KJjy0FbXXcqlpXa_!!792382564.jpg_640x640q85s150_.webp">
-        <img src="http://img.alicdn.com/imgextra/i1/792382564/TB2cX1GoRHH8KJjy0FbXXcqlpXa_!!792382564.jpg_640x640q85s150_.webp">
-        <img src="http://img.alicdn.com/imgextra/i1/792382564/TB2cX1GoRHH8KJjy0FbXXcqlpXa_!!792382564.jpg_640x640q85s150_.webp">
-        <img src="http://img.alicdn.com/imgextra/i1/792382564/TB2cX1GoRHH8KJjy0FbXXcqlpXa_!!792382564.jpg_640x640q85s150_.webp">
-      </div>
-      <i class="iconfont right">&#xe62e;</i>
-      <div class="des">
-        <p>{{data.name}}</p>
-        <p>{{data.style[0].name}}</p>
+    <div class="detail-foot" @click="footCartClick">
+      <div class="pos-rel">
+        <div class="price">${{goodsData.price}}</div>
+        <i class="iconfont">&#xe624;</i>
       </div>
     </div>
-  </div>
-  <div class="detail-sku">
-    <div class="sku-label fl">请选择：</div>
-    <div class="sku-info fl">红</div>
-    <i class="iconfont">&#xe62e;</i>
-  </div>
-  <div class="detail-info">
-    <div class="title">商品详情</div>
-    <ul class="info-main">
-      <li>
-        <div class="label fl">洗涤说明</div>
-        <div class="des fl">不能用热水洗</div>
-      </li>
-      <li>
-        <div class="label fl">洗涤说明</div>
-        <div class="des fl">不能用热水洗</div>
-      </li>
-    </ul>
-  </div>
-  <div class="detail-imglist">
-    <img src="http://img.alicdn.com/imgextra/i1/792382564/TB2cX1GoRHH8KJjy0FbXXcqlpXa_!!792382564.jpg_640x640q85s150_.webp">
-    <img src="https://img.alicdn.com/imgextra/i4/792382564/TB263aGoRHH8KJjy0FbXXcqlpXa_!!792382564.jpg_640x0q85s150_.webp">
-    <img src="https://img.alicdn.com/imgextra/i1/792382564/TB2HK5JoJrJ8KJjSspaXXXuKpXa_!!792382564.jpg_640x0q85s150_.webp">
-    <img src="https://img.alicdn.com/imgextra/i2/792382564/TB27rsfnz3z9KJjy0FmXXXiwXXa_!!792382564.jpg_640x0q85s150_.webp">
-  </div>
-  <div class="detail-foot">
-    <div class="pos-rel">
-      <div class="price">￥199</div>
-      <i class="iconfont">&#xe624;</i>
+    <div class="detail-float-menu">
+      <div class="btn-menu" :class="{'cur': isBackMenuShow}" @click="backMenuClick">{{isBackMenuShow ? 'BACK' : 'MENU'}}</div>
+      <ul class="a-fadeinB" :class="{'show': isBackMenuShow}">
+        <li>
+          <div class="name">HOME</div>
+          <router-link :to="{path: '/'}"><i class="iconfont">&#xe618;</i></router-link>
+        </li>
+        <li>
+          <div class="name">SEARCH</div>
+          <router-link :to="{path: '/search'}"><i class="iconfont">&#xe620;</i></router-link>
+        </li>
+        <li>
+          <div class="name">CART</div>
+          <router-link :to="{path: '/cart'}"><i class="iconfont">&#xe624;</i></router-link>
+        </li>
+        <li>
+          <div class="name">SHARE</div>
+          <router-link :to="{path: '/sharec'}"><i class="iconfont">&#xe684;</i></router-link>
+        </li>
+      </ul>
+    </div>
+    <div class="bg-mask" :class="{'show': isMaskShow}" @click="changeMaskClick"></div>
+    <!-- 弹出SKU -->
+    <div class="detail-popup-sku" :class="{'a-fadeinT': isPopupSkuShow}" v-show="isPopupSkuShow">
+      <div class="popup-sku">
+        <div class="sku-info">
+          <img class="fl" :src="goodsData.img">
+          <div class="des fl">
+            <div class="price">${{goodsData.price}}</div>
+            <div class="stock">Stock：> {{goodsData.stock}} Pieces</div>
+          </div>
+        </div>
+        <div class="sku-attr">
+          <div class="attr-con">
+            <div class="attr-title">{{goodsData.name}}</div>
+            <ul class="attr-des" ref="oneSkuRef">
+              <li v-for="(item, index) in data.style" @click="oneSkuClick(index, item.stock)">
+                <a :class="{'cur': item.value === goodsData.oneValue && +item.stock !== 0, 'disabled': +item.stock === 0}" href="javascript:;">{{item.value}}</a>
+              </li>
+            </ul>
+            <template v-if="goodsData.subArr && goodsData.subArr.length">
+              <div class="attr-title">{{goodsData.subArr[0].name}}</div>
+              <ul class="attr-des" ref="twoSkuRef">
+                <li v-for="(item, index) in goodsData.subArr" @click="twoSkuClick(index, item.stock)">
+                  <a :class="{'disabled': +item.stock === 0}" href="javascript:;">{{item.value}}</a>
+                </li>
+              </ul>
+            </template>
+          </div>
+        </div>
+        <div class="sku-qty">
+          <div class="title">Qty</div>
+          <div class="qty">
+            <a href="javascript:;" class="reduce fl" :class="{'ban': goodsData.saleNum <= 1}"  @click="reduceClick()">
+              <i class="iconfont">&#xe62a;</i>
+            </a>
+            <div class="num fl">{{goodsData.saleNum}}</div>
+            <a href="javascript:;" class="add fl" @click="addClick()">
+              <i class="iconfont">&#xe66f;</i>
+            </a>
+          </div>
+        </div>
+        <div class="sku-ok" @click="skuOkClick">OK</div>
+        <i class="iconfont sku-close" @click="skuCloseClick">&#xe63f;</i>
+      </div>
     </div>
   </div>
-</div>
 </template>
 
 <script>
+import { Swipe, SwipeItem } from 'components/swipe';
+
 export default {
   props: {},
-  components: {},
+  components: {
+    Swipe,
+    SwipeItem
+  },
   data () {
     return {
-      data: {}
+      data: {},
+      goodsData: {
+        saleNum: 1
+      }, // 选中的商品信息
+      imgSwipe: [], // 大图
+      smallImgSwipe: [], // 小图
+      imgRelationArr: [], // 图片关系  找到图片属于第几个object
+      isBackMenuShow: false, // back菜单按钮
+      isMaskShow: false, // 背景mask
+      isPopupSkuShow: false, // 弹出SKU
+      imgNum: 0, // sku中展示的图片
+      oneSkuNum: 0, // sku第一排动态属性高亮
+      el: {} // dom 集合
     }
   },
   created () {
-    this.$store.dispatch('setTopbarTitle', '商品详情');
-  },
-  mounted () {
+    this.$store.dispatch('setTopbarTitle', 'Goods details');
     this.getDetailData();
   },
+  mounted () {},
+  watch: {},
   methods: {
-    getDetailData() {
+    // 获取详情页基础数据
+    getDetailData () {
       this.$http.post('/detail', {}).then((res) => {
         if (res && res.data && res.data.status) {
           let {data} = res.data;
@@ -78,7 +156,248 @@ export default {
         }
       }, () => {
         // @TODO 网络错误
+      }).then(() => {
+        this.getOneSkuData();
+      }).then(() => {
+        this.imgDomHandler();
       });
+    },
+    // 图片和dom处理助手
+    imgDomHandler () {
+      // swipe的图片逻辑处理
+      let style = this.data.style;
+      if (style && style.length) {
+        // 大图逻辑处理
+        let len = style.length;
+        for (let i = 0; i < len; i++) {
+          let imgArr = style[i].img || [];
+          let imgLen = imgArr.length;
+          for (let j = 0; j < imgLen; j++) {
+            // 所有图片
+            this.imgSwipe.push(imgArr[j]);
+            this.imgRelationArr.push(i);
+          }
+        }
+        // 小图逻辑处理
+        let iLen = this.imgSwipe.length;
+        for (let n = 0; n < iLen; n += 4) {
+          this.smallImgSwipe.push(this.imgSwipe.slice(n, n + 4));
+        }
+      }
+      // 缓存dom
+      this.el.oneSkuA = this.$refs.oneSkuRef && this.$refs.oneSkuRef.querySelectorAll('a') || ''
+      this.el.twoSkuA = this.$refs.twoSkuRef && this.$refs.twoSkuRef.querySelectorAll('a') || '';
+    },
+    // 高亮
+    // @param option.dom 元素
+    // @param option.num 第几个高亮
+    hightLightHandler (option) {
+      let dom = option.dom;
+      let len = dom.length;
+
+      // 更新第一属性数据
+      // !option.unUpdata && this.getOneSkuData();
+      // 高亮处理
+      for (let i = 0; i < len; i++) {
+        if (dom[i].className.indexOf('disabled') === -1) {
+          dom[i].className = '';
+        }
+      }
+      dom[option.num].className = 'cur';
+    },
+    // ------------------------ sku start  ------------------------ //
+    // 第一个sku属性信息
+    getOneSkuData () {
+      let self = this;
+      // 初始化
+      this.goodsData = {};
+      // 初始化
+      let style = this.data.style || [];
+      let len = style.length;
+      if (!len) return;
+
+      // 第一属性
+      let oneSku = style[this.oneSkuNum];
+      // 初始化数据集合
+      this.goodsData = {
+        id: oneSku.id, // 选中的商品ID
+        name: oneSku.name, // 选中一层属性名
+        oneValue: oneSku.value, // 选中一层属性值
+        twoValue: '', // 选中二层属性值
+        img: '', // 展示图片
+        price: oneSku.supply_price || oneSku.max_price || 0, // @TODO
+        stock: oneSku.stock,
+        saleNum: 1 // 购物数量
+      };
+
+
+      // 第二属性处理
+      let subArr = oneSku.sub || [];
+      let subLen = subArr.length;
+      this.goodsData.subArr = subLen && subArr || [];
+
+      // DOM未渲染所以用异步
+      setTimeout(function() {
+        // 展示图片
+        self.goodsData.img = self.imgSwipe[self.imgNum];
+        // 第二层sku重置
+        let dom = self.el.twoSkuA;
+        for (let i = 0; i < subLen; i++) {
+          if (dom[i].className.indexOf('disabled') === -1) {
+            dom[i].className = '';
+          }
+        }
+      }, 50);
+    },
+    // 第二个sku属性信息
+    getTwoSkuData (num) {
+      // 变化
+      let arr = this.goodsData.subArr[num];
+      this.goodsData.price = arr.prom_price || arr.price;
+      this.goodsData.stock = arr.stock;
+      this.goodsData.twoValue = arr.value;
+    },
+    // 联动swipe图片 - 第一排sku属性点击
+    oneSkuClickSwipeHandler () {
+      // 图片滚动
+      let swipeNum = 0;
+      let iArr = this.imgRelationArr;
+      let len = iArr.length;
+      for (let i = 0; i < len; i++) {
+        if (iArr[i] === this.oneSkuNum) {
+          swipeNum = i;
+          break;
+        }
+      }
+      // sku展示图片
+      this.imgNum = swipeNum;
+      // 轮播跟随
+      this.$refs.bigImgSwipeRef.goto(swipeNum);
+      this.$refs.smallImgSwipeRef.goto(Math.floor(swipeNum / 4));
+      // 配图小图
+      this.goodsData.img = this.imgSwipe[swipeNum];
+      // 点亮小图高亮 && 同步数据
+      this.hightLightHandler({
+        dom: this.$refs.smallImgListRef.querySelectorAll('img'),
+        num: swipeNum
+      });
+    },
+    // 第一排sku属性点击
+    oneSkuClick (num, stock) {
+      if (+stock === 0) return;
+      this.oneSkuNum = num;
+      // 更新数据
+      this.getOneSkuData();
+      // DOM高亮
+      this.hightLightHandler({
+        dom: this.el.oneSkuA,
+        num: num
+      });
+      // 联动swipe图片
+      this.oneSkuClickSwipeHandler();
+    },
+    // 第二排sku属性点击
+    twoSkuClick (num, stock) {
+      if (+stock === 0) return;
+      // 更新数据
+      this.getTwoSkuData(num);
+      // 高亮
+      this.hightLightHandler({
+        dom: this.el.twoSkuA,
+        num: num
+      });
+    },
+    // ------------------------ sku end  ------------------------ //
+    // ------------------------ 轮播函数集合 start  ------------------------- //
+    // @note 辅助轮播函数
+    // @param num 第几张小图
+    swipeImgHandler (num) {
+      // 关联图片与属性
+      this.oneSkuNum = this.imgRelationArr[num];
+      this.imgNum = num;
+      // 高亮 && 同步数据
+      this.hightLightHandler({
+        dom: this.$refs.smallImgListRef.querySelectorAll('img'),
+        num: num
+      });
+      // 第一属性联动
+      this.getOneSkuData();
+    },
+    // 选中小图
+    // @param num 第几张小图
+    smallImgClick (num) {
+      this.swipeImgHandler(num);
+      // 滚动轮播大图
+      this.$refs.bigImgSwipeRef.goto(num);
+    },
+    // 大图滑动回调函数
+    // @param num 第几张图片高亮
+    nextCallback (num) {
+      this.swipeImgHandler(num);
+      // 滚动轮播小图
+      this.$refs.smallImgSwipeRef.goto(Math.floor(num / 4));
+    },
+    // ------------------------ 轮播函数集合 end  ------------------------ //
+    // 点击加
+    addClick () {
+      if (this.goodsData.saleNum >= +this.goodsData.stock) {
+        this.goodsData.saleNum = +this.goodsData.stock;
+        return;
+      }
+      this.goodsData.saleNum++;
+    },
+    // 点击减
+    reduceClick () {
+      if (this.goodsData.saleNum <= 1) {
+        return;
+      }
+      this.goodsData.saleNum--;
+    },
+    // 返回菜单
+    backMenuClick () {
+      this.isMaskShow = !this.isMaskShow;
+      this.isBackMenuShow = !this.isBackMenuShow;
+    },
+    // 点击黑点底层
+    changeMaskClick () {
+      this.isMaskShow = !this.isMaskShow;
+      document.body.style.overflow = this.isMaskShow ? 'hidden' : '';
+      this.isPopupSkuShow = false;
+      this.isBackMenuShow = false;
+    },
+    // 点击加入购物车
+    footCartClick () {
+      this.isMaskShow = true;
+      this.isPopupSkuShow = true;
+    },
+    // OK - 提交表单
+    skuOkClick () {
+      // 1. 判定是否登录  TODO
+      // 2. 判定是否加入购物车
+      this.$http.post('/cart/add', {
+        good_id: 1,
+        num: 1,
+        type: 2,
+        sub_id: 233,
+        token: 1,
+        key: 1
+      }).then((res) => {
+        if (res && res.data && res.data.status) {
+          // @TODO
+          this.isMaskShow = false;
+          this.isPopupSkuShow = false;
+        } else {
+          // @TODO
+        }
+      }, () => {
+        // @TODO 网络错误
+      });
+
+    },
+    // 弹出SKU点击关闭
+    skuCloseClick () {
+      this.isMaskShow = false;
+      this.isPopupSkuShow = false;
     }
   }
 };
@@ -88,10 +407,11 @@ export default {
 @import "~less/tool.less";
 .detail-main {
   .detail-swipe {
-    .big-img-list {
+    .big-img-swipe {
+      height: 750/@rem;
       img {
-        width: 750/@rem;
-        height: 750/@rem;
+        display: block;
+        width: 100%;
       }
     }
     .small-img-list {
@@ -99,30 +419,28 @@ export default {
       background-color: #fff;
       width: 750/@rem;
       padding: 20/@rem 0;
-      height: 260/@rem;
+      height: 270/@rem;
       margin-top: 20/@rem;
-      i {
-        position: absolute;
-        z-index: 1;
-        top: 30/@rem;
-        width: 90/@rem;
-        font-size: 90/@rem;
-        color: #dfe0e4;
-      }
-      i.left {
-        left: 0;
-      }
-      i.right {
-        right: 0;
-      }
-      .list {
-        margin-left: 90/@rem;
-        .clearfix();
-        img {
-          float: left;
-          width: 128/@rem;
-          height: 128/@rem;
-          margin-right: 20/@rem;
+      .small-img-swipe {
+        overflow: visible;
+        width: 572/@rem;
+        height: 128/@rem;
+        margin: 0 auto;
+        .mint-swipe-items-wrap {
+          .clearfix();
+          img {
+            display: block;
+            float: left;
+            width: 128/@rem;
+            height: 128/@rem;
+            margin-right: 20/@rem;
+            &:nth-child(4n) {
+              margin-right: 0;
+            }
+          }
+          img.cur {
+            border: 1px solid @red;
+          }
         }
       }
       .des {
@@ -197,13 +515,18 @@ export default {
     position: fixed;
     left: 0;
     bottom: 0;
-    width: 750/@rem;
+    z-index: 100;
+    width: 100%;
     height: 96/@rem;
-    padding: 0 20/@rem;
-    background-color: @red;
-    color: #fff;
+
     .pos-rel {
       position: relative;
+      width: 100%;
+      margin: 0 auto;
+      max-width: 750px;
+      padding: 0 20/@rem;
+      background-color: @red;
+      color: #fff;
       .price {
         font-size: 36/@rem;
         line-height: 96/@rem;
@@ -214,6 +537,219 @@ export default {
         right: 20/@rem;
         font-size: 50/@rem;
       }
+    }
+  }
+
+  .detail-float-menu {
+    position: fixed;
+    z-index: 101;
+    right: 30/@rem;
+    bottom: 200/@rem;
+    width: 88/@rem;
+    height: 88/@rem;
+
+    .btn-menu {
+      // opacity: 0;
+      display: inline-block;
+      width: 88/@rem;
+      height: 88/@rem;
+      // line-height: 88/@rem;
+      line-height: 0.85rem;
+      border: 1px solid @gray3;
+      border-radius: 50%;
+      background-color: #FFF;
+      text-align: center;
+      letter-spacing: -.5px;
+      box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.1);
+      &.cur {
+        background-color: @red;
+        color: #fff;
+        border: 1px solid @red;
+      }
+    }
+    ul {
+      display: none;
+      position: absolute;
+      right: 0;
+      bottom: 90/@rem;
+      &.show {
+        display: block;
+      }
+      li {
+        position: relative;
+        width: 200/@rem;
+        height: 80/@rem;
+        margin-bottom: 30/@rem;
+        .name {
+          width: 110/@rem;
+          height: 80/@rem;
+          padding-top: 25/@rem;
+          text-align: right;
+          color: #fff;
+        }
+        a {
+          position: absolute;
+          top: 0;
+          right: 0;
+          display: inline-block;
+          width: 80/@rem;
+          height: 80/@rem;
+          line-height: 80/@rem;
+          border-radius: 50%;
+          background-color: #FFF;
+          text-align: center;
+          i {
+            display: inline-block;
+          }
+        }
+        &:nth-child(3) a > i {
+          margin-top: .03rem;
+          margin-left: -.01rem;
+        }
+      }
+    }
+  }
+
+  .detail-popup-sku {
+    position: fixed;
+    z-index: 110;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 998/@rem;
+    .popup-sku {
+      position: relative;
+      width: 100%;
+      margin: 0 auto;
+      max-width: 750px;
+      background: #fff;
+      height: 998/@rem;
+      padding: 0 20/@rem;
+    }
+    .sku-info {
+      width: 100%;
+      height: 180/@rem;
+      border-bottom: 1px solid #e1e1e1;
+      .clearfix();
+      img {
+        display: block;
+        width: 200/@rem;
+        height: 200/@rem;
+        border-radius: 20/@rem;
+        margin-top: -40/@rem;
+      }
+      .des {
+        margin: 60/@rem 0 0 30/@rem;
+        .price {
+          height: 50/@rem;
+          line-break: 50/@rem;
+          font-size: 30/@rem;
+          color: @red;
+        }
+        .stock {
+          height: 48/@rem;
+          line-height: 48/@rem;
+          font-size: 24/@rem;
+          color: @gray2;
+        }
+      }
+    }
+    .sku-attr {
+      padding-bottom: 35/@rem;
+      border-bottom: 1px solid #e1e1e1;
+      .attr-con {
+        .clearfix();
+        .attr-title {
+          height: 40/@rem;
+          margin-top: 25/@rem;
+          color: #5a5a5e;
+        }
+        .attr-des {
+          .clearfix();
+          li {
+            float: left;
+            a {
+              display: block;
+              width: 140/@rem;
+              height: 54/@rem;
+              line-height: 54/@rem;
+              margin: 25/@rem 25/@rem 0 0;
+              text-align: center;
+              border: 1px solid @gray2;
+              border-radius: 2px;
+              &.cur {
+                border: 1px solid @red;
+                color: @red;
+              }
+              &.disabled {
+                border: 1px solid #eee;
+                color: #eee;
+              }
+            }
+          }
+        }
+      }
+    }
+    .sku-qty {
+      position: relative;
+      width: 100%;
+      height: 54/@rem;
+      margin-top: 35/@rem;
+      .clearfix();
+      .qty {
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 182/@rem;
+        height: 54/@rem;
+        border-radius: 2px;
+        border: 1px solid @gray2;
+        overflow: hidden;
+        .reduce {
+          border-right: 1px solid @gray2;
+          i {
+            font-size: 32/@rem;
+          }
+          &.ban i {
+            color: #c7c7c7;
+          }
+        }
+        .add {
+          border-left: 1px solid @gray2;
+        }
+        .reduce, .add {
+          display: block;
+          text-align: center;
+          width: 48/@rem;
+          height: 54/@rem;
+          line-height: 50/@rem;
+        }
+        .num {
+          width: 80/@rem;
+          height: 54/@rem;
+          line-height: 54/@rem;
+          text-align: center;
+        }
+      }
+    }
+    .sku-ok {
+      position: absolute;
+      width: 100%;
+      height: 99/@rem;
+      line-height: 99/@rem;
+      left: 0;
+      bottom: 0;
+      background-color: @red;
+      text-align: center;
+      color: #fff;
+      font-size: 36/@rem;
+    }
+    .sku-close {
+      position: absolute;
+      top: 20/@rem;
+      right: 20/@rem;
+      color: @gray2;
+      font-size: 32/@rem;
     }
   }
 }

@@ -23,8 +23,5 @@ export default {
     // self.$cookie.delete('_dragon_sea');
     // self.$cookie.delete('_coll_ci');
     // window.MailaApp && window.MailaApp.logout();
-  },
-  SET_USERTYPE (state, status) {
-    state.isOldUser = status;
   }
 };

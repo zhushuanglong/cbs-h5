@@ -1,6 +1,7 @@
 <template>
   <div class="mint-swipe">
-    <div class="mint-swipe-items-wrap" ref="wrap">
+    <i class="iconfont left" v-show="operator" @click="prev()">&#xe62f;</i>
+    <div class="mint-swipe-items-wrap">
       <slot></slot>
     </div>
     <div class="mint-swipe-indicators" v-show="showIndicators">
@@ -8,21 +9,23 @@
            v-for="(page, $index) in pages"
            :class="{ 'is-active': $index === index }"></div>
     </div>
+    <i class="iconfont right" v-show="operator" @click="next()">&#xe62e;</i>
   </div>
 </template>
 
 <script>
-  import { once } from 'wind-dom/src/event';
-  import { addClass, removeClass } from 'wind-dom/src/class';
+  import { once } from './once';
+  import { addClass } from './addClass';
+  import { removeClass } from './removeClass';
 
   export default {
     name: 'mt-swipe',
 
-    created () {
+    created() {
       this.dragState = {};
     },
 
-    data () {
+    data() {
       return {
         ready: false,
         dragging: false,
@@ -32,14 +35,36 @@
         pages: [],
         timer: null,
         reInitTimer: null,
-        noDrag: false
+        noDrag: false,
+        isTouchMove: false, // 是否是手势
       };
     },
 
     props: {
+      // 是否需要操作icon
+      operator: {
+        type: Boolean,
+        default: false
+      },
+      // 是否自动播放
+      loop: {
+        type: Boolean,
+        default: false
+      },
+
       speed: {
         type: Number,
         default: 300
+      },
+
+      defaultIndex: {
+        type: Number,
+        default: 0
+      },
+
+      disabled: {
+        type: Boolean,
+        default: false
       },
 
       auto: {
@@ -67,14 +92,32 @@
         default: false
       },
 
-      endCallback: {
+      propagation: {
+        type: Boolean,
+        default: false
+      },
+
+      prevCallback: {
         type: Function,
-        default () {}
+        default: function() {}
+      },
+
+      nextCallback: {
+        type: Function,
+        default: function() {}
+      }
+    },
+
+    watch: {
+      'index': function (val) {
+        if (this.isTouchMove) { // 如果是touchmove 去调用
+          this.nextCallback && this.nextCallback(val);
+        }
       }
     },
 
     methods: {
-      swipeItemCreated () {
+      swipeItemCreated() {
         if (!this.ready) return;
 
         clearTimeout(this.reInitTimer);
@@ -83,7 +126,7 @@
         }, 100);
       },
 
-      swipeItemDestroyed () {
+      swipeItemDestroyed() {
         if (!this.ready) return;
 
         clearTimeout(this.reInitTimer);
@@ -92,7 +135,7 @@
         }, 100);
       },
 
-      translate (element, offset, speed, callback) {
+      translate(element, offset, speed, callback) {
         if (speed) {
           this.animating = true;
           element.style.webkitTransition = '-webkit-transform ' + speed + 'ms ease-in-out';
@@ -121,19 +164,19 @@
         }
       },
 
-      reInitPages () {
+      reInitPages() {
         var children = this.$children;
         this.noDrag = children.length === 1 && this.noDragWhenSingle;
 
         var pages = [];
-        this.index = 0;
+        this.index = this.defaultIndex;
 
-        children.forEach(function (child, index) {
+        children.forEach((child, index) => {
           pages.push(child.$el);
 
           removeClass(child.$el, 'is-active');
 
-          if (index === 0) {
+          if (index === this.defaultIndex) {
             addClass(child.$el, 'is-active');
           }
         });
@@ -141,7 +184,7 @@
         this.pages = pages;
       },
 
-      doAnimate (towards, options) {
+      doAnimate(towards, options) {
         if (this.$children.length === 0) return;
         if (!options && this.$children.length < 2) return;
 
@@ -151,11 +194,20 @@
         var pages = this.pages;
         var pageCount = pages.length;
 
-        if (!options) {
+        this.isTouchMove = towards !== 'goto'; // 判定是否是touchmove
+
+        if (!options || towards === 'goto') {
+          options = options || {};
           pageWidth = this.$el.clientWidth;
           currentPage = pages[index];
-          prevPage = pages[index - 1];
-          nextPage = pages[index + 1];
+          if (towards === 'goto') {
+            prevPage = options.prevPage;
+            nextPage = options.nextPage;
+          } else {
+            prevPage = pages[index - 1];
+            nextPage = pages[index + 1];
+          }
+
           if (this.continuous && pages.length > 1) {
             if (!prevPage) {
               prevPage = pages[pages.length - 1];
@@ -173,6 +225,7 @@
             this.translate(nextPage, pageWidth);
           }
         } else {
+
           prevPage = options.prevPage;
           currentPage = options.currentPage;
           nextPage = options.nextPage;
@@ -198,6 +251,10 @@
           if (this.continuous && index === pageCount - 1) {
             newIndex = 0;
           }
+        } else if (towards === 'goto') {
+          if (options.newIndex > -1 && options.newIndex < pageCount) {
+            newIndex = options.newIndex;
+          }
         }
 
         var callback = () => {
@@ -205,8 +262,8 @@
             var newPage = this.$children[newIndex].$el;
             removeClass(oldPage, 'is-active');
             addClass(newPage, 'is-active');
-
             this.index = newIndex;
+            this.$emit('change', newIndex, index);
           }
 
           if (prevPage) {
@@ -216,8 +273,6 @@
           if (nextPage) {
             nextPage.style.display = '';
           }
-          // 外部回调
-          this.endCallback && this.endCallback();
         };
 
         setTimeout(() => {
@@ -230,6 +285,14 @@
             this.translate(currentPage, pageWidth, speed, callback);
             if (prevPage) {
               this.translate(prevPage, 0, speed);
+            }
+          } else if (towards === 'goto') {
+            if (prevPage && options.goTowards === 'prev') {
+              this.translate(currentPage, pageWidth, speed, callback);
+              this.translate(prevPage, 0, speed);
+            } else if (nextPage && options.goTowards === 'next') {
+              this.translate(currentPage, -pageWidth, speed, callback);
+              this.translate(nextPage, 0, speed);
             }
           } else {
             this.translate(currentPage, 0, speed, callback);
@@ -252,20 +315,40 @@
         }, 10);
       },
 
-      next () {
+      next() {
         this.doAnimate('next');
+        this.nextCallback && this.nextCallback();
       },
 
-      prev () {
+      prev() {
         this.doAnimate('prev');
+        this.prevCallback && this.prevCallback();
       },
 
-      doOnTouchStart (event) {
-        if (this.noDrag) return;
+      goto(newIndex) {
+        if (this.index === newIndex) return;
+
+        if (newIndex < this.index) {
+          this.doAnimate('goto', {
+            newIndex,
+            prevPage: this.pages[newIndex],
+            goTowards: 'prev'
+          });
+        } else {
+          this.doAnimate('goto', {
+            newIndex,
+            nextPage: this.pages[newIndex],
+            goTowards: 'next'
+          });
+        }
+      },
+
+      doOnTouchStart(event) {
+        if (this.noDrag || this.disabled) return;
 
         var element = this.$el;
         var dragState = this.dragState;
-        var touch = event.touches[0];
+        var touch = event.changedTouches ? event.changedTouches[0] : event;
 
         dragState.startTime = new Date();
         dragState.startLeft = touch.pageX;
@@ -301,11 +384,11 @@
         }
       },
 
-      doOnTouchMove (event) {
-        if (this.noDrag) return;
+      doOnTouchMove(event) {
+        if (this.noDrag || this.disabled) return;
 
         var dragState = this.dragState;
-        var touch = event.touches[0];
+        var touch = event.changedTouches ? event.changedTouches[0] : event;
 
         dragState.currentLeft = touch.pageX;
         dragState.currentTop = touch.pageY;
@@ -329,15 +412,22 @@
 
         if (dragState.prevPage && towards === 'prev') {
           this.translate(dragState.prevPage, offsetLeft - dragState.pageWidth);
+        } else if (dragState.nextPage && towards === 'next') {
+          this.translate(dragState.nextPage, offsetLeft + dragState.pageWidth);
+        } else {
+          // when continuous=false and it's the end of each side,
+          // limit swipe width with quadratic-functional ease
+          // y = (-1 / dk) x (|x| - 2k)
+          const k = dragState.pageWidth;
+          const x = offsetLeft;
+          const d = 6; // scroll until 1/d of screenWidth at maximum
+          offsetLeft = -1 / d / k * x * (Math.abs(x) - 2 * k);
         }
         this.translate(dragState.dragPage, offsetLeft);
-        if (dragState.nextPage && towards === 'next') {
-          this.translate(dragState.nextPage, offsetLeft + dragState.pageWidth);
-        }
       },
 
-      doOnTouchEnd () {
-        if (this.noDrag) return;
+      doOnTouchEnd() {
+        if (this.noDrag || this.disabled) return;
 
         var dragState = this.dragState;
 
@@ -385,10 +475,39 @@
         });
 
         this.dragState = {};
+      },
+
+      dragStartEvent(event) {
+        if (this.prevent) {
+          event.preventDefault();
+        }
+        if (this.propagation) {
+          event.stopPropagation();
+        }
+        if (this.animating) return;
+        this.dragging = true;
+        this.userScrolling = false;
+        this.doOnTouchStart(event);
+      },
+
+      dragMoveEvent(event) {
+        if (!this.dragging) return;
+        this.doOnTouchMove(event);
+      },
+
+      dragEndEvent(event) {
+        if (this.userScrolling) {
+          this.dragging = false;
+          this.dragState = {};
+          return;
+        }
+        if (!this.dragging) return;
+        this.doOnTouchEnd(event);
+        this.dragging = false;
       }
     },
 
-    destroyed () {
+    destroyed() {
       if (this.timer) {
         clearInterval(this.timer);
         this.timer = null;
@@ -399,10 +518,10 @@
       }
     },
 
-    mounted () {
+    mounted() {
       this.ready = true;
 
-      if (this.auto > 0) {
+      if (this.loop && this.auto > 0) {
         this.timer = setInterval(() => {
           if (!this.dragging && !this.animating) {
             this.next();
@@ -414,41 +533,38 @@
 
       var element = this.$el;
 
-      element.addEventListener('touchstart', (event) => {
-        if (this.prevent) {
-          event.preventDefault();
-        }
-        if (this.animating) return;
-        this.dragging = true;
-        this.userScrolling = false;
-        this.doOnTouchStart(event);
-      });
-
-      element.addEventListener('touchmove', (event) => {
-        if (!this.dragging) return;
-        this.doOnTouchMove(event);
-      });
-
-      element.addEventListener('touchend', (event) => {
-        if (this.userScrolling) {
-          this.dragging = false;
-          this.dragState = {};
-          return;
-        }
-        if (!this.dragging) return;
-        this.doOnTouchEnd(event);
-        this.dragging = false;
-      });
+      // for mobile
+      element.addEventListener('touchstart', this.dragStartEvent);
+      element.addEventListener('touchmove', this.dragMoveEvent);
+      element.addEventListener('touchend', this.dragEndEvent);
+      // for pc
+      element.addEventListener('mousedown', this.dragStartEvent);
+      element.addEventListener('mousemove', this.dragMoveEvent);
+      element.addEventListener('mouseup', this.dragEndEvent);
     }
   };
 </script>
 
 <style lang="less">
-  @rem: 75rem;
+  @rem: 100rem;
   .mint-swipe {
     overflow: hidden;
     position: relative;
-    height: 100%;
+    // height: 100%;
+    i {
+      position: absolute;
+      z-index: 1;
+      top: 15/@rem;
+      width: 90/@rem;
+      font-size: 90/@rem;
+      color: #dfe0e4;
+    }
+    i.left {
+      left: -90/@rem;
+    }
+    i.right {
+      right: -90/@rem;
+    }
   }
   .mint-swipe-items-wrap {
     position: relative;
@@ -463,7 +579,7 @@
     transform: translateX(-100%);
     width: 100%;
     height: 100%;
-    display: none
+    display: none;
   }
   .mint-swipe-items-wrap > div.is-active {
     display: block;
@@ -472,69 +588,21 @@
   }
   .mint-swipe-indicators {
     position: absolute;
-    bottom: 10px;
+    bottom: 0.45rem;
+    text-align: center;
     left: 50%;
-    -webkit-transform: translateX(-50%);
-    transform: translateX(-50%);
+    width: 100%;
+    margin-left: -50%;
   }
   .mint-swipe-indicator {
-    width: 8px;
-    height: 8px;
+    width: 20/@rem;
+    height: 20/@rem;
     display: inline-block;
     border-radius: 100%;
-    background: #000;
-    margin: 0 3px;
+    background: #bfbfbf;
+    margin: 0 10/@rem;
   }
   .mint-swipe-indicator.is-active {
-    background: #fff;
-  }
-  /* slider插件css + 改写*/
-  .mint-swipe, .mint-swipe-items-wrap {
-    overflow: hidden;
-    position: relative;
-    height: 100%
-  }
-
-  .mint-swipe-items-wrap>div {
-    position: absolute;
-    -webkit-transform: translateX(-100%);
-    transform: translateX(-100%);
-    width: 100%;
-    height: 100%;
-    display: none;
-    a, img {
-      width: 100%;
-      height: 220/@rem;
-      display: block;
-    }
-  }
-
-  .mint-swipe-items-wrap>div.is-active {
-    display: block;
-    -webkit-transform: none;
-    transform: none
-  }
-
-  .mint-swipe-indicators {
-    position: absolute;
-    bottom: 10px;
-    left: 60/@rem;
-    -webkit-transform: translateX(-50%);
-    transform: translateX(-50%)
-  }
-
-  .mint-swipe-indicator {
-    width: 10/@rem;
-    height: 10/@rem;
-    display: inline-block;
-    border-radius: 100/@rem;
-    background: #ccc;
-    margin: 0 5/@rem;
-    background: rgba(255,255,255,0.70); 
-  }
-
-  .mint-swipe-indicator.is-active {
-    width: 30/@rem;
-    background: #fff;
+    background: #ff473c;
   }
 </style>
