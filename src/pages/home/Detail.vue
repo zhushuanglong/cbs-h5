@@ -493,7 +493,7 @@ export default {
         line-height: 44/@rem;
         .label {
           width: 155/@rem;
-          color: @gray1;
+          color: #535353;
         }
         .des {
           width: 555/@rem;

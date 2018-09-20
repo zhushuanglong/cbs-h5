@@ -9,7 +9,7 @@
       </li>
       <li>
         <div class="label">Full Name</div>
-        <div class="info"><input type="text" placeholder=""></div>
+        <div class="info"><input type="text" placeholder="Full Name"></div>
         <i class="iconfont">&#xe62e;</i>
       </li>
       <li>
@@ -78,7 +78,7 @@ export default {
       width: 100%;
       .height(86);
       padding: 0 20/@rem;
-      border-bottom: 1px solid rgba(211, 211, 211, 0.7);
+      border-bottom: 1px solid @gray3;
       font-size: 26/@rem;
     }
     .first {
