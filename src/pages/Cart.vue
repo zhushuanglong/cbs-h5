@@ -47,7 +47,7 @@
         </div>
         <div class="cart-points cart-rel">
           <div class="cart-label">Activity Discounts <span class="label-des">( 635 points to use )</span></div>
-          <div class="cart-pos">-$6.35</div>
+          <div class="cart-pos">-$6.35<mt-switch v-model="isDiscount"></mt-switch></div>
         </div>
       </div>
       <div class="cart-btn">CONTINUE CHECKOUT ( <span>$288.88</span> ) </div>
@@ -65,7 +65,9 @@ export default {
     BottomBar
   },
   data () {
-    return {};
+    return {
+      isDiscount: false //
+    };
   },
   computed: {},
   created () {},
