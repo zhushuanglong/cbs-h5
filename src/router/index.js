@@ -16,15 +16,6 @@ export default new Router({
       }
     },
     {
-      name: 'newlist',
-      path: '/newlist',
-      component: function (resolve) {
-        require.ensure([], function () {
-          resolve(require('pages/home/NewList'));
-        }, 'newlist');
-      }
-    },
-    {
       name: 'detail', // 私有H5
       path: '/detail/:id', // 商品ID
       component: function (resolve) {

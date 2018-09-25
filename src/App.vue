@@ -1,10 +1,8 @@
 <template>
   <div id="app">
-    <div class="global-main">
-      <transition name="router-fade" mode="out-in">
-        <router-view></router-view>
-      </transition>
-    </div>
+    <transition name="router-fade" mode="out-in">
+      <router-view></router-view>
+    </transition>
   </div>
 </template>
 
