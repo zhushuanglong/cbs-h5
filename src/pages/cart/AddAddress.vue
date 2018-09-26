@@ -1,6 +1,6 @@
 <template>
-  <div class="address-main" ref="indexMain">
-    <TopBar :title="'Add Address'" :backUrl="'secure'"></TopBar>
+  <div class="add-address-main">
+    <topbar :title="'Add Address'" :backUrl="'cart/secureCheckout'"></topbar>
 
     <ul class="address-ul">
       <li>
@@ -39,7 +39,7 @@
       </li>
       <li>
         <div class="label">Phone Number*</div>
-        <input type="text">
+        <input class="phone" type="text">
         <div class="phone-number-icon">
           <div class="img"></div>
           <div class="des">+001</div>
@@ -59,11 +59,7 @@
 </template>
 
 <script>
-import TopBar from 'common/TopBar.vue';
 export default {
-  components: {
-    TopBar
-  },
   data () {
     return {
       isSetDefault: false // 设置默认地址
@@ -87,7 +83,7 @@ export default {
 
 <style lang="less">
 @import '~less/tool.less';
-.address-main {
+.add-address-main {
   font-size: 28/@rem;
   padding-top: 92/@rem;
   padding-bottom: 98/@rem;
@@ -113,11 +109,33 @@ export default {
         .whl(710,80);
         border:1px solid #c5c5c5;
         padding: 0 20/@rem;
+        &.phone {
+          padding-left: 200/@rem;
+        }
       }
       i {
         position: absolute;
         top: 65/@rem;
         right: 20/@rem;
+      }
+    }
+    .phone-number-icon {
+      position: absolute;
+      left: 40/@rem;
+      top: 70/@rem;
+      .img {
+        float: left;
+        display: block;
+        background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADcAAAApCAMAAACm2UGfAAAA1VBMVEX///+vRkgeL1rr0dH69PTSl5jqz88hMl1BQmUrMVgyQmnPkJElNl8wP2cpOWI8S3A5SG4rPGROXH6AepFMWXxBUHSdQ0qSmq9HVXjpzM2Kk6l6hJ1ueZVATnM9THHj5eqwtsVlcY41RGvd4Oanrb6FjqZ/iaF1gJpiboxYZYUjNF7u8PPh4+nW2eG6v81fa4pUYYLR1d21usnRvcKhqLqbo7aXn7OIj6WGiJ9rdpJaZobf2+HLz9nHzNa/xNCpsMCMlauEhJq7h4379fXk5uv26enw3NztBhzRAAABoklEQVRIx5yTyW7bMBRF1dMWr1BJaohUCZbsWnJkW42npHUcu20m5P+/KRQyrCQuchcH3Dzi8eDSe/jmzOP33njeGToEJAeI35G8nn586k03dzcVuL5VML80UK18SC4CCC92w3MHfJ8xviZ9OWlNINqYyFdRxN8vvfG8ERDOYtDrJZj/C5CrzOLPuQA/vYGMUJGkGp+0thgHFpM3OOZu2HcXNxsF5T8Dp7UP+Szs1kj4/bk3nZftll/sKou4tEgXFnVhEFWELp8QbhLQVy2Y6bJ7WmFxnwkMz92AyCFAmOcWi9biuLSoKovhPUccFwK7kYI8iyDNfAiyEOps4vJZzIHyHtjugaTTVE+jbumJyyfUzRh0k4NpEpCitahKAZdPkKcUuGyBTQmcN0B2Dc5+6lDESI5SxO9ILJy9fnD3+vFrb6wXZ68dPj/Y64Oz18P/6EymG4F9V+n5WkM5m8BplUC+2rp8ticgXgL5EQhKICoUPE9LmguPPk68AJe+IQMkGckBtNM31MPTjZUcQP/wdGYhBzDQHbgykwPoH54sbOQABgDcPTW/6d89KwAAAABJRU5ErkJggg==') no-repeat;
+        .wh(55,41);
+        background-size: 100% auto;
+      }
+      .des {
+        float: left;
+        margin-left: 20/@rem;
+        font-size: 26/@rem;
+        .wh(90, 40);
+        border-right: 1px solid #e5e5e5;
       }
     }
   }

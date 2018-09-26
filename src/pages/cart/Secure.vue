@@ -1,17 +1,25 @@
 <template>
   <div class="secure-main">
-    <TopBar :title="`Secure Checkout`" :backUrl="`cart`"></TopBar>
+    <topbar :title="`Secure Checkout`" :backUrl="`cart`"></topbar>
 
     <div class="secure-shipping">
       <div class="title"><i class="iconfont">&#xe61e;</i>Shipping Address</div>
       <div class="line"></div>
       <div class="shipping-con">
-        <router-link :to="{path: '/cart/address'}" class="empty">
+        <router-link :to="{path: '/cart/addAddress'}" class="empty" v-if="0">
           + Add a shipping address
           <i class="iconfont gray2">&#xe62e;</i>
         </router-link>
-        <!-- TODO -->
-        <div class="list"></div>
+        <router-link :to="{path: '/cart/shippingAddress'}" class="address-detail" v-else>
+          <div class="info">
+            <div class="fl">QIAN.XIAO</div>
+            <div class="fr">+001123455534545</div>
+          </div>
+          <div class="address">608 kingsley st，apt 10，nomal，lllinois，United St-ates, 61761</div>
+          <div class="pos">
+            <i class="iconfont gray2">&#xe62e;</i>
+          </div>
+        </router-link>
       </div>
     </div>
 
@@ -65,11 +73,7 @@
 </template>
 
 <script>
-import TopBar from 'common/TopBar.vue';
 export default {
-  components: {
-    TopBar
-  },
   data () {
     return {
       isBalance: true
@@ -114,6 +118,30 @@ export default {
           right: -10/@rem;
         }
       }
+      .address-detail {
+        position: relative;
+        display: block;
+        width: 680/@rem;
+        padding: 20/@rem;
+        position: relative;
+        color: #535353;
+
+        .info {
+          .height(40);
+          .clearfix();
+        }
+        .address {
+          word-break: break-all;
+          letter-spacing: -.5px;
+          line-height: 40/@rem;
+        }
+
+        .pos {
+          position: absolute;
+          top: 30/@rem;
+          right: -40/@rem;
+        }
+      }
     }
     .line {
       position: absolute;
@@ -134,7 +162,7 @@ export default {
     li {
       position: relative;
       .height(90);
-      border-bottom: 1px solid @gray3;
+      border-bottom: 1px solid @gray4;
       &:last-child {
         border-bottom: none;
       }
