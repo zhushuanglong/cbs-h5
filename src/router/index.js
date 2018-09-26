@@ -59,6 +59,87 @@ export default new Router({
           resolve(require('pages/my/Profile'));
         }, 'my');
       }
+    },
+    {
+      name: 'points',
+      path: '/my/points',
+      component: function (resolve) {
+        require.ensure([], function () {
+          resolve(require('pages/my/Points'));
+        }, 'my');
+      }
+    },
+    {
+      name: 'coupon',
+      path: '/my/coupons',
+      component: function (resolve) {
+        require.ensure([], function () {
+          resolve(require('pages/my/Coupon'));
+        }, 'my');
+      }
+    },
+    {
+      name: 'history',
+      path: '/my/historyview',
+      component: function (resolve) {
+        require.ensure([], function () {
+          resolve(require('pages/my/HistoryView'));
+        }, 'my');
+      }
+    },
+    {
+      name: 'sign',
+      path: '/my/sign',
+      component: function (resolve) {
+        require.ensure([], function () {
+          resolve(require('pages/my/Sign'));
+        }, 'my');
+      }
+    },
+    {
+      name: 'forgetpwd',
+      path: '/my/forgetpwd',
+      component: function (resolve) {
+        require.ensure([], function () {
+          resolve(require('pages/my/ForgetPassword'));
+        }, 'my');
+      }
+    },
+    {
+      name: 'forgetSendSuccess',
+      path: '/my/forgetSendSuccess',
+      component: function (resolve) {
+        require.ensure([], function () {
+          resolve(require('pages/my/SendSuccess'));
+        }, 'my');
+      }
+    },
+    {
+      name: 'finance',
+      path: '/my/finance',
+      component: function (resolve) {
+        require.ensure([], function () {
+          resolve(require('pages/my/Finance'));
+        }, 'my');
+      }
+    },
+    {
+      name: 'income',
+      path: '/my/income',
+      component: function (resolve) {
+        require.ensure([], function () {
+          resolve(require('pages/my/Income'));
+        }, 'my');
+      }
+    },
+    {
+      name: 'fans',
+      path: '/my/fans',
+      component: function (resolve) {
+        require.ensure([], function () {
+          resolve(require('pages/my/Fans'));
+        }, 'my');
+      }
     }
   ]
 });

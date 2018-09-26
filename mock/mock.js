@@ -127,11 +127,13 @@ var setOnline = [
     url: '/lists/goodslist'
   },
   {
+    // 我的积分
     name: 'personalIntegral',
     type: 'post',
     url: '/personal/integral'
   },
   {
+    // 优惠券
     name: 'couponIndex',
     type: 'post',
     url: '/coupon/index'
@@ -220,6 +222,11 @@ var setOnline = [
     name: 'success',
     type: 'post',
     url: '/login/passwordFreeLogin'
+  },
+  {
+    name: 'historyViewList',
+    type: 'get',
+    url: '/store/historyview'
   }
 ];
 
