@@ -1,15 +1,13 @@
 import Vue from 'vue';
-
+import VueResource from 'vue-resource';
 import App from './App';
 import router from './router';
 import store from './vuex/store';
-
 import VueCookie from 'vue-cookie';
-import VueResource from 'vue-resource';
-
+import initComponents from './initComponents';
 Vue.use(VueCookie);
 Vue.use(VueResource);
-
+initComponents(Vue);
 // vue-resource配置项
 Vue.http.options.emulateJSON = true;
 
@@ -17,7 +15,6 @@ Vue.http.options.emulateJSON = true;
 import { remChange } from './components/basic/remChange';
 remChange();
 
-// switch 开关
 import 'less/mint/switch.less';
 import { Switch } from 'mint-ui';
 Vue.component(Switch.name, Switch);

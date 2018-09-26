@@ -3,7 +3,7 @@
     <div class="my-top">
       <div class="my-top-info">
         <router-link :to="{path: '/my/profile'}" class="img fl"><img class="head" src="~img/my/head.png"></router-link>
-        <div class="nickname fl">Sign In / Register</div>
+        <div class="nickname fl" @click="userLogin">Sign In / Register</div>
       </div>
       <ul class="my-top-des">
         <li v-for="item in tabs">
@@ -47,11 +47,11 @@ export default {
       }, {
         name: 'Coupons',
         url: '/my/coupons',
-        icon: '&#xe64a;'
+        icon: '&#xe691;'
       }, {
         name: 'History View',
         url: '/my/historyview',
-        icon: '&#xe64a;'
+        icon: '&#xe693;'
       }]
     };
   },
@@ -64,7 +64,14 @@ export default {
     //   this.popupShow();
     // }
   },
-  methods: {},
+  methods: {
+    userLogin() {
+      this.$router.push({
+        path: '/my/sign',
+      })
+    }
+  },
+  
   beforeDestroy () {
     // this.$refs.indexMain.removeEventListener('scroll', this.dispatchScroll, false);
   }

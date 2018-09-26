@@ -1,6 +1,6 @@
 <template>
   <div class="my-card-main">
-    <router-link :to="{path: '/my/card'}" class="card-detail">
+    <router-link :to="{path: '/my/finance'}" class="card-detail">
       <div class="img fl">
         <i class="iconfont">&#xe655;</i>
       </div>
@@ -13,7 +13,7 @@
     </router-link>
     <div class="card-line"></div>
     <ul class="card-info">
-      <li v-for="item in cardTabs">
+      <li v-for="item in cardTabs" :key="item.id">
         <router-link :to="{path: item.url}">
           <i class="iconfont" v-html="item.icon"></i>
           <div class="value">{{item.value}}</div>
@@ -31,19 +31,19 @@ export default {
     return {
       cardTabs: [{
         name: 'Accumulated Income',
-        url: '/my/income',
+        url: '/my/income?type=1',
         value: '$0',
-        icon: '&#xe611;'
+        icon: '&#xe695;'
       },{
         name: 'Wait for an account',
-        url: '/my/waitfor',
+        url: '/my/income?type=2',
         value: '$0',
-        icon: '&#xe611;'
+        icon: '&#xe694;'
       },{
         name: 'My fans',
         url: '/my/fans',
         value: '0',
-        icon: '&#xe611;'
+        icon: '&#xe697;'
       }]
     }
   },
