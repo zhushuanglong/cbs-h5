@@ -434,6 +434,10 @@ export default {
             width: 128/@rem;
             height: 128/@rem;
             margin-right: 20/@rem;
+            -webkit-transition: -webkit-transform .3s;
+            transition: -webkit-transform .3s;
+            transition: transform .3s;
+            transition: transform .3s, -webkit-transform .3s;
             &:nth-child(4n) {
               margin-right: 0;
             }
@@ -677,6 +681,10 @@ export default {
               text-align: center;
               border: 1px solid @gray2;
               border-radius: 2px;
+              -webkit-transition: -webkit-transform .3s;
+              transition: -webkit-transform .3s;
+              transition: transform .3s;
+              transition: transform .3s, -webkit-transform .3s;
               &.cur {
                 border: 1px solid @red;
                 color: @red;

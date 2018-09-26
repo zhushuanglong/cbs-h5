@@ -34,6 +34,24 @@ export default new Router({
       }
     },
     {
+      name: 'secure',
+      path: '/cart/secure',
+      component: function (resolve) {
+        require.ensure([], function () {
+          resolve(require('pages/cart/Secure'));
+        }, 'secure');
+      }
+    },
+    {
+      name: 'address',
+      path: '/cart/address',
+      component: function (resolve) {
+        require.ensure([], function () {
+          resolve(require('pages/cart/Address'));
+        }, 'address');
+      }
+    },
+    {
       name: 'my',
       path: '/my',
       component: function (resolve) {

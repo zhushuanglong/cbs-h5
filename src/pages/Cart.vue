@@ -50,7 +50,9 @@
           <div class="cart-pos">-$6.35<mt-switch v-model="isDiscount"></mt-switch></div>
         </div>
       </div>
-      <div class="cart-btn">CONTINUE CHECKOUT ( <span>$288.88</span> ) </div>
+      <div class="global-fixed-btn">
+        <router-link :to="{path: '/cart/secure'}" class="fixed-btn">CONTINUE CHECKOUT ( <span>$288.88</span> )</router-link>
+      </div>
     </template>
   </div>
 </template>
@@ -202,20 +204,20 @@ export default {
       position: absolute;
       top: 0;
       right: 20/@rem;
+      .clearfix();
+      .mint-switch {
+        float: right;
+        margin-top: 20/@rem;
+        margin-left: 20/@rem;
+      }
     }
   }
 
-  .cart-discounts {
+  .cart-discounts {}
 
-  }
+  .cart-coupon {}
 
-  .cart-coupon {
-
-  }
-
-  .cart-points {
-
-  }
+  .cart-points {}
 
   .cart-empty {
     padding-top: 92/@rem;
@@ -245,18 +247,6 @@ export default {
       border-radius: 10/@rem;
       color: @red;
     }
-  }
-
-  .cart-btn {
-    position: fixed;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    color: #ffffff;
-    text-align: center;
-    .height(98);
-    background-color: @red;
-    font-size: 32/@rem;
   }
 }
 </style>

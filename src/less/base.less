@@ -74,6 +74,12 @@ input {
   border-radius: 0;
   -webkit-appearance: none;
 }
+input[type="radio"] {
+  -webkit-appearance: radio;
+  width: 42/@rem;
+  height: 42/@rem;
+  vertical-align: middle;
+}
 :focus {
   outline: 0;
 }
@@ -124,20 +130,23 @@ input {
 
 // ---- 公用样式 ---- //
 #app {
-  max-width: 750px;
+  max-width: 750/@rem;
   margin: 0 auto;
   position: relative;
   width: 100%;
   height: 100%;
 }
-// --- gobal_center 居中 --- //
+
+// gobal_center
 .global-center {
   position: relative;
   width: 100%;
   margin: 0 auto;
-  max-width: 750px;
+  max-width: 750/@rem;
   background-color: #FFFFFF;
 }
+
+// topbar
 .global-topbar {
   position: fixed;
   left: 0;
@@ -171,6 +180,8 @@ input {
     font-size: 36/@rem;
   }
 }
+
+// bottombar
 .global-bottombar {
   position: fixed;
   left: 0;
@@ -214,9 +225,43 @@ input {
   }
 }
 
+// 底部固定按钮
+.global-fixed-btn {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  z-index: 99;
+  width: 100%;
+  .fixed-btn {
+    display: block;
+    width: 750/@rem;
+    margin: 0 auto;
+    color: #ffffff;
+    text-align: center;
+    .height(98);
+    background-color: @red;
+    font-size: 28/@rem;
+  }
+}
+
+// 常用灰
 .gray2 {
   color: #939399;
 }
+
+// 常用红
+.red {
+  color: #ff473c;
+}
+
+// transition .3s
+.t3s {
+  -webkit-transition: -webkit-transform .3s;
+  transition: -webkit-transform .3s;
+  transition: transform .3s;
+  transition: transform .3s, -webkit-transform .3s;
+}
+
 // --- 基础样式gobal_loading 加载动画 --- //
 .router-fade-enter-active, .router-fade-leave-active {
   transition: opacity .2s;
