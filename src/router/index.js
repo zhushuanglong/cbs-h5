@@ -43,12 +43,39 @@ export default new Router({
       }
     },
     {
-      name: 'address',
-      path: '/cart/address',
+      name: 'addAddress',
+      path: '/cart/addAddress',
       component: function (resolve) {
         require.ensure([], function () {
-          resolve(require('pages/cart/Address'));
-        }, 'address');
+          resolve(require('pages/cart/AddAddress'));
+        }, 'addAddress');
+      }
+    },
+    {
+      name: 'shippingAddress',
+      path: '/cart/shippingAddress',
+      component: function (resolve) {
+        require.ensure([], function () {
+          resolve(require('pages/cart/ShippingAddress'));
+        }, 'shippingAddress');
+      }
+    },
+    {
+      name: 'successful',
+      path: '/cart/successful',
+      component: function (resolve) {
+        require.ensure([], function () {
+          resolve(require('pages/cart/Successful'));
+        }, 'successful');
+      }
+    },
+    {
+      name: 'failure',
+      path: '/cart/failure',
+      component: function (resolve) {
+        require.ensure([], function () {
+          resolve(require('pages/cart/Failure'));
+        }, 'failure');
       }
     },
     {
