@@ -1,6 +1,6 @@
 <template>
   <div class="my-order-main">
-    <div class="no-order" v-if="0">
+    <div class="no-order" v-if="!data">
       <div class="i-bg">
         <i class="iconfont">&#xe637;</i>
       </div>
@@ -8,22 +8,21 @@
     </div>
     <div class="my-order-list" v-else>
       <div class="top">
-        <div class="time">08/26/2018 18:33</div>
-        <div class="status">Shipped</div>
+        <div class="time">{{data.ordertime}}</div>
+        <div class="status">{{getOrderStatus(data)}}</div>
       </div>
-      <div class="detail">
+      <router-link class="detail" v-for="item in data.ordergoods" :to="{ name: 'orderDetail', query: {id: item.orderid}}">
         <div class="img fl">
-          <img src="https://gw3.alicdn.com/bao/uploaded/i1/1825922675/TB1l4q4wYwrBKNjSZPcXXXpapXa_!!0-item_pic.jpg_.webp">
+          <img :src="item.good_img">
         </div>
         <div class="info fl">
-          <div class="title">Button Up Front Plugin Pace Bird LALA HAHAHHAAHAH</div>
-          <div class="sku">Color: White</div>
-          <div class="sku">Size: S (175/92A)</div>
-          <div class="price">$299.00</div>
-          <div class="num">x 1</div>
+          <div class="title">{{item.good_name}}</div>
+          <div class="sku" v-for="(ele, index) in item.sku_value">{{ele}}</div>
+          <div class="price">{{item.good_price}}</div>
+          <div class="num">x {{item.good_num}}</div>
         </div>
-      </div>
-      <div class="operate">
+      </router-link>
+      <div class="operate" v-if="operate">
         <div class="operate-one">Order Status</div>
         <!-- TODO 代付款  按钮是红色   其他时候都是正常颜色 -->
         <div class="operate-two">Confirm</div>
@@ -34,8 +33,34 @@
 
 <script>
 export default {
-  props: {},
-  created () {}
+  props: {
+    data: {
+      type: Object,
+      default: {}
+    },
+    operate: {
+      type: Boolean,
+      default: true
+    }
+  },
+  data() {
+    return {
+
+    }
+  },
+  methods: {
+    getOrderStatus(item) {
+      let desc = '';
+      if(+item.orderstatus === 1) {
+        desc = 'Shipping';
+      } else if (+item.orderstatus === 2) {
+        desc = 'Unpaid';
+      } else {
+        desc = 'All';
+      }
+      return desc;
+    }
+  }
 };
 </script>
 
@@ -83,6 +108,7 @@ export default {
   }
 
   .detail {
+    display: block;
     padding: 0 20/@rem;
     margin-bottom: 18/@rem;
     .clearfix();

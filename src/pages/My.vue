@@ -16,23 +16,25 @@
     </div>
     <Card></Card>
     <div class="my-order-title">
-      <router-link :to="{path: '/'}">
+      <router-link :to="{path: '/my/orderList'}">
         <div class="label">Order List</div>
         <div class="btn">All</div>
         <i class="iconfont">&#xe62e;</i>
       </router-link>
     </div>
-    <Order></Order>
-    <bottombar></bottombar>
+    <Order v-for="item in orders" :data="item"></Order>
+    <BottomBar></BottomBar>
   </div>
 </template>
 
 <script>
+import BottomBar from './common/BottomBar.vue';
 import Card from './my/Card.vue';
 import Order from './my/Order.vue';
 export default {
   name: 'my',
   components: {
+    BottomBar,
     Card,
     Order
   },
@@ -50,12 +52,14 @@ export default {
         name: 'History View',
         url: '/my/historyview',
         icon: '&#xe693;'
-      }]
+      }],
+      orders: []
     };
   },
   computed: {},
-  created () {},
-  mounted () {},
+  mounted () {
+    this.getOrderList();
+  },
   watch: {
     // 'isLogin': function () {
     //   this.pageInit();
@@ -67,9 +71,20 @@ export default {
       this.$router.push({
         path: '/my/sign',
       })
+    },
+    getOrderList() {
+      this.$http.post('/order/orderList').then((res) => {
+        res = res.data;
+        if(res.status === 200 && res.data) {
+          this.orders = res.data.orders;
+        }
+      }, err => {
+
+      }).catch((err) => {
+      })
     }
   },
-
+  
   beforeDestroy () {
     // this.$refs.indexMain.removeEventListener('scroll', this.dispatchScroll, false);
   }
