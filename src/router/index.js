@@ -149,6 +149,24 @@ export default new Router({
           resolve(require('pages/my/Fans'));
         }, 'my');
       }
+    },
+    {
+      name: 'orderlist',
+      path: '/my/orderlist',
+      component: function (resolve) {
+        require.ensure([], function () {
+          resolve(require('pages/my/OrderList'));
+        }, 'my');
+      }
+    },
+    {
+      name: 'orderDetail',
+      path: '/my/orderDetail',
+      component: function (resolve) {
+        require.ensure([], function () {
+          resolve(require('pages/my/OrderDetail'));
+        }, 'my');
+      }
     }
   ]
 });
