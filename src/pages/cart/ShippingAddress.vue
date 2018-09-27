@@ -102,7 +102,6 @@ export default {
     }
     .address {
       word-break: break-all;
-      letter-spacing: -.25px;
       line-height: 40/@rem;
     }
 
@@ -115,9 +114,6 @@ export default {
   .operate {
     .height(70);
     .clearfix();
-    .fl {
-      letter-spacing: -.25px;
-    }
     .fl input {
       margin-left: 15/@rem;
       .wh(34, 34);

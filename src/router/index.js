@@ -25,6 +25,15 @@ export default new Router({
       }
     },
     {
+      name: 'categories',
+      path: '/categories',
+      component: function (resolve) {
+        require.ensure([], function () {
+          resolve(require('pages/Categories'));
+        }, 'categories');
+      }
+    },
+    {
       name: 'cart',
       path: '/cart',
       component: function (resolve) {
@@ -58,6 +67,15 @@ export default new Router({
         require.ensure([], function () {
           resolve(require('pages/cart/ShippingAddress'));
         }, 'shippingAddress');
+      }
+    },
+    {
+      name: 'addCard',
+      path: '/cart/addCard',
+      component: function (resolve) {
+        require.ensure([], function () {
+          resolve(require('pages/cart/AddCard'));
+        }, 'addCard');
       }
     },
     {

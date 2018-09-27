@@ -7,7 +7,7 @@
         Successful Payment
       </div>
       <p class="f32">Order amount: $888</p>
-      <p class="l-s25">Thank you for your order, we will deliver the goods soon</p>
+      <p>Thank you for your order, we will deliver the goods soon</p>
     </div>
     <div class="btn-order">VIEW THE ORDER</div>
     <div class="btn-shopping">GO SHOPPING</div>
@@ -64,10 +64,6 @@ export default {
     }
     .f32 {
       font-size: 32/@rem;
-    }
-    .l-s25 {
-      letter-spacing: -.5px;
-
     }
   }
 

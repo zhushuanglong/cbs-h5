@@ -2,19 +2,17 @@
   <div class="home-main" ref="indexMain">
     <!-- <New :data="new_goods"></New> -->
     <Goods :data="store_goods"></Goods>
-    <BottomBar></BottomBar>
+    <bottombar></bottombar>
   </div>
 </template>
 
 <script>
-import BottomBar from './common/BottomBar.vue';
 import Goods from './home/Goods.vue';
 import New from './home/New.vue';
 
 export default {
   name: 'home',
   components: {
-    BottomBar,
     Goods,
     New
   },

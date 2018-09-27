@@ -23,18 +23,16 @@
       </router-link>
     </div>
     <Order></Order>
-    <BottomBar></BottomBar>
+    <bottombar></bottombar>
   </div>
 </template>
 
 <script>
-import BottomBar from './common/BottomBar.vue';
 import Card from './my/Card.vue';
 import Order from './my/Order.vue';
 export default {
   name: 'my',
   components: {
-    BottomBar,
     Card,
     Order
   },
@@ -71,7 +69,7 @@ export default {
       })
     }
   },
-  
+
   beforeDestroy () {
     // this.$refs.indexMain.removeEventListener('scroll', this.dispatchScroll, false);
   }
