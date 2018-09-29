@@ -227,6 +227,16 @@ var setOnline = [
     name: 'historyViewList',
     type: 'get',
     url: '/store/historyview'
+  },
+  {// 注册
+    name: 'register',
+    type: 'post',
+    url: '/users/register'
+  },
+  {// 登陆
+    name: 'login',
+    type: 'post',
+    url: '/users/login'
   }
 ];
 

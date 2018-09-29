@@ -194,6 +194,15 @@ export default new Router({
           resolve(require('pages/my/OrderDetail'));
         }, 'my');
       }
+    },
+    {
+      name: 'logistics',
+      path: '/my/logistics',
+      component: function (resolve) {
+        require.ensure([], function () {
+          resolve(require('pages/my/Logistics'));
+        }, 'my');
+      }
     }
   ]
 });

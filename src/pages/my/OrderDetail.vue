@@ -12,9 +12,9 @@
       </div>
       <order v-for="item in orders" :data="item" :operate="false"></order>
       <div>
-        <p class="price"><span class="fl">Subtotal:</span><span class="fr">$599.00</span></p>
-        <p class="price"><span class="fl">Shipping：Free</span><span class="fr">$ 0.00</span></p>
-        <p class="price total"><span class="fl">All Total：</span><span class="fr">$599.00</span></p>
+        <p class="o-price"><span class="fl">Subtotal:</span><span class="fr">$599.00</span></p>
+        <p class="o-price"><span class="fl">Shipping：Free</span><span class="fr">$ 0.00</span></p>
+        <p class="o-price total"><span class="fl">All Total：</span><span class="fr">$599.00</span></p>
       </div>
     </div>
   </div>
@@ -58,7 +58,7 @@ export default {
     text-align: left;
     padding-left: 50/@rem;
   }
-  .price{
+  .o-price{
     width: 100%;
     height: 48/@rem;
     color: #939399;
@@ -104,8 +104,6 @@ export default {
     .adddress-detail{
       margin-top: 6/@rem;
     }
-    
-    
   }
 }
 </style>

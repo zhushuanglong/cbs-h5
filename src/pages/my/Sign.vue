@@ -2,8 +2,8 @@
   <div >
     <topbar title="Sign In"></topbar>
     <div class="sign">
-      <input type="text" class="input-control email" placeholder="Email">
-      <input type="text" class="input-control" placeholder="Password">
+      <input type="text" class="input-control email" v-model="params.email" placeholder="Email">
+      <input type="text" class="input-control" v-model="params.password"  placeholder="Password">
       <div class="forget">
         <router-link  v-if="type === 'sign'" :to="{name: 'forgetpwd'}">Forgot password</router-link>
       </div>
@@ -22,27 +22,70 @@
 export default {
   data() {
     return {
-      type: 'sign'
+      type: 'sign',
+      params: {
+        email: '',
+        password: ''
+      }
     }
   },
   mounted() {
-
   },
   methods: {
     // 注册
     register(type) {
       if (type === 1) {
-        this.type = 'register'
+        this.type = 'register';
+        this.params.email = '';
+        this.params.password = '';
       } else {
         // 请求
+        if(!this.paramsValid()) {
+          return;
+        }
+        this.request('UsersRegister').then((res) => {
+          if(res.status === 200 && res.content) {
+            window.localStorage && window.localStorage.setItem('userToken', res.content.token);
+            window.localStorage && window.localStorage.setItem('userId', res.content.user_id)
+          }
+        }, err => {
+          this.$Messagebox.alert(err);
+        })
       }
     },
     sign(type) {
       if (type === 1) {
-        this.type = 'sign'
+        this.type = 'sign';
+        this.params.email = '';
+        this.params.password = '';
       } else {
+        if(!this.paramsValid()) {
+          return;
+        }
         // 请求
+        this.request('UsersLogin', {
+          email: this.params.email,
+          password: this.params.password
+        }).then((res) => {
+          res = res.data;
+          if(res.status === 200 && res.content) {
+            window.localStorage && window.localStorage.setItem('userInfo', res.content.userInfo)
+          }
+        }, err => {
+          this.$Toast(err);
+        })
       }
+    },
+    paramsValid() {
+      if(!this.params.email) {
+        this.$Toast('email no empty');
+        return false
+      }
+      if(!this.params.password) {
+        this.$Toast('password no empty');
+        return false
+      }
+      return true;
     }
   }
 }
