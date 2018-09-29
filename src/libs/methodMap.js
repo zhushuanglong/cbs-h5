@@ -7,7 +7,9 @@ const methodMap = {
     /** 登录 **/
     UsersLogin: {url: '/users/login', method: 'post'},
     /** 用户中心 **/
-    PersonalIndex: {url: '/personal/index', method: 'post'}
+    PersonalIndex: {url: '/personal/index', method: 'post'},
+    /** 积分详情 **/
+    PersonalIntegral: {url: ' /personal/integral', method: 'post'},
 
 };
 

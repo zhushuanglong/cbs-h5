@@ -45,20 +45,20 @@ AxiosInst.interceptors.response.use(response => {
         window.localStorage.removeItem('userInfo');
         window.localStorage.removeItem('userToken');
         router.push({
-            path: '/login'
+            name: '/login'
         });
         return Promise.reject(response);
         //return response;
     }
     return response;
 }, (error) => {
-    // // 下面是接口回调的status ,因为我做了一些错误页面,所以都会指向对应的报错页面
-    // if (error.response.status === 404) {
-    //     router.push({
-    //         path: ''
-    //     });
-    // }
-    // //请求错误时做些事
-    // return Promise.reject(error);
+    // 下面是接口回调的status ,因为我做了一些错误页面,所以都会指向对应的报错页面
+    if (error.response.status === 404) {
+        router.push({
+            name: '404'
+        });
+    }
+    //请求错误时做些事
+    return Promise.reject(error);
 });
 export default AxiosInst;

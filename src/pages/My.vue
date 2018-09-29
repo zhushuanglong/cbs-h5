@@ -82,12 +82,11 @@ export default {
     },
     // 个人主页
     getPersonalIndex() {
-      // this.$Indicator();
       this.request('PersonalIndex').then((res) => {
         if(res.status === 200) {
           this.avator = res.content.img; //头像
-          this.money = res.content.money;
-          this.integral = res.content.integral;
+          this.cardData.money = res.content.money;
+          this.cardData.integral = res.content.integral;
           this.order = res.content.order;
           this.username = res.content.username;
           this.orders = res.content.order.orders;
