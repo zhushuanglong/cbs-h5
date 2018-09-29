@@ -32,39 +32,18 @@ AxiosInst.interceptors.request.use((config) => {
 AxiosInst.interceptors.response.use(response => {
     const resp = response.data;
     let code = resp.status
-    // let success = resp.success;
     //检查数据是否返回NULL
-    if (response.content === null) {
-        //return response;
-        return Promise.reject(response);
-    }
+    // if (response.content === null) {
+    //     return Promise.reject(response);
+    // }
     //检查是否有权限
     if (code === 1001) {
         return Promise.reject(response);
     }
-    // 未登录
-    if (code === 401) {
-        router.push({
-            name: 'login'
-        });
-    }
-    // 重置token
-    if (code === 1003) {
-        // let userInfo = window.localStorage.getItem('userInfo');
-        // userInfo = userInfo ? JSON.parse(userInfo) : '';
-        // let data = {
-        //     token: resp.data.token || null,
-        //     account: userInfo.account || null
-        // }
-        // window.localStorage.setItem('userInfo', JSON.stringify(data));
-        // window.localStorage.setItem('userToken', data.token);
-        // router.push({
-        //     name: ''
-        // });
-    }
-    //检查登陆信息是否还存在
-    if (code === 2000) {
+    // 没有token是402，token失效是403
+    if (code === 402 || code === 403) {
         window.localStorage.removeItem('userInfo');
+        window.localStorage.removeItem('userToken');
         router.push({
             path: '/login'
         });
@@ -73,13 +52,13 @@ AxiosInst.interceptors.response.use(response => {
     }
     return response;
 }, (error) => {
-    // 下面是接口回调的status ,因为我做了一些错误页面,所以都会指向对应的报错页面
-    if (error.response.status === 404) {
-        router.push({
-            path: ''
-        });
-    }
-    //请求错误时做些事
-    return Promise.reject(error);
+    // // 下面是接口回调的status ,因为我做了一些错误页面,所以都会指向对应的报错页面
+    // if (error.response.status === 404) {
+    //     router.push({
+    //         path: ''
+    //     });
+    // }
+    // //请求错误时做些事
+    // return Promise.reject(error);
 });
 export default AxiosInst;
