@@ -1,6 +1,27 @@
 <template>
-  <div class="secure-main">
-    <topbar :title="`Secure Checkout`" :backUrl="`cart`"></topbar>
+  <div class="add-card-main">
+    <topbar :title="'Add a credit/debit card'" :backUrl="'cart/secureCheckout'"></topbar>
+    <div class="card-con">
+      <div class="card-img"><div class="img"></div></div>
+      <div class="card-num">
+        <p>CARD NUMBER</p>
+        <p class="gray2 mt">0000 0000 0000</p>
+      </div>
+      <div class="card-info">
+        <div class="fl br">
+          <p class="p1">EXPIRE</p>
+          <p class="p2"></p>
+        </div>
+        <div class="fl pl">
+          <p class="p1">CVV</p>
+          <p class="gray2 p2">000</p>
+        </div>
+      </div>
+      <div class="card-remeber">
+        <p>Remember this card for future use</p>
+        <mt-switch v-model="isSetDefault"></mt-switch>
+      </div>
+    </div>
 
     <div class="secure-shipping">
       <div class="title"><i class="iconfont">&#xe61e;</i>Shipping Address</div>
@@ -16,58 +37,11 @@
             <div class="fr">+001123455534545</div>
           </div>
           <div class="address">608 kingsley st，apt 10，nomal，lllinois，United St-ates, 61761</div>
-          <div class="pos">
-            <i class="iconfont gray2">&#xe62e;</i>
-          </div>
         </router-link>
       </div>
     </div>
-
-    <ul class="secure-ul">
-      <li>
-        <div class="label"><i class="iconfont title-order">&#xe649;</i> Order</div>
-      </li>
-      <li>
-        <div class="label">Products Price</div>
-        <div class="pos-abs">$299.99</div>
-      </li>
-      <li>
-        <div class="label">Express Delivery</div>
-        <div class="pos-abs">Free</div>
-      </li>
-      <li>
-        <div class="label">Available Balance</div>
-        <div class="pos-abs red">
-          $28.6
-          <mt-switch v-model="isBalance"></mt-switch>
-        </div>
-      </li>
-      <li>
-        <div class="label">Order Subtotal</div>
-        <div class="pos-abs red">$299.99</div>
-      </li>
-    </ul>
-
-    <ul class="secure-ul">
-      <li>
-        <div class="label"><i class="iconfont">&#xe60a;</i>Payment Method</div>
-      </li>
-      <li>
-        <div class="label">Credit／Debit card</div>
-        <div class="pos-abs">
-          <input type="radio" name="card" value="1">
-        </div>
-      </li>
-      <li>
-        <div class="label">PayPal</div>
-        <div class="pos-abs">
-          <input type="radio" name="card" value="2">
-        </div>
-      </li>
-    </ul>
-
     <div class="global-fixed-btn">
-      <div class="fixed-btn">PLACE ORDER ( $299.99 )</div>
+      <div class="fixed-btn">PURCHASE</div>
     </div>
   </div>
 </template>
@@ -76,22 +50,93 @@
 export default {
   data () {
     return {
-      isBalance: true
+      isSetDefault: false
     };
   },
   computed: {},
   created () {},
   mounted () {},
-  watch: {},
+  watch: {
+    // 'isLogin': function () {
+    //   this.pageInit();
+    //   this.popupShow();
+    // }
+  },
   methods: {},
-  beforeDestroy () {}
+  beforeDestroy () {
+    // this.$refs.indexMain.removeEventListener('scroll', this.dispatchScroll, false);
+  }
 };
 </script>
 
 <style lang="less">
-@import "~less/tool.less";
-.secure-main {
+@import '~less/tool.less';
+.add-card-main {
+  font-size: 28/@rem;
   padding-top: 92/@rem;
+  padding-bottom: 98/@rem;
+  .card-con {
+    width: 100%;
+    padding: 20/@rem;
+    height: 458/@rem;
+    background-color: #fff;
+    margin-top: 20/@rem;
+    .card-img {
+      padding-bottom: 20/@rem;
+      border-bottom: 1px solid @gray4;
+      .img {
+        margin: 0 auto;
+        .wh(506, 56);
+        background: url('~img/cart/card.png') no-repeat;
+        background-size: 100% auto;
+      }
+    }
+    .card-num {
+      padding: 20/@rem 0;
+      border-bottom: 1px solid @gray4;
+      p {
+        .height(40);
+      }
+      .mt {
+        margin-top: 10/@rem;
+      }
+    }
+    .card-info {
+      height: 135/@rem;
+      .clearfix();
+      .fl {
+        .wh(355, 135);
+      }
+      .pl {
+        padding-left: 20/@rem;
+      }
+      .br {
+        border-right: 1px solid @gray4;
+      }
+      p {
+        margin-bottom: 10/@rem;
+        .height(40);
+      }
+      .p1 {
+        margin-top: 20/@rem;
+      }
+      .p2 {
+
+      }
+    }
+    .card-remeber {
+      position: relative;
+      border-top: 1px solid @gray4;
+      p {
+        .height(88);
+      }
+      .mint-switch {
+        position: absolute;
+        top: 20/@rem;
+        right: 0;
+      }
+    }
+  }
   .secure-shipping {
     position: relative;
     margin: 20/@rem 0;
@@ -101,7 +146,7 @@ export default {
     .title {
       .height(90);
       font-weight: bold;
-      border-bottom: 1px solid @gray3;
+      border-bottom: 1px solid @gray4;
       i {
         font-weight: normal;
       }
@@ -150,43 +195,6 @@ export default {
       height: 8/@rem;
       background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAE4AAAAIBAMAAAClhdRfAAAAD1BMVEX///+PyfX1iYnH5Pr6xMRR3CN5AAAAJklEQVQY02MAAhYlOFBhgAJDQTgwgIk5IdQ5QIWYEcqEQfwRZxwAKvUUdRO2lFcAAAAASUVORK5CYII=') repeat-x;
       background-size: 78/@rem;
-    }
-  }
-  .secure-ul {
-    display: block;
-    background-color: #fff;
-    margin-bottom: 20/@rem;
-    padding: 0 20/@rem;
-
-    li {
-      position: relative;
-      .height(90);
-      border-bottom: 1px solid @gray4;
-      &:last-child {
-        border-bottom: none;
-      }
-      .label {
-        font-size: 28/@rem;
-        font-weight: bold;
-        i {
-          font-weight: normal;
-          &.title-order {
-            vertical-align: middle;
-            font-size: 36/@rem;
-          }
-        }
-      }
-      .pos-abs {
-        position: absolute;
-        top: 0;
-        right: 0;
-        .clearfix();
-        .mint-switch {
-          float: right;
-          margin-top: 20/@rem;
-          margin-left: 20/@rem;
-        }
-      }
     }
   }
 }

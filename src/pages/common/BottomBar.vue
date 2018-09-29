@@ -20,7 +20,14 @@ export default {
         url: '/home',
         icon: '&#xe618;',
         aicon: '&#xe617;'
-      }, {
+      },
+      {
+        name: 'Categories',
+        url: '/categories',
+        icon: '&#xe699;',
+        aicon: '&#xe696;'
+      },
+      {
         name: 'Cart',
         url: '/cart',
         icon: '&#xe624;',
@@ -36,7 +43,7 @@ export default {
   methods: {
     // bottombar icon高亮
     highlight (index, item) {
-      return ['home', 'cart', 'my'][index] === this.$route.name ? item.aicon : item.icon;
+      return ['home', 'categories', 'cart', 'my'][index] === this.$route.name ? item.aicon : item.icon;
     }
   }
 };

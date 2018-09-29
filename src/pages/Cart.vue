@@ -1,6 +1,6 @@
 <template>
   <div class="cart-main" ref="indexMain">
-    <TopBar :title="'Shopping Cart'" :backUrl="'home'"></TopBar>
+    <topbar :title="'Shopping Cart'" :backUrl="'home'"></topbar>
     <!-- 空 -->
     <template v-if="0">
       <div class="cart-empty">
@@ -8,7 +8,7 @@
         <p>Your shopping cart is currently empty</p>
         <router-link :to="{path: '/home'}" class="btn">SHOP NOW</router-link>
       </div>
-      <BottomBar></BottomBar>
+      <bottombar></bottombar>
     </template>
     <!-- 有 -->
     <template v-else>
@@ -58,14 +58,9 @@
 </template>
 
 <script>
-import TopBar from './common/TopBar.vue';
-import BottomBar from './common/BottomBar.vue';
 export default {
   name: 'cart',
-  components: {
-    TopBar,
-    BottomBar
-  },
+  components: {},
   data () {
     return {
       isDiscount: false //

@@ -7,7 +7,7 @@
         Failure to pay
       </div>
       <p class="f32">Order amount: $888</p>
-      <p class="l-s25">Payment failed, please pay again.</p>
+      <p>Payment failed, please pay again.</p>
     </div>
     <div class="btn-order">VIEW THE ORDER</div>
   </div>
@@ -66,10 +66,6 @@ export default {
     }
     .f32 {
       font-size: 32/@rem;
-    }
-    .l-s25 {
-      letter-spacing: -.5px;
-
     }
   }
 
