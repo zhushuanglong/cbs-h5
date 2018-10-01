@@ -1,5 +1,5 @@
 <template>
-  <div class="cart-main" ref="indexMain">
+  <div class="cart-main">
     <topbar :title="'Shopping Cart'" :backUrl="'home'"></topbar>
     <!-- 空 -->
     <template v-if="0">
