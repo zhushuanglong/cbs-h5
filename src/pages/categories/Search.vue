@@ -8,6 +8,23 @@
           <input ref="inputSearchRef" class="t3s" :class="{'w660': isSearchBlur }" type="text" name="search" placeholder="What are you looking for?" @focus="inputFocus"  @blur="inputBlur">
         </form>
         <div class="btn-search" v-show="!isSearchBlur" @click="searchResult">Search</div>
+
+        <div class="search-history">
+          <div class="label gray2">History</div>
+          <ul>
+            <li>LED</li>
+            <li>Mommy & Me</li>
+            <li>Black Jumpsuit</li>
+            <li>Black Jumpsuit</li>
+          </ul>
+          <div class="label gray2">Hot Search</div>
+          <ul>
+            <li class="hot">LED</li>
+            <li>Mommy & Me</li>
+            <li>Black Jumpsuit</li>
+            <li>Black Jumpsuit and top</li>
+          </ul>
+        </div>
       </div>
     </div>
     <div class="search-sort-pos">
@@ -44,13 +61,51 @@
           <i class="iconfont i3">&#xe64e;</i>
           <span>Filter</span>
           <i class="iconfont i2 t3s">&#xe60d;</i>
-          <div class="filter-con">
-            <div class="title"></div>
-          </div>
         </div>
       </div>
     </div>
-    <div class="search-con" v-show="!dataSearch.length">
+
+    <div class="filter-con">
+      <div class="filter-title">
+        <i class="iconfont">&#xe63f;</i>
+        <p>Filter</p>
+      </div>
+      <ul class="filter-detail">
+        <li>
+          <div class="label mt">Price</div>
+          <input type="text" placeholder="Min">
+          <div class="line"></div>
+          <input type="text" class="input-max" placeholder="Max">
+        </li>
+        <li>
+          <div class="lable">
+            <p>Size</p>
+            <i class="iconfont">&#xe611;</i>
+            <div class="filter-value">
+              <div class="fl">
+                <div class="value">S<i class="iconfont">&#xe625;</i></div>
+              </div>
+              <div class="fl">
+                <div class="value">M<i class="iconfont">&#xe625;</i></div>
+              </div>
+              <div class="fl">
+                <div class="value">L<i class="iconfont">&#xe625;</i></div>
+              </div>
+              <div class="fl">
+                <div class="value">XL<i class="iconfont">&#xe625;</i></div>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li></li>
+      </ul>
+      <div class="filter-btn">
+        <div class="btn-reset fl">RESET</div>
+        <div class="btn-apply fl">APPLY</div>
+      </div>
+    </div>
+
+    <div class="search-con" v-show="dataSearch.length">
       <ul>
         <li>
           <img src="https://gw3.alicdn.com/bao/uploaded/i1/1825922675/TB1l4q4wYwrBKNjSZPcXXXpapXa_!!0-item_pic.jpg_.webp">
@@ -64,6 +119,7 @@
         </li>
       </ul>
     </div>
+
     <div class="search-empty" v-show="dataSearch.length">
       <img src="~img/categories/no_match.png">
       <p class="gray2">No Match Results</p>
@@ -166,7 +222,40 @@ export default {
       font-size: 32/@rem;
     }
   }
+  .search-history {
+    display: block;
+    position: fixed;
+    z-index: 101;
+    left: 0;
+    top: 90/@rem;
+    width: 750/@rem;
+    height: auto;
+    background-color: #fff;
+    padding: 0 20/@rem;
+    .label {
+      .height(80);
+    }
+    ul {
+      display: block;
+      .clearfix();
+      li {
+        float: left;
+        margin-right: 25/@rem;
+        margin-bottom: 25/@rem;
+        background-color: #F3F4F6;
+        border-radius: 30/@rem;
+        padding: 0 30/@rem;
+        .height(56);
+
+        &.hot {
+          background-color: #FEE4E7;
+          color: @red;
+        }
+      }
+    }
+  }
   .search-sort-pos {
+    display: none;
     position: fixed;
     left: 0;
     top: 90/@rem;
@@ -250,18 +339,6 @@ export default {
         -webkit-transform: rotate(180deg);
       }
     }
-    .filter-con {
-
-    }
-    .show-filter-con {
-      .filter-con {
-        display: block;
-      }
-      .i2 {
-        transform: rotate(180deg);
-        -webkit-transform: rotate(180deg);
-      }
-    }
   }
   .search-con {
     display: block;
@@ -291,6 +368,114 @@ export default {
       display: block;
       .wh(365,365);
       background-size: 100% auto;
+    }
+  }
+  .filter-con {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    top: 0;
+    right: 0;
+    width: 650/@rem;
+    height: 100%;
+    background-color: #fff;
+    .filter-title {
+      padding-top: 38/@rem;
+      border-bottom: 1px solid #d3d3db;
+      p {
+        font-size: 30/@rem;
+        color: @red;
+        .height(90);
+        text-align: center;
+      }
+      i {
+        position: absolute;
+        left: 20/@rem;
+        top: 60/@rem;
+        font-size: 46/@rem;
+      }
+    }
+    .filter-detail {
+      display: block;
+      padding: 20/@rem;
+      li {
+        position: relative;
+        border-bottom: 1px solid #d3d3db;
+        .label {
+          .height(60);
+        }
+        .mt {
+          margin: 10/@rem 0 20/@rem 0;
+        }
+        input {
+          .whl(260, 70);
+          border: 1px solid @gray2;
+          margin-bottom: 30/@rem;
+          border-radius: 2px;
+          padding: 0 10/@rem;
+        }
+        .input-max {
+          margin-left: 70/@rem;
+        }
+        .line {
+          position: absolute;
+          top: 110/@rem;
+          left: 270/@rem;
+          height: 2px;
+          width: 50/@rem;
+          border-bottom: 1px solid @gray2;
+        }
+
+        i {
+          position: absolute;
+          top: 25/@rem;
+          right: 20/@rem;
+        }
+        p {
+          .height(90);
+        }
+      }
+    }
+    .filter-value {
+      display: block;
+      padding-bottom: 20/@rem;
+      .clearfix();
+      .fl {
+        width:280/@rem;
+        .height(60);
+        text-align: left;
+        padding-left: 60/@rem;
+      }
+      .value {
+        position: relative;
+        i {
+          color: @red;
+          position: absolute;
+          top: 0;
+          right: 80/@rem;
+          vertical-align: middle;
+        }
+      }
+    }
+    .filter-btn {
+      position: absolute;
+      bottom: 30/@rem;
+      left: 30/@rem;
+      .clearfix();
+      .btn-reset {
+        .whl(280, 70);
+        background-color: #fff;
+        color: @red;
+        border: 1px solid @red;
+        text-align: center;
+      }
+      .btn-apply {
+        .whl(280, 70);
+        background-color: @red;
+        color: #fff;
+        margin-left: 30/@rem;
+        text-align: center;
+      }
     }
   }
   .search-empty {
