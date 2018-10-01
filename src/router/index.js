@@ -221,6 +221,24 @@ export default new Router({
           resolve(require('pages/my/OrderDetail'));
         }, 'my');
       }
+    },
+    {
+      name: 'logistics',
+      path: '/my/logistics',
+      component: function (resolve) {
+        require.ensure([], function () {
+          resolve(require('pages/my/Logistics'));
+        }, 'my');
+      }
+    },
+    {
+      name: '404',
+      path: '/404',
+      component: function (resolve) {
+        require.ensure([], function () {
+          resolve(require('components/layout/404.vue'));
+        }, '404');
+      }
     }
   ]
 });

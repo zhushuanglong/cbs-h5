@@ -1,7 +1,7 @@
 {
-    "status": 1,
-    "messages": "",
-    "data": {
+    "status": 200,
+    "msg": "success",
+    "content": {
         "personal_integral": "100",
         "integral": [
             {

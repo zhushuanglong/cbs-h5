@@ -2,8 +2,8 @@
   <div class="my-main">
     <div class="my-top">
       <div class="my-top-info">
-        <router-link :to="{path: '/my/profile'}" class="img fl"><img class="head" src="~img/my/head.png"></router-link>
-        <div class="nickname fl" @click="userLogin">Sign In / Register</div>
+        <router-link :to="{path: '/my/profile'}" class="img fl"><img class="head" :src="avator"></router-link>
+        <div class="nickname fl" @click="userLogin">{{username}}</div>
       </div>
       <ul class="my-top-des">
         <li v-for="item in tabs">
@@ -14,7 +14,7 @@
         </li>
       </ul>
     </div>
-    <Card></Card>
+    <Card :data="cardData"></Card>
     <div class="my-order-title">
       <router-link :to="{path: '/my/orderList'}">
         <div class="label">Order List</div>
@@ -22,7 +22,9 @@
         <i class="iconfont">&#xe62e;</i>
       </router-link>
     </div>
-    <Order v-for="item in orders" :data="item"></Order>
+    <div class="index-order">
+      <Order v-for="item in orders" :data="item"></Order>
+    </div>
     <BottomBar></BottomBar>
   </div>
 </template>
@@ -53,12 +55,18 @@ export default {
         url: '/my/historyview',
         icon: '&#xe693;'
       }],
-      orders: []
+      avator: '', //头像
+      cardData: {
+        money: 0,
+        integral: 0,
+      },
+      orders: [],
+      username: ''
     };
   },
   computed: {},
   mounted () {
-    this.getOrderList();
+    this.getPersonalIndex();
   },
   watch: {
     // 'isLogin': function () {
@@ -72,11 +80,24 @@ export default {
         path: '/my/sign',
       })
     },
+    // 个人主页
+    getPersonalIndex() {
+      this.request('PersonalIndex').then((res) => {
+        if(res.status === 200) {
+          this.avator = res.content.img; //头像
+          this.cardData.money = res.content.money;
+          this.cardData.integral = res.content.integral;
+          this.order = res.content.order;
+          this.username = res.content.username;
+          this.orders = res.content.order.orders;
+        }
+      })
+    },
     getOrderList() {
       this.$http.post('/order/orderList').then((res) => {
         res = res.data;
         if(res.status === 200 && res.data) {
-          this.orders = res.data.orders;
+          this.orders = res.data.order.orders;
         }
       }, err => {
 
@@ -181,6 +202,9 @@ export default {
       top: 22/@rem;
       right: -10/@rem;
     }
+  }
+  .index-order{
+    margin-bottom: 100/@rem;
   }
 }
 </style>

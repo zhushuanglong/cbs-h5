@@ -5,15 +5,15 @@
       <div class="point-null">
         <i class="iconfont points-icon">&#xe64a;</i>
         <div class="detail">
-          <div class="points"><span class="zero">{{points}}</span>Points</div>
-          <p><i class="iconfont">&#xe60c;</i>One point equals to U.S $0.01</p>
+          <div class="points"><span class="zero">{{personal_integral}}</span>Points</div>
+          <p><i class="iconfont icon">&#xe60c;</i>One point equals to U.S $0.01</p>
         </div>
       </div>
       <div class="history">
         <div class="title">History</div>
         <div class="content">
-          <div class="content-list" v-if="history.length > 0">
-            <div class="clearfix content-item"  v-for="item in history">
+          <div class="content-list" v-if="integral.length > 0">
+            <div class="clearfix content-item"  v-for="item in integral">
               <div class="fl">
                 <p class="c-a">{{item.source_type}}</p>
                 <div class="c-b">{{item.created_at}}</div>
@@ -21,7 +21,7 @@
               <span class="fr c-c" :class="Number(item.integral) > 0 ? 'add' : 'reduce'">{{item.integral}}</span>
             </div>
           </div>
-          <div class="empty" v-if="history.length === 0">
+          <div class="empty" v-if="integral.length === 0">
              No history so far
           </div>
         </div>
@@ -33,8 +33,11 @@
 export default {
   data() {
     return  {
-      points: 568,
-      history: [] // 历史纪录
+      personal_integral: 0,
+      integral: [], // 历史纪录
+      params: {
+        page: 1
+      }
     }
   },
   mounted() {
@@ -42,16 +45,13 @@ export default {
   },
   methods: {
     getPoints: function() {
-      this.$http.post('/personal/integral').then((res) => {
-        res = res.data;
-        if(res.status === 1 && res.data) {
-          this.history = res.data.integral;
-          this.points = res.data.personal_integral;
+      this.request('PersonalIntegral', this.params).then((res) => {
+        if(res.status === 200 && res.content) {
+          this.integral = res.content.integral;
+          this.personal_integral = res.personal_integral;
         }
       }, err => {
- 
-      }).catch((err) => {
-
+        this.$Toast(err);
       })
     }
   }
