@@ -1,5 +1,5 @@
 <template>
-  <div class="my-main" ref="indexMain">
+  <div class="my-main">
     <div class="my-top">
       <div class="my-top-info">
         <router-link :to="{path: '/my/profile'}" class="img fl"><img class="head" :src="avator"></router-link>
@@ -108,7 +108,7 @@ export default {
       })
     }
   },
-  
+
   beforeDestroy () {
     // this.$refs.indexMain.removeEventListener('scroll', this.dispatchScroll, false);
   }
