@@ -11,7 +11,7 @@
         <div class="time">{{data.ordertime}}</div>
         <div class="status">{{getOrderStatus(data)}}</div>
       </div>
-      <router-link class="detail" v-for="item in data.ordergoods" :to="{ name: 'orderDetail', query: {id: item.orderid}}">
+      <router-link class="detail" v-for="item in data.ordergoods" :to="{ name: 'orderDetail', query: {id: item.orderid, order_status: item.orderstatus}}">
         <div class="img fl">
           <img :src="item.good_img">
         </div>
@@ -23,6 +23,7 @@
         </div>
       </router-link>
       <div class="operate" v-if="operate">
+        <!-- 订单状态(订单状态 1-待付款 3-待发货 4-待收货 5-交易完成 6-交易取消 ) -->
         <div class="operate-one">Order Status</div>
         <!-- TODO 代付款  按钮是红色   其他时候都是正常颜色 -->
         <div class="operate-two">Confirm</div>

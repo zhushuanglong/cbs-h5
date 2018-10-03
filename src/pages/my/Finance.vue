@@ -4,14 +4,14 @@
     <div class="finance">
       <div class="finance-count">
         <div class="icon"><i class="iconfont">&#xe694;</i></div>
-        <div class="number">${{account}}</div>
+        <div class="number">${{money}}</div>
       </div>
       <div class="finance-detail">
         <div class="title">History</div>
         <div class="detail-list">
-          <div v-for="item in detailList" class="detail-item">
-            <p class="item item1 clearfix"><span class="name fl">{{item.name}}</span><span class="time fr">{{item.time}}</span></p>
-            <p class="item item2 clearfix"><span class="detail fl">{{item.detail}}</span><span class="price fr" :style="{'color': item.price > 0 ? '#FF0000' : '#9ABD00'}">{{item.price > 0 ? '+ ' + item.price : '- ' + item.price}}</span></p>
+          <div v-for="item in finance" class="detail-item">
+            <p class="item item1 clearfix"><span class="name fl">{{item.name}}</span><span class="time fr">{{item.created_at}}</span></p>
+            <p class="item item2 clearfix"><span class="detail fl">{{item.detail}}</span><span class="price fr" :style="{'color': item.amount > 0 ? '#FF0000' : '#9ABD00'}">{{item.amount > 0 ? '+ ' + item.price : '- ' + item.price}}</span></p>
           </div>
         </div>
       </div>
@@ -22,8 +22,8 @@
 export default {
   data() {
     return {
-      account: 314.35,
-      detailList: [{
+      money: 0.00,
+      finance: [{
         name: 'Shopping Reward',
         time: '2017-01-01 11:07:49',
         detail: 'You have placed an order for $123',
@@ -37,8 +37,18 @@ export default {
       }]
     }
   },
+  mounted() {
+    this.getFinanceDetail();
+  },
   methods: {
-
+    getFinanceDetail() {
+      this.request('PersonalFinance').then((res) => {
+        if(res.status === 200) {
+          this.money = res.content.money;
+          this.finance = res.content.finance;
+        }
+      })
+    }
   }
 }
 </script>

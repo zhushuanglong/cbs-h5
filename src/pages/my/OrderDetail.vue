@@ -25,11 +25,21 @@ export default {
   components: { order },
   data() {
     return {
-      orders: []
+      orders: [],
+      orderStatus: 0
     }
   },
   mounted() {
+    this.orderStatus = this.$router.query.order_status;
     this.getOrderDetail();
+  },
+  computed: {
+    'orderDesc': function() {
+      let desc = '';
+      return {
+
+      }
+    }
   },
   methods: {
     getOrderDetail() {

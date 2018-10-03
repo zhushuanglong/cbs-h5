@@ -2,7 +2,7 @@
   <div>
     <topbar title="Forgot Password" backUrl="my"></topbar>
     <div class="forgetpwd-page">
-      <input type="text" class="input-control" placeholder="Email">
+      <input type="text" class="input-control" v-model="email" placeholder="Email">
       <p class="desc">Confirm your identity to reset password</p>
       <div class="submit-btn" @click="send">Submit</div>
     </div>
@@ -12,14 +12,28 @@
 export default {
   data() {
     return {
-
+      email: ''
     }
   },
   methods: {
     send() {
-      this.$router.push({
-        name: 'forgetSendSuccess'
+      if(!this.email) {
+        this.$Toast('email no empty');
+        return false
+      }
+      this.request('PwdReset', {
+        email: this.email
+      }).then((res) => {
+        if (res.status === 200) {
+          this.$router.push({
+            name: 'forgetSendSuccess',
+            query: {
+              email: this.email
+            }
+          })
+        }
       })
+      
     }
   }
 }

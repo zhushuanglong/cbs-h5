@@ -134,9 +134,9 @@ var setOnline = [
   },
   {
     // 优惠券
-    name: 'couponIndex',
+    name: 'couponList',
     type: 'post',
-    url: '/coupon/index'
+    url: '/coupon/list'
   },
   {
     name: 'couponExchange',
@@ -168,7 +168,7 @@ var setOnline = [
     type: 'post',
     url: '/order/delOrder'
   },
-  {
+  {// 交易流水
     name: 'personalFinance',
     type: 'post',
     url: '/personal/finance'
@@ -237,6 +237,11 @@ var setOnline = [
     name: 'login',
     type: 'post',
     url: '/users/login'
+  },
+  {// 密码重置
+    name: 'pwreset',
+    type: 'post',
+    url: '/users/pwreset'
   }
 ];
 

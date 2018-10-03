@@ -6,18 +6,32 @@
       </div>
       <div class="info fl">
         <div class="label fl">Balance: </div>
-        <div class="price fl">$587.56</div>
+        <div class="price fl">${{data.money}}</div>
       </div>
       <div class="btn">DETAILS</div>
       <i class="iconfont iright">&#xe62e;</i>
     </router-link>
     <div class="card-line"></div>
     <ul class="card-info">
-      <li v-for="item in cardTabs" :key="item.id">
-        <router-link :to="{path: item.url}">
-          <i class="iconfont" v-html="item.icon"></i>
-          <div class="value">{{item.value}}</div>
-          <p>{{item.name}}</p>
+      <li>
+        <router-link :to="{path: '/my/income?type=1'}">
+          <i class="iconfont">&#xe695;</i>
+          <div class="value">{{data.income}}</div>
+          <p>Accumulated Income</p>
+        </router-link>
+      </li>
+      <li>
+         <router-link :to="{path: '/my/income?type=2'}">
+          <i class="iconfont">&#xe694;</i>
+          <div class="value">{{data.wait_account}}</div>
+          <p>Wait for an account</p>
+        </router-link>
+      </li>
+      <li>
+         <router-link :to="{path: '/my/fans'}">
+          <i class="iconfont">&#xe697;</i>
+          <div class="value">{{data.funs}}</div>
+          <p>My fans</p>
         </router-link>
       </li>
     </ul>
@@ -26,25 +40,16 @@
 
 <script>
 export default {
-  props: {},
+  props: {
+    data: {
+      type: Object,
+      default: () => {
+        return {};
+      }
+    }
+  },
   data () {
     return {
-      cardTabs: [{
-        name: 'Accumulated Income',
-        url: '/my/income?type=1',
-        value: '$0',
-        icon: '&#xe695;'
-      },{
-        name: 'Wait for an account',
-        url: '/my/income?type=2',
-        value: '$0',
-        icon: '&#xe694;'
-      },{
-        name: 'My fans',
-        url: '/my/fans',
-        value: '0',
-        icon: '&#xe697;'
-      }]
     }
   },
   created () {

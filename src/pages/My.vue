@@ -85,11 +85,14 @@ export default {
       this.request('PersonalIndex').then((res) => {
         if(res.status === 200) {
           this.avator = res.content.img; //头像
-          this.cardData.money = res.content.money;
-          this.cardData.integral = res.content.integral;
+          this.cardData.money = res.content.money; // 用户余额
+          this.cardData.integral = res.content.integral; // 积分
+          this.cardData.wait_account=  res.content.wait_account; // 待入账
+          this.cardData.income = res.content.income; // 收入
+          this.cardData.funs = res.content.funs;
           this.order = res.content.order;
           this.username = res.content.username;
-          this.orders = res.content.order.orders;
+          this.orders = res.content.orders;
         }
       })
     },

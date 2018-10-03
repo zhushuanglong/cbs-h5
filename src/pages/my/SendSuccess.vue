@@ -16,13 +16,18 @@
 export default {
   data() {
     return {
-      email: 'CoCo.c@136.com'
+      email: ''
     }
+  },
+  mounted() {
+    this.email = this.$route.query.email || ''
   },
   methods: {
     // 重发
     resend() {
-
+      this.$router.push({
+        name: 'forgetpwd'
+      })
     },
     goToSignIn() {
       this.$router.push({

@@ -3,15 +3,16 @@
     <topbar title="My Coupons" backUrl="my"></topbar>
     <div class="my-coupon">
       <div class="c-search">
-        <input type="text" class="s-input" placeholder="Enter promo code here" v-model="searchContent"/>
+        <input type="text" v-model="redeemCode" class="s-input" placeholder="Enter promo code here"/>
         <div class="search-btn" @click="getCouponList">Applay</div>
       </div>
       <div class="coupon-list" v-if="couponList && couponList.length > 0">
-        <div class="coupon-item" :class="item.datestatus >= 1 ? 'able': 'disable'" v-for="item in couponList">
+        <!-- 优惠券状态 1-可用 2-未开始 3-已过期未使用 4-已使用 -->
+        <div class="coupon-item" :class="item.datestatus === 1 ? 'able': 'disable'" v-for="item in couponList">
           <p class="title">${{item.use_price}} OFF</p>
           <p class="desc">{{item.text}}</p>
           <p class="use-time">{{item.startdate}} - {{item.enddate}}</p>
-          <div class="use-flag-img" :class="{'expired': item.datestatus === 2, 'used': item.datestatus === 3}"></div>
+          <div class="use-flag-img" :class="{'expired': item.datestatus === 3, 'used': item.datestatus === 4}"></div>
         </div>
       </div>
       <pageempty v-if="couponList && couponList.length === 0" icon="&#xe691;" desc="You don‘t have any available coupons now!"></pageempty>
@@ -23,7 +24,8 @@ export default {
   data() {
     return {
       searchContent: '',
-      couponList: []
+      couponList: [],
+      redeemCode: ''
     }
   },
   mounted() {
@@ -31,15 +33,14 @@ export default {
   },
   methods: {
     getCouponList() {
-      this.$http.post('/coupon/index').then((res) => {
-        res = res.data;
-        if(res.status === 1 && res.data) {
-          this.couponList = res.data || [];
+      this.request('CouponList', {
+        redeemCode: this.redeemCode
+      }).then((res) => {
+        if(res.status === 200 && res.content) {
+          this.couponList = res.content || [];
         }
       }, err => {
- 
-      }).catch((err) => {
-
+        this.$Toast(err);
       })
     }
   }
