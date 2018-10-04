@@ -36,9 +36,10 @@ export default {
   computed: {
     'orderDesc': function() {
       let desc = '';
-      return {
+      // if(this.orderStatus === )
+      // return {
 
-      }
+      // }
     }
   },
   methods: {

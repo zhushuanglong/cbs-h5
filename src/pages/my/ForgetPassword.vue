@@ -1,6 +1,6 @@
 <template>
   <div>
-    <topbar title="Forgot Password" backUrl="my"></topbar>
+    <topbar title="Forgot Password"></topbar>
     <div class="forgetpwd-page">
       <input type="text" class="input-control" v-model="email" placeholder="Email">
       <p class="desc">Confirm your identity to reset password</p>

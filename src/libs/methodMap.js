@@ -16,7 +16,14 @@ const methodMap = {
     CouponList: {url: '/coupon/list', method: 'post'},
     /** 交易流水 **/
     PersonalFinance: {url: '/personal/finance', method: 'post'},
-
+    /** 累计收益 **/
+    PersonalIncome: {url: '/personal/income', method: 'post'},
+    /** 粉丝列表 **/
+    PersonalFans: {url: '/personal/fans', method: 'post'},
+    /** 待入账 **/
+    PersonalAccount: {url: '/personal/account', method: 'post'},
+     /** 资料修改 **/
+    PersonalEdit: {url: '/personal/edit', method: 'post'}
 };
 
 export default methodMap;

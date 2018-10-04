@@ -5,13 +5,13 @@
       <div class="title">Detail</div>
       <ul class="income-list">
         <li v-for="item in incomes" class="income">
-          <img :src="item.avator" alt="" class="avator">
+          <img :src="item.image" alt="" class="avator">
           <div class="content fl">
-            <p class="name ">{{item.name}}</p>
-            <p class="detail ">{{item.detail}}</p>
-            <p class="time ">{{item.time}}</p>
+            <p class="name ">{{item.type}}</p>
+            <p class="detail ">{{item.description}}</p>
+            <p class="time ">{{item.date}}</p>
           </div>
-          <div class="price fr">{{item.price > 0 ? '+ $' + item.price : '- $' + item.price}}</div>
+          <div class="price fr">{{item.amount > 0 ? '+ $' + Math.abs(item.amount) : '- $' + Math.abs(item.amount)}}</div>
         </li>
       </ul>
     </div>
@@ -21,29 +21,50 @@
 export default {
   data() {
     return {
-      incomes: [{
-        avator: 'http://www.qqzhi.com/uploadpic/2014-10-14/112402345.jpg',
-        name: 'Shopping Reward',
-        detail: 'You have placed an order for $123',
-        time: '2017-01-01 11:07:49',
-        price: '40'
-      }]
+      incomes: [],
+      type: 0,
+      page: 1,
+      total_page: 1,
+      pageTitle: ''
     }
   },
   mounted() {
-    
-  },
-  computed: {
-    pageTitle: function() {
-      if(+this.$route.query.type === 1) {
-        return 'Accumulated Income'
-      } else {
-        return 'Wait for an account'
-      }
+    this.type = this.$route.query.type;
+    if(+this.type === 1) {
+      this.getIncome();
+      this.pageTitle = 'Accumulated Income'
+    } else {
+      this.getAccount();
+      this.pageTitle = 'Wait for an account'
     }
   },
   methods: {
-
+    // 累计收益
+    getIncome() {
+      this.request('PersonalIncome', {
+        page: this.page
+      }).then((res) => {
+        if(res.status === 200 && res.content) {
+          this.incomes = res.content.incomes || [];
+          this.total_page = res.content.total_page
+        }
+      }, err => {
+        this.$Toast(err);
+      })
+    },
+    // 待入账
+    getAccount() {
+      this.request('PersonalAccount', {
+        page: this.page
+      }).then((res) => {
+        if(res.status === 200 && res.content) {
+          this.incomes = res.content.incomes || [];
+          this.total_page = res.content.total_page
+        }
+      }, err => {
+        this.$Toast(err);
+      })
+    }
   }
 }
 </script>

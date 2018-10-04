@@ -72,11 +72,6 @@ var setOnline = [
     url: '/personal/self'
   },
   {
-    name: 'personalEdit',
-    type: 'post',
-    url: '/personal/edit'
-  },
-  {
     name: 'paymentConfirmPayment',
     type: 'post',
     url: '/payment/confirmPayment'
@@ -242,6 +237,35 @@ var setOnline = [
     name: 'pwreset',
     type: 'post',
     url: '/users/pwreset'
+  },
+  {// 累计收益
+    name: 'personalIncome',
+    type: 'post',
+    url: '/personal/income'
+  },
+  // 粉丝列表
+  {
+    name: 'personalFans',
+    type: 'post',
+    url: '/personal/fans'
+  },
+  // 待入账
+  {
+    name: 'personalAccount',
+    type: 'post',
+    url: '/personal/account'
+  },
+  // 订单详情
+  {
+    name: 'personalAccount',
+    type: 'post',
+    url: '/orders/detail'
+  },
+  // 修改资料
+  {
+    name: 'personalEdit',
+    type: 'post',
+    url: '/personal/edit'
   }
 ];
 

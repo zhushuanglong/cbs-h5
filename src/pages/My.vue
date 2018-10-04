@@ -61,7 +61,8 @@ export default {
         integral: 0,
       },
       orders: [],
-      username: ''
+      username: '',
+      isLogin: false
     };
   },
   computed: {},
@@ -76,9 +77,11 @@ export default {
   },
   methods: {
     userLogin() {
-      this.$router.push({
-        path: '/my/sign',
-      })
+      if(this.isLogin) {
+        this.$router.push({
+          path: '/my/sign',
+        })
+      }
     },
     // 个人主页
     getPersonalIndex() {
@@ -93,6 +96,7 @@ export default {
           this.order = res.content.order;
           this.username = res.content.username;
           this.orders = res.content.orders;
+          this.isLogin = true;
         }
       })
     },

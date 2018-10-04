@@ -232,6 +232,15 @@ export default new Router({
       }
     },
     {
+      name: 'orderDetail',
+      path: '/my/orderDetail',
+      component: function (resolve) {
+        require.ensure([], function () {
+          resolve(require('pages/my/OrderDetail'));
+        }, 'my');
+      }
+    },
+    {
       name: '404',
       path: '/404',
       component: function (resolve) {

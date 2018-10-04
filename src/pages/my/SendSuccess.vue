@@ -4,19 +4,28 @@
     <div class="sendEmail-page">
       <p class="title">Successfully sent</p>
       <p class="desc">An email with the reset link has been sent to <span style="color: #000">{{email}}</span></p>
-      <div class="submit-btn" @click="goToSignIn">Return to sign in</div>
+      <div class="submit-btn" @click="resend">Return to sign in</div>
       <div class="foot">
           Didn’t get the email? <a href="javascript:;" class="resend" 
           @click="resend">Resend</a>
       </div>
     </div>
+    <confirm :show.sync="confirmModal.show" :type="confirmModal.type" :on-ok="confirmModal.action" :title="confirmModal.title" :content="confirmModal.content" :ok-text="confirmModal.onText">
+    </confirm>
   </div>
 </template>
 <script>
 export default {
   data() {
     return {
-      email: ''
+      email: '',
+      confirmModal: {
+        show: false,
+        title: '',
+        content: '',
+        onText: 'yes',
+        action: () => {}
+      }
     }
   },
   mounted() {
@@ -25,13 +34,22 @@ export default {
   methods: {
     // 重发
     resend() {
-      this.$router.push({
-        name: 'forgetpwd'
-      })
+      this.confirmModal = {
+        show: true,
+        type: 'alert',
+        title: '',
+        onText: 'ok',
+        content: `we've send an email to ${this.email} with this instructions to you rsent you password`,
+        action: this.resendCB
+      }
     },
-    goToSignIn() {
-      this.$router.push({
-        name: 'sign'
+    resendCB() {
+      this.request('PwdReset', {
+        email: this.email
+      }).then((res) => {
+        if (res.status === 200) {
+          this.confirmModal.show = false;
+        }
       })
     }
   }

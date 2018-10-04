@@ -1,6 +1,6 @@
 <template>
   <div >
-    <topbar title="Sign In"></topbar>
+    <topbar title="Sign In" :close="true"></topbar>
     <div class="sign">
       <input type="text" class="input-control email" v-model="params.email" placeholder="Email">
       <input type="text" class="input-control" v-model="params.password"  placeholder="Password">
@@ -67,9 +67,17 @@ export default {
           email: this.params.email,
           password: this.params.password
         }).then((res) => {
-          res = res.data;
           if(res.status === 200 && res.content) {
-            window.localStorage && window.localStorage.setItem('userInfo', res.content.userInfo)
+            window.localStorage && window.localStorage.setItem('userToke', res.content.token)
+            window.localStorage && window.localStorage.setItem('userInfo', JSON.stringify({
+              first_name: res.content.first_name,
+              last_name: res.content.last_name,
+              member_since: res.content.member_since,
+              email: res.content.email
+            }))
+            this.$router.push({
+              name: 'my'
+            })
           }
         }, err => {
           this.$Toast(err);

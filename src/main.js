@@ -24,6 +24,7 @@ Vue.component(MessageBox.name, MessageBox);
 
 Vue.prototype.$Toast = Toast;
 Vue.prototype.$Indicator = Indicator;
+Vue.prototype.$MessageBox = MessageBox;
 
 /* eslint-disable no-new */
 new Vue({
