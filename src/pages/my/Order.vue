@@ -9,7 +9,7 @@
     <div class="my-order-list" v-else>
       <div class="top">
         <div class="time">{{data.ordertime}}</div>
-        <div class="status">{{getOrderStatus(data)}}</div>
+        <div class="status">{{orderStatusDesc}}</div>
       </div>
       <router-link class="detail" v-for="item in data.ordergoods" :to="{ name: 'orderDetail', query: {id: item.orderid, order_status: item.orderstatus}}">
         <div class="img fl">
@@ -22,13 +22,15 @@
           <div class="num">x {{item.good_num}}</div>
         </div>
       </router-link>
-      <div class="operate" v-if="operate">
+      <div class="operate clearfix">
         <!-- 订单状态(订单状态 1-待付款 3-待发货 4-待收货 5-交易完成 6-交易取消 ) -->
-        <div class="operate-one">Order Status</div>
         <!-- TODO 代付款  按钮是红色   其他时候都是正常颜色 -->
-        <div class="operate-two">Confirm</div>
+        <div class="operate-two" v-if="orderHandle.pay">Pay now</div>
+        <div class="operate-two" @click="handleCollect" v-if="orderHandle.collect">I get it</div>
+        <div class="" v-if="orderHandle.delete">Delete</div>
       </div>
     </div>
+    <confirm :show.sync="confirmModal.show" :title="confirmModal.title"  :content="confirmModal.content" :on-ok="confirmModal.action"  okText="Yes"></confirm>
   </div>
 </template>
 
@@ -46,21 +48,62 @@ export default {
   },
   data() {
     return {
-
+      orderStatusDesc: '',
+      orderDesc: '',
+      orderstatus: 0,
+      orderHandle: {
+        delete: false,
+        pay: false,
+        logistic: false,
+        collect: false
+      },
+      confirmModal: {}
     }
   },
+  mounted() {
+    this.orderstatus = this.data.orderstatus;
+    this.getOrderDesc();
+  },
   methods: {
-    getOrderStatus(item) {
-      let desc = '';
-      if(+item.orderstatus === 1) {
-        desc = 'Shipping';
-      } else if (+item.orderstatus === 2) {
-        desc = 'Unpaid';
-      } else {
-        desc = 'All';
+    getOrderDesc() {
+      let handle = {};
+      if(+this.orderstatus === 1) {
+        this.orderStatusDesc = 'Unpaid';
+        this.orderDesc = 'Waiting for payment';
+         // 删除订单（delete）、支付（pay）
+        handle.delete = true;
+        handle.pay = true;
+      } else if (+this.orderstatus === 3) {
+        this.orderStatusDesc = 'Preparing';
+        this.orderDesc = 'Goods awaiting confirmation';
+      } else if(+this.orderstatus === 4) {
+        this.orderStatusDesc = 'Shipped';
+        this.orderDesc = 'Goods awaiting confirmation';
+        // 确认收货、查看物流信息
+        handle.logistic = true;
+        handle.collect = true
+      } else if (+this.orderstatus === 5) {
+        this.orderStatusDesc = 'Delivered';
+        this.orderDesc = 'Goods have been served'
+      } else if (+this.orderstatus === 6) {
+        this.orderStatusDesc = 'Cancelled';
+        this.orderDesc = 'Order cancelled';
+        handle.delete = true;
       }
-      return desc;
-    }
+      this.orderHandle = handle;
+    },
+    // 确认收货
+    handleCollect() {
+      this.confirmModal = {
+        show: true,
+        title: 'Do you confirm receipt?',
+        onText: 'Yes',
+        content: `Confirm receipt can get ${Math.floor(this.finalAmount)} points!`,
+        action: this.handleCollectCb
+      }
+    },
+    // 确认收货 回调
+    handleCollectCb() {}
   }
 };
 </script>
@@ -149,8 +192,8 @@ export default {
     height: 100/@rem;
     border-top: 1px solid #f0f0f3;
     & > div {
-      position: absolute;
-      top: 20/@rem;
+      float: right;
+      margin-right: 20/@rem;
       .whl(162, 60);
       border-radius: 50/@rem;
       border: 1px solid @gray2;

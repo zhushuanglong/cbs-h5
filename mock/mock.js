@@ -257,7 +257,7 @@ var setOnline = [
   },
   // 订单详情
   {
-    name: 'personalAccount',
+    name: 'ordersDetail',
     type: 'post',
     url: '/orders/detail'
   },
@@ -266,6 +266,12 @@ var setOnline = [
     name: 'personalEdit',
     type: 'post',
     url: '/personal/edit'
+  },
+  // 促销列表
+  {
+    name: 'promotionsList',
+    type: 'post',
+    url: '/promotions/list'
   }
 ];
 

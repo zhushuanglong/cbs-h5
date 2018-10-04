@@ -22,8 +22,12 @@ const methodMap = {
     PersonalFans: {url: '/personal/fans', method: 'post'},
     /** 待入账 **/
     PersonalAccount: {url: '/personal/account', method: 'post'},
-     /** 资料修改 **/
-    PersonalEdit: {url: '/personal/edit', method: 'post'}
+    /** 资料修改 **/
+    PersonalEdit: {url: '/personal/edit', method: 'post'},
+    /** 订单详情 **/
+    OrdersDetail: {url: '/orders/detail', method: 'post'},
+    /** 订单详情 **/
+    PromotionsList: {url: '/promotions/list', method: 'post'}
 };
 
 export default methodMap;

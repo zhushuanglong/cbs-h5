@@ -241,6 +241,15 @@ export default new Router({
       }
     },
     {
+      name: 'activity',
+      path: '/activity',
+      component: function (resolve) {
+        require.ensure([], function () {
+          resolve(require('pages/activity/index.vue'));
+        }, 'activity');
+      }
+    },
+    {
       name: '404',
       path: '/404',
       component: function (resolve) {
