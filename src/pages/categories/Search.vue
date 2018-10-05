@@ -2,32 +2,31 @@
   <div class="search-main">
     <div class="global-topbar">
       <div class="global-center search-bar">
-        <i class="iconfont fl" v-show="isSearchBlur" @click="backUrl">&#xe62f;</i>
+        <router-link :to="{path: '/categories'}">
+          <i class="iconfont fl back-url" v-show="isSearchBlur" @click="backUrl">&#xe62f;</i>
+        </router-link>
         <form action="" class="input fl">
           <i class="iconfont">&#xe66e;</i>
           <input ref="inputSearchRef" class="t3s" :class="{'w660': isSearchBlur }" type="text" name="search" placeholder="What are you looking for?" @focus="inputFocus"  @blur="inputBlur">
         </form>
-        <div class="btn-search" v-show="!isSearchBlur" @click="searchResult">Search</div>
-
-        <div class="search-history">
-          <div class="label gray2">History</div>
-          <ul>
-            <li>LED</li>
-            <li>Mommy & Me</li>
-            <li>Black Jumpsuit</li>
-            <li>Black Jumpsuit</li>
-          </ul>
-          <div class="label gray2">Hot Search</div>
-          <ul>
-            <li class="hot">LED</li>
-            <li>Mommy & Me</li>
-            <li>Black Jumpsuit</li>
-            <li>Black Jumpsuit and top</li>
-          </ul>
-        </div>
+        <div class="btn-search" v-show="!isSearchBlur" @click="clickSearchResult">Search</div>
       </div>
     </div>
-    <div class="search-sort-pos">
+    <div class="search-history" v-show="isShowSearchHistory">
+      <div v-show="historyArr.length" class="label gray2">History</div>
+      <ul v-show="historyArr.length">
+        <li v-for="item in historyArr" @click="getProductsList({title: name, page: 1})">
+          <router-link :to="{path: '/categories/search/' + item}">{{item}}</router-link>
+        </li>
+      </ul>
+      <div class="label gray2">Hot Search</div>
+      <ul>
+        <li v-for="item in hotArr" :class="{'hot': item.hot}">
+          <router-link :to="{path: '/categories/search/'}">{{item.name}}</router-link>
+        </li>
+      </ul>
+    </div>
+    <div class="search-sort-pos" v-show="dataSearch.length">
       <div class="global-center search-sort">
         <div class="sort" @click="clickConditions('sort')" :class="{'cur': conditionsName === 'sort', 'show-sort-con': isShowSortCon}">
           <i class="iconfont i1">&#xe615;</i>
@@ -35,25 +34,11 @@
           <i class="iconfont i2 t3s">&#xe60d;</i>
           <!-- sort内容 -->
           <ul class="sort-con a-fadeinTX">
-            <li class="cur">
-              <p>Best Match</p>
-              <i class="iconfont">&#xe625;</i>
-            </li>
-            <li>
-              <p>Best Selling</p>
-              <i class="iconfont">&#xe625;</i>
-            </li>
-            <li>
-              <p>Newest</p>
-              <i class="iconfont">&#xe625;</i>
-            </li>
-            <li>
-              <p>Price: High to Low</p>
-              <i class="iconfont">&#xe625;</i>
-            </li>
-            <li>
-              <p>Price: Low to High</p>
-              <i class="iconfont">&#xe625;</i>
+            <li v-for="(item, index) in sortArr" :class="{'cur': clickSortIndex === index}" @click="clickSort(index, item)">
+              <router-link :to="{path: '/categories/search/' + item.name}">
+                <p>{{item.name}}</p>
+                <i class="iconfont">&#xe625;</i>
+              </router-link>
             </li>
           </ul>
         </div>
@@ -107,20 +92,15 @@
 
     <div class="search-con" v-show="dataSearch.length">
       <ul>
-        <li>
-          <img src="https://gw3.alicdn.com/bao/uploaded/i1/1825922675/TB1l4q4wYwrBKNjSZPcXXXpapXa_!!0-item_pic.jpg_.webp">
-          <p class="p1">Sheer Lace Yoke Tee Ifree Ifree La</p>
-          <p class="p2">$100</p>
-        </li>
-        <li>
-          <img src="https://gw3.alicdn.com/bao/uploaded/i1/1825922675/TB1l4q4wYwrBKNjSZPcXXXpapXa_!!0-item_pic.jpg_.webp">
-          <p class="p1">Sheer Lace Yoke Tee Ifree La</p>
-          <p class="p2">$102</p>
+        <li v-for="item in dataSearch">
+          <img :src="item.img">
+          <p class="p1">{{item.name}}</p>
+          <p class="p2">${{item.price}}</p>
         </li>
       </ul>
     </div>
 
-    <div class="search-empty" v-show="dataSearch.length">
+    <div class="search-empty" v-show="!dataSearch.length">
       <img src="~img/categories/no_match.png">
       <p class="gray2">No Match Results</p>
     </div>
@@ -133,33 +113,128 @@ export default {
   data () {
     return {
       isSearchBlur: false, // 搜索框失去焦点
-      dataSearch: [],
+      searchParam: '', // 搜索参数
+      dataSearch: [], // 搜索内容
+      historyArr: localStorage.getItem('cbs_history') && localStorage.getItem('cbs_history').split(',') || [],
+      isShowSearchHistory: true, // 搜索历史
       conditionsName: 'sort', // 条件
+      clickSortIndex: 0, // 排序搜索条件
       isShowSortCon: false, // 显示sort内容
-      isShowFilterCon: false // 显示filter内容
+      isShowFilterCon: false, // 显示filter内容
+      sortArr: [
+        {
+          name: 'Best Match',
+          sort: ''
+        },
+        {
+          name: 'Best Selling',
+          sort: 'sales'
+        },
+        {
+          name: 'Newest',
+          sort: 'new'
+        },
+        {
+          name: 'Price: High to Low',
+          sort: 'price-d'
+        },
+        {
+          name: 'Price: Low to High',
+          sort: 'price-a'
+        }
+      ],
+      hotArr: [
+        {
+          name: 'LED',
+          hot: true
+        },
+        {
+          name: 'Mommy & Me'
+        },
+        {
+          name: 'Black Jumpsuit'
+        },
+        {
+          name: 'Black Jumpsuit and top'
+        }
+      ]
     };
   },
   computed: {},
+  created() {},
   mounted () {
-    this.$refs.inputSearchRef.focus();
+    // this.$refs.inputSearchRef.focus();
   },
-  watch: {},
   methods: {
-    searchResult () {
-      let inputSearchRef = this.$refs.inputSearchRef;
-      if (inputSearchRef.value.trim() === '') return;
-
-      // input失去焦点
-      inputSearchRef.blur();
+    // 获取商品列表信息
+    getProductsList (option) {
       this.isSearchBlur = true;
-      // 获取商品数据
-      this.dataSearch = [];
+      // @TODO 这里加朵菊花
+      this.$http.post('/products/list', {
+        cate: option.cate || '',
+        title: option.title || '', // 搜索内容
+        sort: option.sort || '',
+        page: 1
+      }).then((res) => {
+        if (res && res.data && res.data.status) {
+          this.dataSearch = res.data.content.goods;
+          this.isShowSearchHistory = false; // 隐藏搜索历史
+          option.title && this.getHistory(option.title); // 记录搜索历史
+        } else {
+          this.dataSearch = [];
+        }
+      }, () => {
+        this.dataSearch = [];
+      });
+    },
+    // 记录搜索历史 - 最多记录15个
+    getHistory (title) {
+      let cbsHistory = localStorage.getItem('cbs_history') || '';
+      let arr = [];
+      if (cbsHistory.length) {
+        arr = cbsHistory.split(',');
+      }
+      // 数组去重
+      let len = arr.length;
+      for (let i = 0; i < len; i++) {
+        if (arr[i] === title) {
+          arr.splice(i, i + 1);
+        }
+      }
+      // 数组前插入
+      arr.unshift(title);
+      // 最多记录15个
+      arr.length > 15 && arr.splice(15, 16);
+      localStorage.setItem('cbs_history', arr);
     },
     inputFocus () {
       this.isSearchBlur = false;
+      this.isShowSearchHistory = true;
     },
     inputBlur () {
       this.isSearchBlur = true;
+    },
+    // 点击搜索按钮
+    clickSearchResult () {
+      let inputSearchRef = this.$refs.inputSearchRef;
+      if (inputSearchRef.value.trim() === '') return;
+      // input失去焦点
+      inputSearchRef.blur();
+      // 获取商品列表信息
+      this.getProductsList({
+        title: inputSearchRef.value.trim()
+      });
+    },
+    // 点击sort
+    clickSort (index, item) {
+      this.clickSortIndex = index;
+      // 获取商品列表信息
+      this.getProductsList({
+        page: 1,
+        sort: item.sort
+      });
+      // this.$route.params.name = item.name;
+      // console.log(this.$route.params.name);
     },
     // 点击条件
     clickConditions (status) {
@@ -190,7 +265,9 @@ export default {
     padding: 0 20/@rem;
     .height(90);
     .clearfix();
-
+    .back-url {
+      margin: 0 10/@rem 0 -5/@rem;
+    }
     .input {
       position: relative;
       input {
@@ -231,7 +308,8 @@ export default {
     width: 750/@rem;
     height: auto;
     background-color: #fff;
-    padding: 0 20/@rem;
+    padding: 0 20/@rem 30/@rem 20/@rem;
+    border-bottom: 1px solid @gray3;
     .label {
       .height(80);
     }
@@ -244,18 +322,21 @@ export default {
         margin-bottom: 25/@rem;
         background-color: #F3F4F6;
         border-radius: 30/@rem;
-        padding: 0 30/@rem;
         .height(56);
-
+        a {
+          padding: 0 30/@rem;
+          display: block;
+        }
         &.hot {
           background-color: #FEE4E7;
-          color: @red;
+          a {
+            color: @red;
+          }
         }
       }
     }
   }
   .search-sort-pos {
-    display: none;
     position: fixed;
     left: 0;
     top: 90/@rem;
@@ -310,6 +391,7 @@ export default {
       height: 460/@rem;
       border-top: 1px solid @gray3;
       border-bottom: 1px solid @gray3;
+      box-shadow: 0px 5px 10px 0px rgba(80, 80, 80, 0.1);
       li {
         position: relative;
         .height(90);
@@ -345,7 +427,7 @@ export default {
     background-color: #fff;
     .clearfix();
     li {
-      .wh(365, 550);
+      .wh(365, 530);
       margin-right: 20/@rem;
       float: left;
       &:nth-child(2n) {

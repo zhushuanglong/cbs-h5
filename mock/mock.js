@@ -62,6 +62,11 @@ var setOnline = [
     url: '/store/decodeAddress'
   },
   {
+    name: 'productsList',
+    type: 'post',
+    url: '/products/list'
+  },
+  {
     name: 'personalIndex',
     type: 'post',
     url: '/personal/index'
