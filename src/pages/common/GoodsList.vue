@@ -3,8 +3,8 @@
     <ul v-if="list.length">
       <li v-for="item in list" class="goods-item">
        <a :href="item.url">
-         <img :src="item.img" alt="" class="img">
-         <p class="title">{{item.name}}</p>
+         <img :src="item.good_img" alt="" class="img">
+         <p class="title">{{item.good_name}}</p>
          <p class="price">${{item.price}}</p>
        </a>
       </li>

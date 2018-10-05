@@ -10,8 +10,8 @@
         <div class="title">History</div>
         <div class="detail-list">
           <div v-for="item in finance" class="detail-item">
-            <p class="item item1 clearfix"><span class="name fl">{{item.name}}</span><span class="time fr">{{item.created_at}}</span></p>
-            <p class="item item2 clearfix"><span class="detail fl">{{item.detail}}</span><span class="price fr" :style="{'color': item.amount > 0 ? '#FF0000' : '#9ABD00'}">{{item.amount > 0 ? '+ ' + item.price : '- ' + item.price}}</span></p>
+            <p class="item item1 clearfix"><span class="name fl">{{item.operate_type}}</span><span class="time fr">{{item.created_at}}</span></p>
+            <p class="item item2 clearfix"><span class="detail fl">{{item.operate_description}}</span><span class="price fr" :style="{'color': item.amount > 0 ? '#FF0000' : '#9ABD00'}">{{item.amount > 0 ? '+ $' + Math.abs(item.amount) : '- &' + Math.abs(item.amount)}}</span></p>
           </div>
         </div>
       </div>
@@ -23,18 +23,7 @@ export default {
   data() {
     return {
       money: 0.00,
-      finance: [{
-        name: 'Shopping Reward',
-        time: '2017-01-01 11:07:49',
-        detail: 'You have placed an order for $123',
-        price: 40
-      },
-      {
-        name: 'Shopping Reward',
-        time: '2017-01-01 11:07:49',
-        detail: 'You have placed an order for $123',
-        price: -40
-      }]
+      finance: []
     }
   },
   mounted() {
@@ -56,7 +45,6 @@ export default {
 @import "~less/tool.less";
 .finance{
   position: relative;
-  height: 230/@rem;
   padding-top: 90/@rem;
   .finance-count {
     height: 230/@rem;

@@ -1,11 +1,13 @@
 import TopBar from 'common/TopBar.vue';
 import BottomBar from 'common/BottomBar.vue';
 import PageEmpty from 'common/PageEmpty.vue';
+import Confirm from 'common/Confirm.vue';
 
 const Components = {
   TopBar,
   BottomBar,
-  PageEmpty
+  PageEmpty,
+  Confirm
 };
 
 export default function(Vue) {

@@ -3,20 +3,44 @@
     <topbar title="Order Details" backUrl="orderDetail"></topbar>
     <div class="order-detail">
       <div class="page-title">
-        Order cancelled
+        {{orderDesc}}
       </div>
       <div class="address">
         <i class="iconfont address-icon">&#xe624;</i>
-        <p class="user"><span class="name">CoCo</span><span>188****6729</span></p>
-        <p class="adddress-detail">Ship to：1978 Stuart Street, Blairsville, PA, United States</p>
+        <p class="user"><span class="name">{{name}}</span><span>{{telephone.toString().split(4)[0]}}****{{telephone.toString().split(7)[1]}}</span></p>
+        <p class="adddress-detail">Ship to：{{address}}</p>
       </div>
-      <order v-for="item in orders" :data="item" :operate="false"></order>
+      <div  class="my-order-list">
+        <div class="top">
+          <div class="time">{{ordertime}}</div>
+          <div class="status">{{orderStatusDesc}}</div>
+        </div>
+        <div class="detail" v-for="item in ordergoods">
+          <div class="img fl">
+            <img :src="item.good_img">
+          </div>
+          <div class="info fl">
+            <div class="title">{{item.good_name}}</div>
+            <div class="sku" v-for="(ele, index) in item.sku_value">{{ele}}</div>
+            <div class="price">{{item.good_price}}</div>
+            <div class="num">x {{item.good_num}}</div>
+          </div>
+        </div>
+      </div>
       <div>
         <p class="o-price"><span class="fl">Subtotal:</span><span class="fr">$599.00</span></p>
-        <p class="o-price"><span class="fl">Shipping：Free</span><span class="fr">$ 0.00</span></p>
-        <p class="o-price total"><span class="fl">All Total：</span><span class="fr">$599.00</span></p>
+        <p class="o-price"><span class="fl">Shipping：Free</span><span class="fr">$ {{shipping}}</span></p>
+        <p class="o-price total"><span class="fl">All Total：</span><span class="fr">${{finalAmount}}</span></p>
+      </div>
+      <div class="operate clearfix">
+        <!-- 订单状态(订单状态 1-待付款 3-待发货 4-待收货 5-交易完成 6-交易取消 ) -->
+        <!-- TODO 代付款  按钮是红色   其他时候都是正常颜色 -->
+        <div class="operate-two" v-if="orderHandle.pay">Pay now</div>
+        <div class="operate-two" @click="handleCollect" v-if="orderHandle.collect">I get it</div>
+        <div class="" v-if="orderHandle.delete">Delete</div>
       </div>
     </div>
+    <confirm :show.sync="confirmModal.show" :title="confirmModal.title"  :content="confirmModal.content" :on-ok="confirmModal.action"  okText="Yes"></confirm>
   </div>
 </template>
 <script>
@@ -26,31 +50,91 @@ export default {
   data() {
     return {
       orders: [],
-      orderStatus: 0
+      orderstatus: 0,
+      ordergoods: [],
+      orderid: '',
+      ordertime: '',
+      finalAmount: 0,
+      shipping: '',
+      name: '',
+      telephone: '',
+      address: '',
+      orderStatusDesc: '',
+      orderDesc: '',
+      orderHandle: {
+        delete: false,
+        pay: false,
+        logistic: false,
+        collect: false
+      },
+      confirmModal: {}
     }
   },
   mounted() {
-    this.orderStatus = this.$router.query.order_status;
+    // this.orderstatus = this.$router.query && this.$router.query.order_status || '';
     this.getOrderDetail();
   },
-  computed: {
-    'orderDesc': function() {
-      let desc = '';
-      return {
-
-      }
-    }
-  },
+  computed: {},
   methods: {
+    getOrderDesc() {
+      let handle = {};
+      if(+this.orderstatus === 1) {
+        this.orderStatusDesc = 'Unpaid';
+        this.orderDesc = 'Waiting for payment';
+         // 删除订单（delete）、支付（pay）
+        handle.delete = true;
+        handle.pay = true;
+      } else if (+this.orderstatus === 3) {
+        this.orderStatusDesc = 'Preparing';
+        this.orderDesc = 'Goods awaiting confirmation';
+      } else if(+this.orderstatus === 4) {
+        this.orderStatusDesc = 'Shipped';
+        this.orderDesc = 'Goods awaiting confirmation';
+        // 确认收货、查看物流信息
+        handle.logistic = true;
+        handle.collect = true
+      } else if (+this.orderstatus === 5) {
+        this.orderStatusDesc = 'Delivered';
+        this.orderDesc = 'Goods have been served'
+      } else if (+this.orderstatus === 6) {
+        this.orderStatusDesc = 'Cancelled';
+        this.orderDesc = 'Order cancelled';
+        handle.delete = true;
+      }
+      this.orderHandle = handle;
+    },
+    // 订单详情
     getOrderDetail() {
-      this.$http.post('/order/orderDetail').then((res) => {
-        res = res.data;
-        if(res.status === 200 && res.data) {
-          this.orders = res.data.orders;
+      this.request('OrdersDetail').then((res) => {
+        if(res.status === 200 && res.content) {
+          this.ordergoods = res.content.ordergoods;
+          this.orderstatus = res.content.orderstatus;
+          this.orderid = res.content.orderid;
+          this.ordertime = res.content.ordertime;
+          this.finalAmount = res.content.final_amount;
+          this.shipping = res.content.shipping;
+          this.name = res.content.name;
+          this.telephone = res.content.telephone;
+          this.address = res.content.address; 
+          this.getOrderDesc();
         }
       }, err => {
-      }).catch((err) => {
+        this.$Toast(err)
       })
+    },
+    // 确认收货
+    handleCollect() {
+      this.confirmModal = {
+        show: true,
+        title: 'Do you confirm receipt?',
+        onText: 'Yes',
+        content: `Confirm receipt can get ${Math.floor(this.finalAmount)} points!`,
+        action: this.handleCollectCb
+      }
+    },
+    // 确认收货 回调
+    handleCollectCb() {
+
     }
   }
 }
@@ -59,6 +143,7 @@ export default {
 @import "~less/tool.less";
 .order-detail{
   margin-top: 100/@rem;
+  background-color: #fff;
   .page-title{
     color: #fff;
     height: 128/@rem;
@@ -115,6 +200,75 @@ export default {
       margin-top: 6/@rem;
     }
   }
+  .my-order-list {
+    background-color: #fff;
+    .top {
+      position: relative;
+      width: 100%;
+      .height(60);
+      padding: 0 20/@rem;
+      color: @gray2;
+      .time {}
+      .status {
+        position: absolute;
+        top: 0;
+        right: 20/@rem;
+      }
+    }
+    .detail {
+      display: block;
+      padding: 0 20/@rem;
+      margin-bottom: 18/@rem;
+      .clearfix();
+      .img, img {
+        .wh(148, 148);
+        background-size: 100%;
+      }
+      .info {
+        position: relative;
+        margin-left: 20/@rem;
+        width: 540/@rem;
+        .title {
+          .height(50);
+          .line1();
+        }
+        .sku {
+          .height(45);
+          color: @gray2;
+        }
+        .price {
+          position: absolute;
+          top: 55/@rem;
+          right: 0;
+        }
+        .num {
+          position: absolute;
+          top: 95/@rem;
+          right: 0;
+          color: @gray2;
+        }
+      }
+    }
+  }
+  .operate {
+    position: relative;
+    width: 100%;
+    height: 100/@rem;
+    border-top: 1px solid #f0f0f3;
+    padding-top: 20/@rem;
+    & > div {
+      float: right;
+      margin-right: 10/@rem;
+      .whl(162, 60);
+      border-radius: 50/@rem;
+      border: 1px solid @gray2;
+      color: @gray2;
+      text-align: center;
+    }
+    .operate-two {
+      color: #FF473C
+    }
+  }  
 }
 </style>
 

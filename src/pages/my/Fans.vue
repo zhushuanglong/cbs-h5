@@ -10,14 +10,14 @@
     <ul class="c-body">
       <li v-for="item in fans" class="clearfix">
         <div class="detail clearfix fl">
-          <img :src="item.avator" alt="" class="avator fl">
+          <img :src="item.image" alt="" class="avator fl">
           <div class="content fl">
             <p class="name">{{item.name}}</p>
-            <p class="time">{{item.time}}</p>
+            <p class="time">{{item.date}}</p>
           </div>
         </div>
-        <div class="d-2 fl">12</div>
-        <div class="d-3 fl">$140</div>
+        <div class="d-2 fl">{{item.sub_fans}}</div>
+        <div class="d-3 fl">${{item.benefit}}</div>
       </li>
     </ul>
   </div>
@@ -32,7 +32,27 @@ export default {
         name: ' Reward',
         time: '2017-01-01 11:07:49',
         price: '40'
-      }]
+      }],
+      page: 1,
+      total_page: 1
+    }
+  },
+  mounted() {
+    this.getFans();
+  },
+  methods: {
+    // 累计收益
+    getFans() {
+      this.request('PersonalFans', {
+        page: this.page
+      }).then((res) => {
+        if(res.status === 200 && res.content) {
+          this.fans = res.content.incomes || [];
+          this.total_page = res.content.total_page
+        }
+      }, err => {
+        this.$Toast(err);
+      })
     }
   }
 }
@@ -44,7 +64,7 @@ export default {
   margin-top: 110/@rem;
   padding: 0 20/@rem;
   .detail{
-    width: 350/@rem;
+    width: 370/@rem;
     padding-top: 26/@rem;
     .name{
       font-size: 30/@rem;
@@ -69,15 +89,15 @@ export default {
     }
   }
   .h-t-1 {
-    width: 350/@rem;
+    width: 390/@rem;
     text-align: left
   }
   .h-t-2 {
-    width: 200/@rem;
+    width: 180/@rem;
     text-align: left
   }
   .h-t-3 {
-    width: 150/@rem;
+    width: 130/@rem;
     text-align: left
   }
   .avator{
@@ -91,13 +111,13 @@ export default {
     overflow: hidden;
   }
   .d-2{
-    width: 200/@rem;
+    width: 180/@rem;
     line-height: 150/@rem;
     padding-left: 30/@rem;
   }
   .d-3{
     padding-left: 20/@rem;
-    width: 150/@rem;
+    width: 130/@rem;
     line-height: 150/@rem;
     color: #FF0000
   }

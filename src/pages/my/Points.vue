@@ -85,6 +85,10 @@ export default {
     }
     .detail{
       padding-left: 165/@rem;
+      .icon{
+        font-size: 32/@rem;
+        margin-right: 7/@rem;
+      }
     }
     .zero{
       display: inline-block;
@@ -93,6 +97,7 @@ export default {
       margin-right: 20/@rem
     }
     .points{
+      margin-bottom: 20/@rem;
       color: #000;
     }
     .history {
