@@ -3,26 +3,26 @@
     <div class="global-topbar">
       <div class="global-center search-bar">
         <router-link :to="{path: '/categories'}">
-          <i class="iconfont fl back-url" v-show="isSearchBlur" @click="backUrl">&#xe62f;</i>
+          <i class="iconfont fl back-url">&#xe62f;</i>
         </router-link>
         <form action="" class="input fl">
           <i class="iconfont">&#xe66e;</i>
-          <input ref="inputSearchRef" class="t3s" :class="{'w660': isSearchBlur }" type="text" name="search" placeholder="What are you looking for?" @focus="inputFocus"  @blur="inputBlur">
+          <input ref="inputSearchRef" class="w660 t3s" type="text" name="search" placeholder="What are you looking for?" @focus="inputFocus" >
         </form>
-        <div class="btn-search" v-show="!isSearchBlur" @click="clickSearchResult">Search</div>
+        <div class="btn-search" @click="clickSearchResult">Search</div>
       </div>
     </div>
     <div class="search-history" v-show="isShowSearchHistory">
       <div v-show="historyArr.length" class="label gray2">History</div>
       <ul v-show="historyArr.length">
-        <li v-for="item in historyArr" @click="getProductsList({title: name, page: 1})">
+        <li v-for="item in historyArr" @click="getProductsList({title: item, page: 1})">
           <router-link :to="{path: '/categories/search/' + item}">{{item}}</router-link>
         </li>
       </ul>
       <div class="label gray2">Hot Search</div>
       <ul>
-        <li v-for="item in hotArr" :class="{'hot': item.hot}">
-          <router-link :to="{path: '/categories/search/'}">{{item.name}}</router-link>
+        <li v-for="item in hotArr" :class="{'hot': item.hot}" @click="getProductsList({title: item.name, page: 1})">
+          <router-link :to="{path: '/categories/search/' + item.name}">{{item.name}}</router-link>
         </li>
       </ul>
     </div>
@@ -42,7 +42,7 @@
             </li>
           </ul>
         </div>
-        <div class="sort" @click="clickConditions('filter')" :class="{'cur': conditionsName === 'filter', 'show-filter-con': isShowFilterCon}">
+        <div class="sort" @click="clickConditions('filter')" :class="{'cur': conditionsName === 'filter'}">
           <i class="iconfont i3">&#xe64e;</i>
           <span>Filter</span>
           <i class="iconfont i2 t3s">&#xe60d;</i>
@@ -50,9 +50,9 @@
       </div>
     </div>
 
-    <div class="filter-con">
+    <div class="filter-con" v-show="isShowFilterCon">
       <div class="filter-title">
-        <i class="iconfont">&#xe63f;</i>
+        <i class="iconfont" @click="closeFilter">&#xe63f;</i>
         <p>Filter</p>
       </div>
       <ul class="filter-detail">
@@ -89,6 +89,7 @@
         <div class="btn-apply fl">APPLY</div>
       </div>
     </div>
+    <div class="bg-mask" :class="{'show': isShowFilterCon}"></div>
 
     <div class="search-con" v-show="dataSearch.length">
       <ul>
@@ -100,6 +101,8 @@
       </ul>
     </div>
 
+    <FloatMenu></FloatMenu>
+
     <div class="search-empty" v-show="!dataSearch.length">
       <img src="~img/categories/no_match.png">
       <p class="gray2">No Match Results</p>
@@ -108,11 +111,13 @@
 </template>
 
 <script>
+import FloatMenu from 'common/FloatMenu';
 export default {
-  components: {},
+  components: {
+    FloatMenu
+  },
   data () {
     return {
-      isSearchBlur: false, // 搜索框失去焦点
       searchParam: '', // 搜索参数
       dataSearch: [], // 搜索内容
       historyArr: localStorage.getItem('cbs_history') && localStorage.getItem('cbs_history').split(',') || [],
@@ -161,14 +166,21 @@ export default {
     };
   },
   computed: {},
-  created() {},
+  created() {
+    let name = this.$route.params.name;
+    if (name !== 'fromcate') { // 'fromcate'是从分类页面刚进来的name
+      this.getProductsList({
+        title: name,
+        page: 1
+      });
+    }
+  },
   mounted () {
     // this.$refs.inputSearchRef.focus();
   },
   methods: {
     // 获取商品列表信息
     getProductsList (option) {
-      this.isSearchBlur = true;
       // @TODO 这里加朵菊花
       this.$http.post('/products/list', {
         cate: option.cate || '',
@@ -208,11 +220,7 @@ export default {
       localStorage.setItem('cbs_history', arr);
     },
     inputFocus () {
-      this.isSearchBlur = false;
       this.isShowSearchHistory = true;
-    },
-    inputBlur () {
-      this.isSearchBlur = true;
     },
     // 点击搜索按钮
     clickSearchResult () {
@@ -248,7 +256,9 @@ export default {
         this.isShowFilterCon = !this.isShowFilterCon;
       }
     },
-    backUrl () {},
+    closeFilter () {
+      this.isShowFilterCon = false;
+    }
   },
   beforeDestroy () {}
 };
@@ -271,15 +281,11 @@ export default {
     .input {
       position: relative;
       input {
-        // font-size: 28/@rem;
-        width: 600/@rem;
+        width: 550/@rem;
         height: 60/@rem;
         background-color: #EEF0EF;
         border-radius: 30/@rem;
         padding: 0 30/@rem 0 55/@rem;
-      }
-      .w660 {
-        width: 660/@rem;
       }
       i {
         position: absolute;
@@ -397,6 +403,9 @@ export default {
         .height(90);
         color: #3d3d3d;
         text-align: center;
+        a {
+          display: block;
+        }
         i {
           position: absolute;
           top: 0;
@@ -405,8 +414,11 @@ export default {
           display: none;
         }
         &.cur {
-          color: @red;
+          a {
+            color: @red;
+          }
           i {
+            color: @red;
             display: block;
           }
         }
@@ -453,9 +465,8 @@ export default {
     }
   }
   .filter-con {
-    display: none;
     position: fixed;
-    z-index: 100;
+    z-index: 110;
     top: 0;
     right: 0;
     width: 650/@rem;
