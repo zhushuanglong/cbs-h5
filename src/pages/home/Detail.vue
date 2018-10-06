@@ -392,7 +392,6 @@ export default {
       }, () => {
         // @TODO 网络错误
       });
-
     },
     // 弹出SKU点击关闭
     skuCloseClick () {

@@ -1,7 +1,7 @@
 <template>
   <div class="categories-main">
     <div class="global-topbar">
-      <router-link :to="{path: '/categories/search'}" class="global-center search-bar">
+      <router-link :to="{path: '/categories/search/fromcate'}" class="global-center search-bar">
         <div class="input fl">
           <i class="iconfont">&#xe66e;</i>
           <input ref="inputSearchRef" type="text" placeholder="What are you looking for?">
