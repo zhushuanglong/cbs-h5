@@ -27,7 +27,13 @@ const methodMap = {
     /** 订单详情 **/
     OrdersDetail: {url: '/orders/detail', method: 'post'},
     /** 订单详情 **/
-    PromotionsList: {url: '/promotions/list', method: 'post'}
+    PromotionsList: {url: '/promotions/list', method: 'post'},
+    /** 订单删除 **/
+    OrdersDelete: {url: '/orders/delete', method: 'post'},
+    /** 订单签收 **/
+    OrdersSign: {url: '/orders/sign', method: 'post'},
+    /** 物流信息 **/
+    OrdersLogDetail: {url: '/orders/logDetail', method: 'post'}
 };
 
 export default methodMap;

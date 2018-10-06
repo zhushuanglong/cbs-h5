@@ -1,10 +1,10 @@
 <template>
   <div class="countdown-container" :style="{'color': color}" v-show="start" :msgPartern="msgPartern" :endTime="endTime" :callback="callback" :endText="endText">
-    <template  v-if="format === 'dd-hh-mm-ss'">
-      <span class="c-b" v-if="data.day > 0">{{data.day}} days</span><span class="c-b">{{data.min}}</span><span class="c-a">:</span><span class="c-b">{{data.sec}}</span><span class="c-a">:</span><span class="c-b">{{data.ms}}</span><span class="label-end"></span>
+    <template  v-if="format === 'dd-hh-mm-ss'"> 
+      <span class="c-b c-d" v-if="data.day > 0">{{data.day}} days</span><span class="c-b">{{data.hour}}</span><span class="c-a">:</span><span class="c-b">{{data.min}}</span><span class="c-a">:</span><span class="c-b">{{data.sec}}</span><span class="label-end"></span>
     </template>
     <template v-if="format === 'hh-mm-ss-mm'">
-      <span class="c-b" v-if="data.day > 0">{{data.day}} days</span> <span class="c-b">{{data.hour}}</span><span class="c-a">:</span><span class="c-b">{{data.min}}</span><span class="c-a">:</span><span class="c-b">{{data.sec}}</span><span class="label-end">{{msgPartern.endWord}}</span><span class="c-a">:</span><span>{{data.ms}}</span>
+     <span class="c-b">{{data.hour}}</span><span class="c-a">:</span><span class="c-b">{{data.min}}</span><span class="c-a">:</span><span class="c-b">{{data.sec}}</span><span class="label-end">{{msgPartern.endWord}}</span><span class="c-a">:</span><span>{{data.ms}}</span>
     </template>
   </div>
 </template>
@@ -59,11 +59,13 @@ export default {
         sec: '00',
         ms: '01'
       }
-    };
-    this.countdown(this.endTime);
+    } else {
+      this.countdown(this.endTime);
+    }
   },
   watch: {
     endTime: function(val) {
+      console.log(val);
       this.countdown(val);
     }
   },
@@ -73,7 +75,7 @@ export default {
       let ms = 9;
       let timer = setInterval(function() {
         self.start = true;
-        let nowTime = this.startTime ||　new Date();
+        let nowTime = new Date();
         let endTime = new Date(timestamp);
         let t = endTime.getTime() - nowTime.getTime();
         if (t > 0) {
@@ -125,6 +127,7 @@ export default {
       line-height: 40/@rem;
       border-radius: 6/@rem;
       font-size: 22/@rem;
+      padding: 0 5/@rem;
       &.label{
         display: none;
       }
@@ -134,6 +137,13 @@ export default {
     }
     .c-b{
       background: #fff;
+    }
+    .c-a{
+      color: #fff;
+      margin: 0 2/@rem;
+    }
+    .c-d{
+      margin-right: 20/@rem;
     }
   }
 </style>

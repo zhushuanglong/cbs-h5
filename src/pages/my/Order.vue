@@ -25,9 +25,10 @@
       <div class="operate clearfix">
         <!-- 订单状态(订单状态 1-待付款 3-待发货 4-待收货 5-交易完成 6-交易取消 ) -->
         <!-- TODO 代付款  按钮是红色   其他时候都是正常颜色 -->
-        <div class="operate-two" v-if="orderHandle.pay">Pay now</div>
+        <div class="operate-two" v-if="orderHandle.pay">Pay now ${{this.finalAmount}}</div>
         <div class="operate-two" @click="handleCollect" v-if="orderHandle.collect">I get it</div>
-        <div class="" v-if="orderHandle.delete">Delete</div>
+        <div class="" @click="getLogistics" v-if="orderHandle.logistic">Logistics Info</div>
+        <div class="" v-if="orderHandle.delete" @click="handleDelete">Delete</div>
       </div>
     </div>
     <confirm :show.sync="confirmModal.show" :title="confirmModal.title"  :content="confirmModal.content" :on-ok="confirmModal.action"  okText="Yes"></confirm>
@@ -57,11 +58,14 @@ export default {
         logistic: false,
         collect: false
       },
-      confirmModal: {}
+      confirmModal: {},
+      orderHandle: [],
+      finalAmount: 0
     }
   },
   mounted() {
     this.orderstatus = this.data.orderstatus;
+    this.orderid = this.data.orderid;
     this.getOrderDesc();
   },
   methods: {
@@ -92,7 +96,7 @@ export default {
       }
       this.orderHandle = handle;
     },
-    // 确认收货
+     // 确认收货
     handleCollect() {
       this.confirmModal = {
         show: true,
@@ -103,7 +107,40 @@ export default {
       }
     },
     // 确认收货 回调
-    handleCollectCb() {}
+    handleCollectCb() {
+      this.request('OrdersSign', {
+        order_id: this.orderid
+      }).then((res) => {
+        if(res.status === 200) {
+          this.confirmModal.show = false;
+          this.getOrderDetail();
+          this.$Toast('success');
+        }
+      }, err => {
+        this.$Toast(err)
+      })
+    },
+    // 删除订单
+    handleDelete() {
+      this.request('OrdersDelete', {
+        order_id: this.orderid
+      }).then((res) => {
+        if(res.status === 200) {
+          this.$Toast(res.msg)
+        }
+      }, err => {
+        this.$Toast(err)
+      })
+    },
+    // 物流信息
+    getLogistics() {
+      this.$router.push({
+        name: 'logistics',
+        query: {
+          order_id: this.orderid
+        }
+      })
+    }
   }
 };
 </script>
@@ -205,6 +242,7 @@ export default {
     }
     .operate-two {
       right: 20/@rem;
+      color: #FF473C
     }
   }
 

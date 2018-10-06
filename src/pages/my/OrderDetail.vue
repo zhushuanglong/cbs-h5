@@ -1,19 +1,19 @@
 <template>
   <div>
-    <topbar title="Order Details" backUrl="orderDetail"></topbar>
+    <topbar title="Order Details"></topbar>
     <div class="order-detail">
       <div class="page-title">
         {{orderDesc}}
       </div>
       <div class="address">
         <i class="iconfont address-icon">&#xe624;</i>
-        <p class="user"><span class="name">{{name}}</span><span>{{telephone.toString().split(4)[0]}}****{{telephone.toString().split(7)[1]}}</span></p>
+        <p class="user"><span class="name">{{name}}</span><span>{{telephone.toString().slice(0, 3)}}*****{{telephone.toString().slice(7, 10)}}</span></p>
         <p class="adddress-detail">Ship to：{{address}}</p>
       </div>
       <div  class="my-order-list">
         <div class="top">
-          <div class="time">{{ordertime}}</div>
-          <div class="status">{{orderStatusDesc}}</div>
+          <p class="order-id">Order: {{orderid}}</p>
+          <p class="order-time">Date: {{ordertime}}</p>
         </div>
         <div class="detail" v-for="item in ordergoods">
           <div class="img fl">
@@ -28,16 +28,17 @@
         </div>
       </div>
       <div>
-        <p class="o-price"><span class="fl">Subtotal:</span><span class="fr">$599.00</span></p>
+        <p class="o-price"><span class="fl">Subtotal:</span><span class="fr">${{parseFloat(finalAmount - shipping).toFixed(2)}}</span></p>
         <p class="o-price"><span class="fl">Shipping：Free</span><span class="fr">$ {{shipping}}</span></p>
         <p class="o-price total"><span class="fl">All Total：</span><span class="fr">${{finalAmount}}</span></p>
       </div>
       <div class="operate clearfix">
         <!-- 订单状态(订单状态 1-待付款 3-待发货 4-待收货 5-交易完成 6-交易取消 ) -->
         <!-- TODO 代付款  按钮是红色   其他时候都是正常颜色 -->
-        <div class="operate-two" v-if="orderHandle.pay">Pay now</div>
+        <div class="operate-two" v-if="orderHandle.pay">Pay now{{this.finalAmount}}</div>
         <div class="operate-two" @click="handleCollect" v-if="orderHandle.collect">I get it</div>
-        <div class="" v-if="orderHandle.delete">Delete</div>
+        <div class="" @click="getLogistics" v-if="orderHandle.logistic">Logistics Info</div>
+        <div class="" v-if="orderHandle.delete" @click="handleDelete">Delete</div>
       </div>
     </div>
     <confirm :show.sync="confirmModal.show" :title="confirmModal.title"  :content="confirmModal.content" :on-ok="confirmModal.action"  okText="Yes"></confirm>
@@ -81,13 +82,16 @@ export default {
       if(+this.orderstatus === 1) {
         this.orderStatusDesc = 'Unpaid';
         this.orderDesc = 'Waiting for payment';
-         // 删除订单（delete）、支付（pay）
+        // 待付款
+        // 删除订单（delete）、支付（pay）
         handle.delete = true;
         handle.pay = true;
       } else if (+this.orderstatus === 3) {
         this.orderStatusDesc = 'Preparing';
+        // 待发货 无操作
         this.orderDesc = 'Goods awaiting confirmation';
       } else if(+this.orderstatus === 4) {
+        // 待收货
         this.orderStatusDesc = 'Shipped';
         this.orderDesc = 'Goods awaiting confirmation';
         // 确认收货、查看物流信息
@@ -98,6 +102,7 @@ export default {
         this.orderDesc = 'Goods have been served'
       } else if (+this.orderstatus === 6) {
         this.orderStatusDesc = 'Cancelled';
+        // 已取消
         this.orderDesc = 'Order cancelled';
         handle.delete = true;
       }
@@ -134,7 +139,38 @@ export default {
     },
     // 确认收货 回调
     handleCollectCb() {
-
+      this.request('OrdersSign', {
+        order_id: this.orderid
+      }).then((res) => {
+        if(res.status === 200) {
+          this.confirmModal.show = false;
+          this.getOrderDetail();
+          this.$Toast('success');
+        }
+      }, err => {
+        this.$Toast(err)
+      })
+    },
+    // 删除订单
+    handleDelete() {
+      this.request('OrdersDelete', {
+        order_id: this.orderid
+      }).then((res) => {
+        if(res.status === 200) {
+          this.$Toast(res.msg)
+        }
+      }, err => {
+        this.$Toast(err)
+      })
+    },
+    // 物流信息
+    getLogistics() {
+      this.$router.push({
+        name: 'logistics',
+        query: {
+          order_id: this.orderid
+        }
+      })
     }
   }
 }
@@ -205,20 +241,20 @@ export default {
     .top {
       position: relative;
       width: 100%;
-      .height(60);
-      padding: 0 20/@rem;
-      color: @gray2;
-      .time {}
-      .status {
-        position: absolute;
-        top: 0;
-        right: 20/@rem;
+      height: 100/@rem;
+      padding: 10/@rem 60/@rem;
+      color: #939399;
+      font-size: 24/@rem;
+      margin-bottom: 20/@rem;
+      p{
+        line-height: 44/@rem;
       }
     }
     .detail {
       display: block;
       padding: 0 20/@rem;
       margin-bottom: 18/@rem;
+      // margin-top: 20/@rem;
       .clearfix();
       .img, img {
         .wh(148, 148);

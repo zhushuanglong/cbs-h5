@@ -1,9 +1,9 @@
 <template>
-  <div class="activity" :style="{'background-color': bgColor}">
+  <div class="activity" >
     <topbar title="Halloween sale"></topbar>
-    <div class="activity-header">
-      <!-- <p class="title">{{promotions.promotion_msg}}</p> -->
-      <!-- <div class="activity-countdown">Start at<countdown :color="bgColor" :start-time="promotion.promotion_start" :end-time="promotion.promotion_end"></countdown></div> -->
+    <div class="activity-header" :style="{'background-color': bgColor}">
+      <p class="title">{{promotions.promotion_msg}}</p>
+      <div class="activity-countdown">{{startEndDesc}} <countdown v-if="promotions.promotion_end" :color="bgColor" :start-time="promotions.promotion_start" :end-time="promotions.promotion_end"></countdown></div>
     </div>
     <div class="activity-content">
       <goods-list :list="goodsList" v-if="goodsList.length"></goods-list>
@@ -16,14 +16,15 @@ import GoodsList from 'common/GoodsList'
 export default {
   data() {
     return {
-      title: '$ 5.00 OFF $39.99++, $10.00 OFF $69.99',
-      endTime: new Date().getTime() + 60 * 1000 * 24,
       bgColor: '#32B16C',
       goodsList: [],
       promotions: {
         promotion_start: '',
         promotion_end: '',
-      }
+        promotion_msg: ''
+      },
+      activityType: '', //活动类型
+      startEndDesc: ''
     }
   },
   components: {
@@ -33,7 +34,40 @@ export default {
   mounted() {
     this.getPromotion();
   },
+  conputed: {
+    title: function() {
+      let desc = '';
+      let activityType = this.activityType
+      if(activityType === 'reduce') {
+        // 满减
+        desc = ''
+      } else if (activityType === 'return') {
+        // 满返
+      } else if(activityType === 'discount') {
+        // 多件多折 
+      } else if(activityType === 'wholesale') {
+        // X元n件 
+      } else if(activityType === 'limit') {
+        // 限时特价 
+      } else if(activityType === 'quantity') {
+        // 限量秒杀 
+      } else if(activityType === 'give') {
+        // 买n免1 
+      }
+    }
+  },
   methods: {
+    promotionsInfo() {
+      let nowTime = new Date().getTime();
+      let pTime = new Date(this.promotions.promotion_start).getTime();
+      if(pTime > nowTime) {
+        this.startEndDesc = 'Start at';
+        this.bgColor = '#32B16C';
+      } else {
+        this.startEndDesc = 'End in';
+        this.bgColor = '#FD386B';
+      }
+    },
     // 促销列表
     getPromotion() {
       this.request('PromotionsList', {
@@ -41,9 +75,9 @@ export default {
       }).then((res) => {
         if(res.status === 200 && res.content) {
           this.goodsList = res.content.goods || [];
-          // this.promotions = res.content.promotions ||;
-          // this.promotions.promotion_start = new Date(this.promotions.promotion_start).getTime()
-          // this.promotions.promotion_end = new Date(this.promotions.promotion_end).getTime();
+          this.activityType = res.content.activityType;
+          this.promotions = res.content.promotions || '';
+          this.promotionsInfo();
         }
       }, err => {
         this.$Toast(err);
@@ -55,12 +89,11 @@ export default {
 <style lang="less">
 @import "~less/tool.less";
 .activity{
-  margin-top: 100/@rem;
-  height:120/@rem;
+  margin-top: 90/@rem;
   text-align: center;
-  color: #fff;
-  background-color: #32B16C;
   .activity-header{
+     height:120/@rem;
+     color: #fff;
     .title {
       font-size: 28/@rem;
       color: #FAFAFA;
