@@ -3,13 +3,13 @@
     <TopBar :title="`Profile`" :backUrl="`my`"></TopBar>
     <ul class="profile-ul">
       <li class="first">
-        <img class="head-img" src="~img/my/head.png">
+        <img class="head-img" :src="params.image">
         <div class="info">Edit</div>
         <i class="iconfont">&#xe62e;</i>
       </li>
       <li>
         <div class="label">Full Name</div>
-        <div class="info"><input type="text" v-model="name" placeholder="Full Name"></div>
+        <div class="info"><input type="text" v-model="params.name" placeholder="Full Name"></div>
         <i class="iconfont">&#xe62e;</i>
       </li>
       <li @click.capture="onGenderChange">
@@ -37,13 +37,12 @@
       </li>
       <li>
         <div class="label">Telephone</div>
-        <div class="info"><input type="text" v-model="params.member_since" ></div>
+        <div class="info"><input type="text" v-model="params.phone" ></div>
         <i class="iconfont">&#xe62e;</i>
       </li>
        <li>
         <div class="label">Email</div>
-        <div class="info"><input type="text" v-model="params.email" ></div>
-        <i class="iconfont">&#xe62e;</i>
+        <div class="info"><input type="text" v-model="params.email" readonly></div>
       </li>
       <li @click="toAddress">
         <div class="label">Shipping Address</div>
@@ -94,28 +93,16 @@ export default {
       }
     };
   },
-  computed: {
-    name: function() {
-      return this.params.first_name +　this.params.last_name;
-    }
-  },
-  created () {},
   mounted () {
-    let userInfo = localStorage.getItem('userInfo');
-    if(userInfo) {
-      userInfo = JSON.parse(userInfo);
-    }
-    this.params = userInfo
+    this.getUserInfo();
   },
   watch: {},
   methods: {
     getUserInfo() {
-      this.request('PersonalIncome', {
-        page: this.page
-      }).then((res) => {
+      this.request('PersonalInfo').then((res) => {
         if(res.status === 200 && res.content) {
-          this.incomes = res.content.incomes || [];
-          this.total_page = res.content.total_page
+          this.params = res.content;
+          this.params.birth = formatToHMS(this.params.birth);
         }
       }, err => {
         this.$Toast(err);
@@ -155,18 +142,12 @@ export default {
     },
     toAddress() {
       this.$router.push({
-        name: 'address'
+        name: 'shippingAddress'
       })
     },
     // 修改资料
     personalEdit() {
-      this.request('PersonalEdit', {
-        alias: '',
-        firstname: '',
-        lastname: '',
-        birthday: '',
-        email: ''
-      }).then((res) => {
+      this.request('PersonalEdit', this.params).then((res) => {
         if(res.status === 200 && res.content) {
           this.$router.push({
             name: 'my'

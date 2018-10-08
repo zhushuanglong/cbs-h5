@@ -48,16 +48,20 @@ export default {
     format: {
       type: String,
       default: 'dd-hh-mm-ss'
+    },
+    isEnd: {
+      type: Boolean,
+      default: false
     }
   },
   mounted() {
     if (!this.endTime) {
       this.data = {
-        day: '00',
-        hour: '00',
-        min: '00',
-        sec: '00',
-        ms: '01'
+        day: '-',
+        hour: '-',
+        min: '-',
+        sec: '-',
+        ms: '-'
       }
     } else {
       this.countdown(this.endTime);
@@ -65,7 +69,6 @@ export default {
   },
   watch: {
     endTime: function(val) {
-      console.log(val);
       this.countdown(val);
     }
   },

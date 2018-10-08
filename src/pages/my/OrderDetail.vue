@@ -211,8 +211,7 @@ export default {
   .address{
     position: relative;
     height: 117/@rem;
-    padding: 0 20/@rem;
-    padding-left: 60/@rem;
+    padding-left: 70/@rem;
     box-shadow:0px 1px 0px 0px rgba(221,220,220,1);
     padding-top: 27/@rem;
     .address-icon{

@@ -2,7 +2,7 @@
   <div class="my-main">
     <div class="my-top">
       <div class="my-top-info">
-        <router-link :to="{path: '/my/profile'}" class="img fl"><img class="head" :src="avator"></router-link>
+        <a class="img fl" href="javascript:;"><img class="head" :src="avator"></a>
         <div class="nickname fl" @click="userLogin">{{username}}</div>
       </div>
       <ul class="my-top-des">
@@ -77,9 +77,13 @@ export default {
   },
   methods: {
     userLogin() {
-      if(this.isLogin) {
+      if(!this.isLogin) {
         this.$router.push({
           path: '/my/sign',
+        })
+      } else {
+        this.$router.push({
+          path: '/my/profile',
         })
       }
     },

@@ -292,7 +292,13 @@ var setOnline = [
     name: 'logDetail',
     type: 'post',
     url: '/orders/logDetail'
-  }
+  },
+  {// 个人信息
+    name: 'personalInfo',
+    type: 'post',
+    url: '/personal/info'
+  },
+  
 ];
 
 // 输出配置项

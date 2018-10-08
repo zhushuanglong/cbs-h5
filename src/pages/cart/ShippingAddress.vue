@@ -1,6 +1,6 @@
 <template>
   <div class="shipping-address-main">
-    <topbar :title="'Shipping Address'" :backUrl="'cart/secure'"></topbar>
+    <topbar title="Shipping Address"></topbar>
     <div class="address-con">
       <div class="address-detail">
         <div class="info">
@@ -61,9 +61,10 @@
 
 <script>
 export default {
-  data () {},
+  data () {
+    return {}
+  },
   computed: {},
-  created () {},
   mounted () {},
   watch: {
     // 'isLogin': function () {

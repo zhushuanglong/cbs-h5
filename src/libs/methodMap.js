@@ -33,7 +33,9 @@ const methodMap = {
     /** 订单签收 **/
     OrdersSign: {url: '/orders/sign', method: 'post'},
     /** 物流信息 **/
-    OrdersLogDetail: {url: '/orders/logDetail', method: 'post'}
+    OrdersLogDetail: {url: '/orders/logDetail', method: 'post'},
+    /** 物流信息 **/
+    PersonalInfo: {url: '/personal/info', method: 'post'},
 };
 
 export default methodMap;

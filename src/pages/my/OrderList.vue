@@ -25,12 +25,12 @@ export default {
         {
           name: 'Shipping',
           active: false,
-          type: 2
+          type: 4
         },
         {
           name: 'All',
           active: true,
-          type: 3
+          type: 0
         }
       ],
       orders: [],
@@ -53,7 +53,7 @@ export default {
       this.getOrderList();
     },
     getOrderList() {
-      this.$http.post('/order/orderList').then((res) => {
+      this.$http.post('/order/orderList', this.params).then((res) => {
         res = res.data;
         if(res.status === 200 && res.data) {
           this.orders = res.data.orders;
