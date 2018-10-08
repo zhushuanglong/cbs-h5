@@ -4,29 +4,15 @@
       <router-link :to="{path: '/categories/search/fromcate'}" class="global-center search-bar">
         <div class="input fl">
           <i class="iconfont">&#xe66e;</i>
-          <input ref="inputSearchRef" type="text" placeholder="What are you looking for?">
+          <input type="text" placeholder="What are you looking for?">
         </div>
         <div class="btn-search">Search</div>
       </router-link>
     </div>
-    <div class="categories-con" v-show="!isSearchBlur">
+    <div class="categories-con">
       <div class="left">
         <ul>
-          <li>Women’s Clothing</li>
-          <li class="cur">Men</li>
-          <li>Kid & Toys</li>
-          <li>Baby & Mom</li>
-          <li>Bag</li>
-          <li>Women’s Clothing</li>
-          <li>Women’s Clothing</li>
-          <li>Women’s Clothing</li>
-          <li>Women’s Clothing</li>
-          <li>Women’s Clothing</li>
-          <li>Women’s Clothing</li>
-          <li>Women’s Clothing1</li>
-          <li>Women’s Clothing2</li>
-          <li>Women’s Clothing3</li>
-          <li>Women’s Clothing4</li>
+          <li v-for="(item, index) in categoriesArr" :class="{'cur': categoriesCur === index}" @click="clickCategories(index)">{{item.name}}</li>
         </ul>
       </div>
       <div class="detail">
@@ -35,25 +21,11 @@
           <div class="pos">All<i class="iconfont">&#xe62e;</i></div>
         </div>
         <ul>
-          <li>
-            <img src="https://gw3.alicdn.com/bao/uploaded/i1/1825922675/TB1l4q4wYwrBKNjSZPcXXXpapXa_!!0-item_pic.jpg_.webp">
-            <p>T-shirts</p>
-          </li>
-          <li>
-            <img src="https://gw3.alicdn.com/bao/uploaded/i1/1825922675/TB1l4q4wYwrBKNjSZPcXXXpapXa_!!0-item_pic.jpg_.webp">
-            <p>T-shirts</p>
-          </li>
-          <li>
-            <img src="https://gw3.alicdn.com/bao/uploaded/i1/1825922675/TB1l4q4wYwrBKNjSZPcXXXpapXa_!!0-item_pic.jpg_.webp">
-            <p>T-shirts</p>
-          </li>
-          <li>
-            <img src="https://gw3.alicdn.com/bao/uploaded/i1/1825922675/TB1l4q4wYwrBKNjSZPcXXXpapXa_!!0-item_pic.jpg_.webp">
-            <p>T-shirts</p>
-          </li>
-          <li>
-            <img src="https://gw3.alicdn.com/bao/uploaded/i1/1825922675/TB1l4q4wYwrBKNjSZPcXXXpapXa_!!0-item_pic.jpg_.webp">
-            <p>T-shirts</p>
+          <li v-for="item in categoriesArr">
+            <router-link :to="{path: '/categories/search/cate_' + item.name}">
+              <img src="https://gw3.alicdn.com/bao/uploaded/i1/1825922675/TB1l4q4wYwrBKNjSZPcXXXpapXa_!!0-item_pic.jpg_.webp">
+              <p>T-shirts</p>
+            </router-link>
           </li>
         </ul>
       </div>
@@ -67,26 +39,47 @@ export default {
   components: {},
   data () {
     return {
-      isSearchBlur: false, // 搜索框失去焦点
-      dataGoods: []
+      categoriesCur: 0,
+      categoriesArr: [
+        {
+          name: 'Men',
+        },
+        {
+          name: 'Kid & Toys',
+        },
+        {
+          name: 'Baby & Mom',
+        },
+        {
+          name: 'Baby & Mom',
+        },
+        {
+          name: 'Baby & Mom',
+        },
+        {
+          name: 'Baby & Mom',
+        },
+        {
+          name: 'Baby & Mom',
+        },
+        {
+          name: 'Baby & Mom',
+        },
+        {
+          name: 'Baby & Mom',
+        },
+        {
+          name: 'Baby & Mom',
+        }
+      ]
     };
   },
   computed: {},
   mounted () {},
   watch: {},
   methods: {
-    searchResult () {
-      // input失去焦点
-      this.$refs.inputSearchRef.blur();
-      this.isSearchBlur = true;
-      // 获取商品数据
-      this.dataGoods = [];
-    },
-    inputClick () {
-      this.isSearchBlur = false;
-    },
-    backUrl () {
-
+    clickCategories (index) {
+      this.categoriesCur = index;
     }
   },
   beforeDestroy () {}
@@ -141,6 +134,7 @@ export default {
     .left {
       float: left;
       height: 100%;
+      min-height: 10.7rem;
       overflow-y: scroll;
       width: 190/@rem;
       background-color: #F2F2F2;
@@ -148,7 +142,9 @@ export default {
         display: block;
         li {
           padding: 25/@rem;
+          padding-left: 19/@rem;
           line-height: 35/@rem;
+          border-left: 6/@rem solid #F2F2F2;
 
           &.cur {
             background-color: #fff;
