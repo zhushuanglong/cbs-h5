@@ -168,11 +168,20 @@ export default {
   computed: {},
   created() {
     let name = this.$route.params.name;
-    if (name !== 'fromcate') { // 'fromcate'是从分类页面刚进来的name
-      this.getProductsList({
+    if (name !== 'fromcate' && name !== null && name !== '') { // 'fromcate'是从分类页面刚进来的name
+      let cate = name.split('slcate_')[1];
+      let obj = {
         title: name,
         page: 1
-      });
+      };
+      // 如果是分类页面点击类别过来的搜索条件是cate_cate_xxx
+      if (cate) {
+        obj = {
+          cate,
+          page: 1
+        }
+      }
+      this.getProductsList(obj);
     }
   },
   mounted () {
