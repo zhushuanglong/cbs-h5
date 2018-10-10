@@ -13,13 +13,13 @@
       </div>
       <router-link class="detail" v-for="item in data.ordergoods" :to="{ name: 'orderDetail', query: {id: item.orderid, order_status: item.orderstatus}}">
         <div class="img fl">
-          <img :src="item.good_img">
+          <img :src="item.img">
         </div>
         <div class="info fl">
-          <div class="title">{{item.good_name}}</div>
+          <div class="title">{{item.name}}</div>
           <div class="sku" v-for="(ele, index) in item.sku_value">{{ele}}</div>
-          <div class="price">{{item.good_price}}</div>
-          <div class="num">x {{item.good_num}}</div>
+          <div class="price">{{item.price}}</div>
+          <div class="num">x {{item.num}}</div>
         </div>
       </router-link>
       <div class="operate clearfix">
