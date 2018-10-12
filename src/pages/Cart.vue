@@ -15,29 +15,29 @@
       <div class="cart-have">
         <div class="cart-enjoy">
           <span class="img"></span>
-          <span>Add $11.99 to enjoy</span>
-          <span>【Buy $599.99 Get $59.99 Off】</span>
+          <span>{{cartsData.promotion_msg}}</span>
           <i class="iconfont">&#xe62e;</i>
         </div>
         <div class="cart-list">
-          <div class="detail">
-            <div class="img fl">
-              <img src="https://gw3.alicdn.com/bao/uploaded/i1/1825922675/TB1l4q4wYwrBKNjSZPcXXXpapXa_!!0-item_pic.jpg_.webp">
-            </div>
-            <div class="info fl">
-              <div class="title">Button Up Front Plugin Pace Bird LALA HAHAHHAAHAH</div>
-              <div class="sku">White</div>
-              <div class="sku mt">S (175/92A)</div>
-              <div class="num">1 x $288.00</div>
-              <div class="price">$684.00</div>
-              <div class="reduce"><i class="iconfont">&#xe62a;</i></div>
-              <div class="add"><i class="iconfont">&#xe66f;</i></div>
-            </div>
+          <div class="detail" v-for="item in cartsData.goods">
+            <router-link :to="{path: '/detail/' + item.id}">
+              <div class="img fl">
+                <img :src="item.img">
+              </div>
+              <div class="info fl">
+                <div class="title">{{item.name}}</div>
+                <div class="sku" v-for="(prop, key, index) in item.props" :class="{'mt': index === 1}">{{prop}}</div>
+                <div class="num">{{item.num}} x ${{item.price}}</div>
+                <div class="price">${{ item.num * item.price}}.00</div>
+                <div class="reduce"><i class="iconfont">&#xe62a;</i></div>
+                <div class="add"><i class="iconfont">&#xe66f;</i></div>
+              </div>
+            </router-link>
           </div>
         </div>
         <div class="cart-discounts cart-rel">
           <div class="cart-label">Activity Discounts</div>
-          <div class="cart-pos">-$200.00</div>
+          <div class="cart-pos">{{cartsData.integral}}</div>
         </div>
         <div class="cart-coupon cart-rel">
           <div class="cart-label">Coupon <span class="gray2">( no coupons )</span></div>
@@ -46,8 +46,8 @@
           </div>
         </div>
         <div class="cart-points cart-rel">
-          <div class="cart-label">Activity Discounts <span class="label-des">( 635 points to use )</span></div>
-          <div class="cart-pos">-$6.35<mt-switch v-model="isDiscount"></mt-switch></div>
+          <div class="cart-label">Activity Discounts <span class="label-des">( {{cartsData.integral}} points to use )</span></div>
+          <div class="cart-pos">-${{cartsData.integral / 100}}<mt-switch v-model="isDiscount"></mt-switch></div>
         </div>
       </div>
       <div class="global-fixed-btn">
@@ -63,11 +63,14 @@ export default {
   components: {},
   data () {
     return {
-      isDiscount: false //
+      cartsData: [],
+      isDiscount: false
     };
   },
   computed: {},
-  created () {},
+  created () {
+    this.getCartData();
+  },
   mounted () {},
   watch: {
     // 'isLogin': function () {
@@ -75,7 +78,20 @@ export default {
     //   this.popupShow();
     // }
   },
-  methods: {},
+  methods: {
+    getCartData () {
+      this.$http.post('/carts', {}).then((res) => {
+        if (res && res.data && res.data.status) {
+          let data = res.data;
+          this.cartsData = data.content;
+        } else {
+          // @TODO 数据错误
+        }
+      }, () => {
+        // @TODO 网络错误
+      });
+    }
+  },
   beforeDestroy () {
     // this.$refs.indexMain.removeEventListener('scroll', this.dispatchScroll, false);
   }
@@ -101,9 +117,7 @@ export default {
       float: left;
       display: inline-block;
       font-size: 24/@rem;
-      &:nth-child(3) {
-        color: @red;
-      }
+      color: @red;
     }
     .img {
       .wh(60, 28);

@@ -17,29 +17,19 @@ var setOnline = [
     url: '/region/index'
   },
   {
-    name: 'cartMultipleStoreCartInfo',
+    name: 'carts',
     type: 'post',
-    url: '/cartMultipleStore/cartInfo'
+    url: '/carts'
   },
   {
-    name: 'cartCartInfo',
+    name: 'cartsAdd',
     type: 'post',
-    url: '/cart/cartInfo'
-  },
-  {
-    name: 'cartCombineCartInfo',
-    type: 'post',
-    url: '/cart/combineCartInfo'
+    url: '/carts/add'
   },
   {
     name: 'detail',
     type: 'post',
     url: '/detail'
-  },
-  {
-    name: 'cartCartTotalCount',
-    type: 'post',
-    url: '/cart/cartTotalCount'
   },
   {
     name: 'addressDelete',
@@ -298,7 +288,7 @@ var setOnline = [
     type: 'post',
     url: '/personal/info'
   },
-  
+
 ];
 
 // 输出配置项
