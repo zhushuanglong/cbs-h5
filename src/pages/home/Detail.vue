@@ -18,8 +18,8 @@
         </div>
       </div>
     </div>
-    <div class="detail-sku">
-      <div class="sku-label fl">Select {{this.goodsData.oneValue || `Color`}}{{this.goodsData.twoValue ||` , Size`}}{{this.goodsData.twoValue && this.goodsData.saleNum || ` & Quantiy`}}</div>
+    <div class="detail-sku" @click="footCartClick">
+      <div class="sku-label fl">Select {{this.goodsData.oneValue || `Color`}}&nbsp;,&nbsp;{{this.goodsData.twoValue ||`Size`}}&nbsp;&&nbsp;{{this.goodsData.twoValue && this.goodsData.saleNum || `Quantiy`}}</div>
       <i class="iconfont">&#xe62e;</i>
     </div>
     <div class="detail-info">
@@ -139,7 +139,6 @@ export default {
     }
   },
   created () {
-    // this.$store.dispatch('setTopbarTitle', 'Goods details');
     this.getDetailData();
   },
   mounted () {},

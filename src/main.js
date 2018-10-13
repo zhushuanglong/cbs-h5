@@ -2,7 +2,6 @@ import Vue from 'vue';
 import VueResource from 'vue-resource';
 import App from './App';
 import router from './router';
-import store from './vuex/store';
 import VueCookie from 'vue-cookie';
 import initComponents from './initComponents';
 import Http from './libs/http';
@@ -30,7 +29,6 @@ Vue.prototype.$MessageBox = MessageBox;
 new Vue({
   el: '#app',
   router,
-  store,
   template: '<App/>',
   components: { App }
 });
