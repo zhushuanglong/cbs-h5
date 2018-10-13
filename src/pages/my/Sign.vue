@@ -43,10 +43,15 @@ export default {
         if(!this.paramsValid()) {
           return;
         }
-        this.request('UsersRegister').then((res) => {
+        this.request('UsersRegister', this.params).then((res) => {
           if(res.status === 200 && res.content) {
             window.localStorage && window.localStorage.setItem('userToken', res.content.token);
-            window.localStorage && window.localStorage.setItem('userId', res.content.user_id)
+            window.localStorage && window.localStorage.setItem('userId', res.content.user_id);
+            this.$router.push({
+              name: 'my'
+            })
+          } else {
+            this.$Toast(res.msg)
           }
         }, err => {
           this.$Messagebox.alert(err);
@@ -68,7 +73,7 @@ export default {
           password: this.params.password
         }).then((res) => {
           if(res.status === 200 && res.content) {
-            window.localStorage && window.localStorage.setItem('userToke', res.content.token)
+            window.localStorage && window.localStorage.setItem('userToken', res.content.token)
             window.localStorage && window.localStorage.setItem('userInfo', JSON.stringify({
               first_name: res.content.first_name,
               last_name: res.content.last_name,
@@ -78,6 +83,8 @@ export default {
             this.$router.push({
               name: 'my'
             })
+          } else {
+            this.$Toast(res.msg)
           }
         }, err => {
           this.$Toast(err);
@@ -127,7 +134,7 @@ export default {
   }
   .signin-nocolor{
     margin-top: 50/@rem;
-    background-color: #fff;
+    background-color: transparent;
     color: #010101
   }
   .forget{

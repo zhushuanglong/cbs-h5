@@ -126,7 +126,7 @@ var setOnline = [
     // 优惠券
     name: 'couponList',
     type: 'post',
-    url: '/coupon/list'
+    url: '/personal/coupons'
   },
   {
     name: 'couponExchange',

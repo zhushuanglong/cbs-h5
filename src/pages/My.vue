@@ -1,12 +1,12 @@
 <template>
   <div class="my-main">
     <div class="my-top">
-      <div class="my-top-info">
+      <div class="my-top-info"  @click="userLogin">
         <a class="img fl" href="javascript:;">
           <img class="head" :src="avator" v-if="avator">
           <img class="head" src="~img/my/head.png" v-if="!avator">
         </a>
-        <div class="nickname fl" @click="userLogin">{{username}}</div>
+        <div class="nickname fl">{{username}}</div>
       </div>
       <ul class="my-top-des">
         <li v-for="item in tabs">
@@ -67,7 +67,7 @@ export default {
         funs: '0'
       },
       orders: [],
-      username: 'Sign In / Register',
+      username: '',
       isLogin: false
     };
   },
@@ -106,6 +106,9 @@ export default {
           this.username = res.content.username;
           this.orders = res.content.orders;
           this.isLogin = true;
+        } else{
+          this.username = 'Sign In / Register';
+          this.isLogin = false;
         }
       })
     },

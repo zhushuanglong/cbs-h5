@@ -45,9 +45,11 @@ AxiosInst.interceptors.response.use(response => {
     if (code === 402 || code === 403) {
         window.localStorage.removeItem('userInfo');
         window.localStorage.removeItem('userToken');
-        router.push({
-            name: 'my'
-        });
+        setTimeout(() => {
+            router.push({
+                name: 'my'
+            });
+        }, 1000)
         return Promise.reject(response);
         //return response;
     }
