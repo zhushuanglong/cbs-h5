@@ -2,7 +2,10 @@
   <div class="my-main">
     <div class="my-top">
       <div class="my-top-info">
-        <a class="img fl" href="javascript:;"><img class="head" :src="avator"></a>
+        <a class="img fl" href="javascript:;">
+          <img class="head" :src="avator" v-if="avator">
+          <img class="head" src="~img/my/head.png" v-if="!avator">
+        </a>
         <div class="nickname fl" @click="userLogin">{{username}}</div>
       </div>
       <ul class="my-top-des">
@@ -23,7 +26,8 @@
       </router-link>
     </div>
     <div class="index-order">
-      <Order v-for="item in orders" :data="item"></Order>
+      <Order v-for="item in orders" :key="item.id" :data="item" v-if="orders && orders.length"></Order>
+      <pageempty icon="&#xe693;" :margin-top="50" desc="You have no orders yet!" v-if="orders.length === 0"></pageempty>
     </div>
     <BottomBar></BottomBar>
   </div>
@@ -57,11 +61,13 @@ export default {
       }],
       avator: '', //头像
       cardData: {
-        money: 0,
-        integral: 0,
+        money: '0',
+        income: '0',
+        wait_account: '0',
+        funs: '0'
       },
       orders: [],
-      username: '',
+      username: 'Sign In / Register',
       isLogin: false
     };
   },
@@ -90,14 +96,13 @@ export default {
     // 个人主页
     getPersonalIndex() {
       this.request('PersonalIndex').then((res) => {
-        if(res.status === 200) {
+        if(res.status === 200 && res.content) {
           this.avator = res.content.img; //头像
           this.cardData.money = res.content.money; // 用户余额
           this.cardData.integral = res.content.integral; // 积分
           this.cardData.wait_account=  res.content.wait_account; // 待入账
           this.cardData.income = res.content.income; // 收入
           this.cardData.funs = res.content.funs;
-          this.order = res.content.order;
           this.username = res.content.username;
           this.orders = res.content.orders;
           this.isLogin = true;

@@ -11,7 +11,7 @@ const methodMap = {
     /** 用户中心 **/
     PersonalIndex: {url: '/personal/index', method: 'post'},
     /** 积分详情 **/
-    PersonalIntegral: {url: ' /personal/integral', method: 'post'},
+    PersonalIntegral: {url: '/personal/integral', method: 'post'},
     /** 优惠券列表 **/
     CouponList: {url: '/coupon/list', method: 'post'},
     /** 交易流水 **/

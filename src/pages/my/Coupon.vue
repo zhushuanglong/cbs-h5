@@ -8,14 +8,14 @@
       </div>
       <div class="coupon-list" v-if="couponList && couponList.length > 0">
         <!-- 优惠券状态 1-可用 2-未开始 3-已过期未使用 4-已使用 -->
-        <div class="coupon-item" :class="item.datestatus === 1 ? 'able': 'disable'" v-for="item in couponList">
+        <div class="coupon-item" :class="item.datestatus === 1 ? 'able': 'disable'" v-for="item in couponList" :key="item.id">
           <p class="title">${{item.use_price}} OFF</p>
           <p class="desc">{{item.text}}</p>
           <p class="use-time">{{item.startdate}} - {{item.enddate}}</p>
           <div class="use-flag-img" :class="{'expired': item.datestatus === 3, 'used': item.datestatus === 4}"></div>
         </div>
       </div>
-      <pageempty v-if="couponList && couponList.length === 0" icon="&#xe691;" desc="You don‘t have any available coupons now!"></pageempty>
+      <pageempty :margin-top="185" v-if="couponList && couponList.length === 0" icon="&#xe691;" desc="You don‘t have any available coupons now!"></pageempty>
     </div>
   </div> 
 </template>
@@ -51,10 +51,11 @@ export default {
 .my-coupon{
   padding-top: 90/@rem;
   .c-search{
+    margin-top: 20/@rem;
     position: relative;
     padding: 0 33/@rem;
     height: 80/@rem;
-    line-break: 80/@rem;
+    line-height: 80/@rem;
   }
   .s-input{
     width: 684/@rem;

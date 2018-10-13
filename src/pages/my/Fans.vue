@@ -27,12 +27,7 @@
 export default {
   data() {
     return {
-      fans: [{
-        avator: 'http://www.qqzhi.com/uploadpic/2014-10-14/112402345.jpg',
-        name: ' Reward',
-        time: '2017-01-01 11:07:49',
-        price: '40'
-      }],
+      fans: [],
       page: 1,
       total_page: 1
     }
@@ -51,7 +46,7 @@ export default {
           this.total_page = res.content.total_page
         }
       }, err => {
-        this.$Toast(err);
+        this.$Toast(err.data.msg);
       })
     }
   }

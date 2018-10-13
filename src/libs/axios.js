@@ -1,6 +1,7 @@
 import axios from 'axios';
 import Qs from 'qs';
 import router from 'src/router';
+import projectConfig from '../../config'
 const config = {
     //baseURL: '',
     timeout: 200000, //
@@ -45,18 +46,19 @@ AxiosInst.interceptors.response.use(response => {
         window.localStorage.removeItem('userInfo');
         window.localStorage.removeItem('userToken');
         router.push({
-            name: '/login'
+            name: 'my'
         });
         return Promise.reject(response);
         //return response;
     }
     return response;
 }, (error) => {
+    console.log(error)
     // 下面是接口回调的status ,因为我做了一些错误页面,所以都会指向对应的报错页面
-    if (error.response.status === 404) {
-        router.push({
-            name: '404'
-        });
+    if (error.response && error.response.status === 404) {
+        // router.push({
+        //     name: '404'
+        // });
     }
     //请求错误时做些事
     return Promise.reject(error);
