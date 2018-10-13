@@ -74,10 +74,6 @@ export default {
   },
   mounted () {},
   watch: {
-    // 'isLogin': function () {
-    //   this.pageInit();
-    //   this.popupShow();
-    // },
     'isUsePoint': function (value) {
       // 积分的使用
       if (value) {
@@ -131,7 +127,7 @@ export default {
       // 函数节流
       self.addSt = setTimeout(function() {
         self.$http.post('/carts/add', {
-          token: '', // @TODO
+          token: localStorage.userToken || '',
           good_id: item.id,
           sku_id: item.sku_id,
           num: item.num
@@ -159,9 +155,14 @@ export default {
     },
     // 提交购物车
     submitCart () {
-      // TODO 判定是否登录
+      // 判定是否有登录token
+      if (!localStorage.userToken) {
+        // 去登录页面
+        this.$router.push({path: '/my/sign'});
+        return;
+      }
       this.$http.post('/orders/checkout', {
-        token: '', // @TODO
+        token: localStorage.userToken,
         type: 2,	// 是	Number	单订来源(1：PC端，2：H5，4：APP)
         coupon_id: '',	// 是	String或者null	优惠券id 没有则为空
         integral: '',	// 是	Boolean	积分是否选择 ture或者false
@@ -206,7 +207,7 @@ export default {
     }
     .img {
       .wh(60, 28);
-      background: url('~img/detail/2.png');
+      background: url('~img/detail/s2.png');
       background-size: 100% auto;
       margin: 22/@rem;
       margin-right: 10/@rem;

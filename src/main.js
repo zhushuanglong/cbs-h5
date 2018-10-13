@@ -16,9 +16,10 @@ import { remChange } from './components/basic/remChange';
 remChange();
 
 import 'less/mint/switch.less';
-import { Switch, MessageBox, Toast, Indicator } from 'mint-ui';
+import { Switch, MessageBox, Toast, Indicator, Lazyload } from 'mint-ui';
 Vue.component(Switch.name, Switch);
 Vue.component(MessageBox.name, MessageBox);
+Vue.use(Lazyload);
 // Vue.component(Indicator.name, Indicator);
 
 Vue.prototype.$Toast = Toast;

@@ -18,32 +18,53 @@
         </div>
       </div>
     </div>
+
+    <ul class="detail-something">
+      <li class="detail-coupon">
+        <img src="~img/detail/s1.png">
+        <span class="gray2">（Rewards {{data.coupon.length}}）</span>
+        <span class="span1">Recive</span>
+        <i class="iconfont">&#xe62e;</i>
+      </li>
+      <li class="detail-sale">
+        <img src="~img/detail/s2.png">
+        {{data.promotion.role}}
+        <span class="span2">More</span>
+        <i class="iconfont">&#xe62e;</i>
+      </li>
+      <li class="detail-point">
+        <img src="~img/detail/s3.png">
+        Earn {{data.max_integral}} Points，100 points equals to U.S. $1.00
+        <i class="iconfont">&#xe62e;</i>
+      </li>
+    </ul>
+
     <div class="detail-sku" @click="footCartClick">
       <div class="sku-label fl">Select {{this.goodsData.oneValue || `Color`}}&nbsp;,&nbsp;{{this.goodsData.twoValue ||`Size`}}&nbsp;&&nbsp;{{this.goodsData.twoValue && this.goodsData.saleNum || `Quantiy`}}</div>
       <i class="iconfont">&#xe62e;</i>
     </div>
+
     <div class="detail-info">
       <div class="title">Description</div>
       <ul class="info-main">
-        <li v-for="(prop, index) in data.prop">
-          <div class="label fl">{{prop.split(':') && prop.split(':')[0]}}</div>
-          <div class="des fl">{{prop.split(':') && prop.split(':')[1]}}</div>
+        <li v-for="(prop, key, index) in data.prop">
+          <div class="label fl">{{key}}</div>
+          <div class="des fl">{{prop}}</div>
         </li>
       </ul>
     </div>
+
     <div class="detail-imglist">
-      <img src="http://img.alicdn.com/imgextra/i1/792382564/TB2cX1GoRHH8KJjy0FbXXcqlpXa_!!792382564.jpg_640x640q85s150_.webp">
-      <img src="https://img.alicdn.com/imgextra/i4/792382564/TB263aGoRHH8KJjy0FbXXcqlpXa_!!792382564.jpg_640x0q85s150_.webp">
-      <img src="https://img.alicdn.com/imgextra/i1/792382564/TB2HK5JoJrJ8KJjSspaXXXuKpXa_!!792382564.jpg_640x0q85s150_.webp">
-      <img src="https://img.alicdn.com/imgextra/i2/792382564/TB27rsfnz3z9KJjy0FmXXXiwXXa_!!792382564.jpg_640x0q85s150_.webp">
+      <img v-for="item in data.images" v-lazy="item">
     </div>
+
     <div class="detail-foot" @click="footCartClick">
       <div class="pos-rel">
         <div class="price">${{goodsData.price}}</div>
         <i class="iconfont">&#xe624;</i>
       </div>
     </div>
-    <div class="detail-float-menu">
+    <div class="detail-float-menu" v-show="isShowFloatMenu">
       <div class="btn-menu" :class="{'cur': isBackMenuShow}" @click="backMenuClick">{{isBackMenuShow ? 'BACK' : 'MENU'}}</div>
       <ul class="a-fadeinB" :class="{'show': isBackMenuShow}">
         <li>
@@ -105,7 +126,7 @@
             </a>
           </div>
         </div>
-        <div class="sku-ok" @click="skuOkClick">OK</div>
+        <div class="sku-ok" @click="submitClick">OK</div>
         <i class="iconfont sku-close" @click="skuCloseClick">&#xe63f;</i>
       </div>
     </div>
@@ -124,6 +145,7 @@ export default {
   data () {
     return {
       data: {},
+      isShowFloatMenu: false, // 浮动menu
       goodsData: {
         saleNum: 1
       }, // 选中的商品信息
@@ -135,17 +157,29 @@ export default {
       isPopupSkuShow: false, // 弹出SKU
       imgNum: 0, // sku中展示的图片
       oneSkuNum: 0, // sku第一排动态属性高亮
-      el: {} // dom 集合
+      el: {}, // dom 集合
+      skuId: null, // sku id
+      submitLocked: false // 提交锁
     }
   },
   created () {
     this.getDetailData();
   },
-  mounted () {},
+  mounted () {
+    let self = this;
+    let t = document.documentElement.scrollTop || document.body.scrollTop;
+    let h = document.documentElement.clientHeight || document.body.clientHeight;
+    window.onscroll = function () {
+      t = document.documentElement.scrollTop || document.body.scrollTop;
+      self.isShowFloatMenu = t >= h * 1.5;
+    }
+    self.isShowFloatMenu = t >= h * 1.5;
+  },
   watch: {},
   methods: {
     // 获取详情页基础数据
     getDetailData () {
+      
       this.$http.post('/detail', {}).then((res) => {
         if (res && res.data && res.data.status) {
           let {data} = res.data;
@@ -224,12 +258,11 @@ export default {
         oneValue: oneSku.value, // 选中一层属性值
         twoValue: '', // 选中二层属性值
         img: '', // 展示图片
-        price: oneSku.supply_price || oneSku.max_price || 0, // @TODO
+        price: oneSku.prom_price || oneSku.price,
         stock: oneSku.stock,
         saleNum: 1 // 购物数量
       };
-
-
+      this.skuId = null; // 第二属性没选
       // 第二属性处理
       let subArr = oneSku.sub || [];
       let subLen = subArr.length;
@@ -255,6 +288,8 @@ export default {
       this.goodsData.price = arr.prom_price || arr.price;
       this.goodsData.stock = arr.stock;
       this.goodsData.twoValue = arr.value;
+      this.goodsData.saleNum = 1;
+      this.skuId = arr.id; // SKU ID
     },
     // 联动swipe图片 - 第一排sku属性点击
     oneSkuClickSwipeHandler () {
@@ -370,26 +405,41 @@ export default {
       this.isPopupSkuShow = true;
     },
     // OK - 提交表单
-    skuOkClick () {
-      // 1. 判定是否登录  TODO
-      // 2. 判定是否加入购物车
-      this.$http.post('/cart/add', {
-        good_id: 1,
-        num: 1,
-        type: 2,
-        sub_id: 233,
-        token: 1,
-        key: 1
+    submitClick () {
+      // 判定是否选择完毕
+      if (!this.skuId) {
+        this.$Toast('Please select your ' + this.goodsData.subArr[0].name);
+        return;
+      }
+      // 提交锁
+      if (this.submitLocked) {
+        return;
+      }
+      
+      if (!this.submitLocked) {
+        this.submitLocked = true;
+      }
+      // 提交表单
+      this.$http.post('/carts/add', {
+        token: localStorage.userToken || '',
+        good_id: +this.$route.params.id,
+        sku_id: +this.skuId,
+        num: +this.goodsData.num
       }).then((res) => {
         if (res && res.data && res.data.status) {
-          // @TODO
+          document.body.scrollTop = document.documentElement.scrollTop = 0; // 滚动到顶部
+          this.submitLocked = false; // 解锁
           this.isMaskShow = false;
           this.isPopupSkuShow = false;
+          // 跳转到购物车
+          this.$router.push({
+            path: '/cart'
+          });
         } else {
-          // @TODO
+          this.submitLocked = false; // 解锁
         }
       }, () => {
-        // @TODO 网络错误
+        this.submitLocked = false; // 解锁
       });
     },
     // 弹出SKU点击关闭
@@ -404,6 +454,7 @@ export default {
 <style lang="less">
 @import "~less/tool.less";
 .detail-main {
+  padding-bottom: 90/@rem;
   .detail-swipe {
     .big-img-swipe {
       height: 750/@rem;
@@ -458,6 +509,41 @@ export default {
     }
   }
 
+  .detail-something {
+    display: block;
+    margin-top: 20/@rem;
+    li {
+      position: relative;
+      padding: 0 20/@rem;
+      width: 750/@rem;
+      .height(84);
+      background-color: #fff;
+      border-bottom: 1px solid @gray3;
+      img {
+        .wh(60, 28);
+        vertical-align: top;
+        margin-top: 27/@rem;
+      }
+      .span1, .span2 {
+        position: absolute;
+        top: 0;
+        right: 60/@rem;
+        font-size: 10/@rem;
+        transform: scale(.85);
+        color: #1EBDFD;
+      }
+      .span2 {
+        color: @red;
+      }
+      i {
+        position: absolute;
+        z-index: 1;
+        right: 20/@rem;
+        color: @gray2;
+      }
+    }
+  }
+
   .detail-sku {
     position: relative;
     padding: 0 20/@rem;
@@ -466,7 +552,6 @@ export default {
     height: 84/@rem;
     background-color: #fff;
     line-height: 84/@rem;
-    .sku-label {}
     i {
       position: absolute;
       z-index: 1;
@@ -494,11 +579,12 @@ export default {
         height: 44/@rem;
         line-height: 44/@rem;
         .label {
-          width: 155/@rem;
+          width: 200/@rem;
           color: #535353;
+          .line1();
         }
         .des {
-          width: 555/@rem;
+          width: 500/@rem;
           color: @gray2;
         }
       }
