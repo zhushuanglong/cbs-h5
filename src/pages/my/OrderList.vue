@@ -7,7 +7,8 @@
       </li>
     </ul>
     <div class="order-list">
-      <order v-for="item in orders" :data="item" :key="item.orderid"></order>
+      <order v-for="item in orders" :data="item" :key="item.orderid" v-if="orders.length"></order>
+      <pageempty icon="&#xe637;" :margin-top="200" desc="You have no related orders yet!" v-if="orders.length === 0" ></pageempty>
     </div>
   </div>
 </template>
@@ -53,14 +54,14 @@ export default {
       this.getOrderList();
     },
     getOrderList() {
-      this.$http.post('/order/orderList', this.params).then((res) => {
-        res = res.data;
-        if(res.status === 200 && res.data) {
-          this.orders = res.data.orders;
+      this.request('OrdersList', this.params).then((res) => {
+        if(res.status === 200) {
+          this.orders = res.content.orderData || [];
+        } else {
+          this.$Toast(res.msg);
         }
       }, err => {
-
-      }).catch((err) => {
+        this.$Toast(err.data.msg);
       })
     }
   }
@@ -70,7 +71,7 @@ export default {
 <style lang="less">
 @import "~less/tool.less";
 .c-order{
-  padding-top: 100/@rem;
+  padding-top: 90/@rem;
   .order-tabs{
     padding: 0 5/@rem;
     height: 88/@rem;

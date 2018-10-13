@@ -9,8 +9,9 @@ const config = {
     withCredentials: true,
     headers: {'Content-Type': 'application/x-www-form-urlencoded', 'X-Requested-With': 'XMLHttpRequest'},
     transformRequest: [function (data) {
+        console.log(data)
         // 这里可以在发送请求之前对请求数据做处理，比如form-data格式化等，这里可以使用开头引入的Qs（这个模块在安装axios的时候就已经安装了，不需要另外安装）
-        if (window.localStorage.getItem('userToken')) {
+        if (window.localStorage.getItem('userToken') && data) {
             data['token'] = window.localStorage.getItem('userToken');
         }
         data = Qs.stringify(data);
@@ -45,9 +46,11 @@ AxiosInst.interceptors.response.use(response => {
     if (code === 402 || code === 403) {
         window.localStorage.removeItem('userInfo');
         window.localStorage.removeItem('userToken');
-        router.push({
-            name: 'my'
-        });
+        setTimeout(() => {
+            router.push({
+                name: 'my'
+            });
+        }, 1000)
         return Promise.reject(response);
         //return response;
     }

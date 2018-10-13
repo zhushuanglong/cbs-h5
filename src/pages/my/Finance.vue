@@ -13,6 +13,10 @@
             <p class="item item1 clearfix"><span class="name fl">{{item.operate_type}}</span><span class="time fr">{{item.created_at}}</span></p>
             <p class="item item2 clearfix"><span class="detail fl">{{item.operate_description}}</span><span class="price fr" :style="{'color': item.amount > 0 ? '#FF0000' : '#9ABD00'}">{{item.amount > 0 ? '+ $' + Math.abs(item.amount) : '- &' + Math.abs(item.amount)}}</span></p>
           </div>
+         
+        </div>
+        <div class="empty" v-if="finance.length === 0">
+          No history so far
         </div>
       </div>
     </div>
@@ -33,8 +37,8 @@ export default {
     getFinanceDetail() {
       this.request('PersonalFinance').then((res) => {
         if(res.status === 200) {
-          this.money = res.content.money;
-          this.finance = res.content.finance;
+          this.money = res.content.money ;
+          this.finance = res.content.finance || [];
         }
       })
     }
@@ -112,6 +116,13 @@ export default {
       span{
         display: inline-block;
       }
+      
+    }
+    .empty{
+      color: #302F2F;
+      font-size: 28/@rem;
+      padding-top: 37/@rem;
+      padding-bottom: 50/@rem;
     }
   }
 }

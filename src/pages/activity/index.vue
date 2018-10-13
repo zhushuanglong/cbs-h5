@@ -42,7 +42,8 @@ export default {
       startEndDesc: '',
       isEnd: false,
       couponShow: false,
-      coupons: []
+      coupons: [],
+      activityId: 0,
     }
   },
   components: {
@@ -50,6 +51,7 @@ export default {
     GoodsList
   },
   mounted() {
+    this.activityId = this.$route.query.activity_id || 0
     this.getPromotion();
   },
   conputed: {
@@ -100,7 +102,8 @@ export default {
     // 促销列表
     getPromotion() {
       this.request('PromotionsList', {
-        page: this.page
+        page: this.page,
+        promotion_id: this.activityId
       }).then((res) => {
         if(res.status === 200 && res.content) {
           this.goodsList = res.content.goods || [];

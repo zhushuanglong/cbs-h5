@@ -5,8 +5,8 @@
         <div class="confirm-content">{{content}}</div>
         <div class="confirm-footer">
           <div v-if="type === 'confirm'" class="confirm-type-a">
-            <a href="javascript:;" @click="cancle">{{cancleText}}</a>
-            <a href="javascript:;" @click="sure">{{okText}}</a>
+            <a href="javascript:;" class="cancle" @click="cancle">{{cancleText}}</a>
+            <a href="javascript:;" class="sure" @click="sure">{{okText}}</a>
           </div>
           <div v-else class="confirm-type-b">
             <a href="javascript:;" @click="sure">{{okText}}</a>
@@ -81,7 +81,7 @@ export default {
     background: #fff;
     width: 600/@rem;
     border-radius: 16/@rem;
-    padding: 57/@rem 50/@rem 0;
+    padding-top: 57/@rem;
     margin: 0 auto;
     position: absolute;
     top: 50%;
@@ -122,6 +122,9 @@ export default {
     }
     .confirm-type-b a{
       width: 100%;
+    }
+    .cancle{
+      border-right: 1px solid #E4E4E4;
     }
   }
   

@@ -17,13 +17,13 @@
         </div>
         <div class="detail" v-for="item in ordergoods">
           <div class="img fl">
-            <img :src="item.good_img">
+            <img :src="item.img">
           </div>
           <div class="info fl">
-            <div class="title">{{item.good_name}}</div>
+            <div class="title">{{item.name}}</div>
             <div class="sku" v-for="(ele, index) in item.sku_value">{{ele}}</div>
-            <div class="price">{{item.good_price}}</div>
-            <div class="num">x {{item.good_num}}</div>
+            <div class="price">${{item.price}}</div>
+            <div class="num">x {{item.num}}</div>
           </div>
         </div>
       </div>
@@ -35,10 +35,10 @@
       <div class="operate clearfix">
         <!-- 订单状态(订单状态 1-待付款 3-待发货 4-待收货 5-交易完成 6-交易取消 ) -->
         <!-- TODO 代付款  按钮是红色   其他时候都是正常颜色 -->
-        <div class="operate-two" v-if="orderHandle.pay">Pay now{{this.finalAmount}}</div>
-        <div class="operate-two" @click="handleCollect" v-if="orderHandle.collect">I get it</div>
-        <div class="" @click="getLogistics" v-if="orderHandle.logistic">Logistics Info</div>
-        <div class="" v-if="orderHandle.delete" @click="handleDelete">Delete</div>
+        <div class="operate-item operate-two" v-if="orderHandle.pay">Pay now{{this.finalAmount}}</div>
+        <div class="operate-item operate-two" @click="handleCollect" v-if="orderHandle.collect">I get it</div>
+        <div class="operate-item" @click="getLogistics" v-if="orderHandle.logistic">Logistics Info</div>
+        <div class="operate-item" v-if="orderHandle.delete" @click="handleDelete">Delete</div>
       </div>
     </div>
     <confirm :show.sync="confirmModal.show" :title="confirmModal.title"  :content="confirmModal.content" :on-ok="confirmModal.action"  okText="Yes"></confirm>
@@ -72,7 +72,8 @@ export default {
     }
   },
   mounted() {
-    // this.orderstatus = this.$router.query && this.$router.query.order_status || '';
+    this.orderid = this.$route.query.orderid;
+    // this.orderstatus = this.$route.query && this.$route.query.order_status || '';
     this.getOrderDetail();
   },
   computed: {},
@@ -110,7 +111,9 @@ export default {
     },
     // 订单详情
     getOrderDetail() {
-      this.request('OrdersDetail').then((res) => {
+      this.request('OrdersDetail', {
+        order_id: this.orderid
+      }).then((res) => {
         if(res.status === 200 && res.content) {
           this.ordergoods = res.content.ordergoods;
           this.orderstatus = res.content.orderstatus;
@@ -157,6 +160,7 @@ export default {
         order_id: this.orderid
       }).then((res) => {
         if(res.status === 200) {
+          this.getOrderDetail();
           this.$Toast(res.msg)
         }
       }, err => {
@@ -178,7 +182,7 @@ export default {
 <style lang="less">
 @import "~less/tool.less";
 .order-detail{
-  margin-top: 100/@rem;
+  margin-top: 90/@rem;
   background-color: #fff;
   .page-title{
     color: #fff;
@@ -241,7 +245,7 @@ export default {
       position: relative;
       width: 100%;
       height: 100/@rem;
-      padding: 10/@rem 60/@rem;
+      padding: 10/@rem 70/@rem;
       color: #939399;
       font-size: 24/@rem;
       margin-bottom: 20/@rem;
@@ -288,12 +292,12 @@ export default {
   .operate {
     position: relative;
     width: 100%;
-    height: 100/@rem;
     border-top: 1px solid #f0f0f3;
-    padding-top: 20/@rem;
+    .operate-item{
+      margin: 20/@rem 10/@rem;
+    }
     & > div {
       float: right;
-      margin-right: 10/@rem;
       .whl(162, 60);
       border-radius: 50/@rem;
       border: 1px solid @gray2;

@@ -14,6 +14,9 @@
           <div class="price fr">{{item.amount > 0 ? '+ $' + Math.abs(item.amount) : '- $' + Math.abs(item.amount)}}</div>
         </li>
       </ul>
+      <div class="empty" v-if="incomes.length === 0">
+        No history so far
+      </div>
     </div>
   </div>
 </template>
@@ -112,6 +115,12 @@ export default {
     font-size: 28/@rem;
     line-height: 100/@rem;
     font-weight: 400
+  }
+   .empty{
+    color: #302F2F;
+    font-size: 28/@rem;
+    padding-top: 37/@rem;
+    padding-bottom: 50/@rem;
   }
 
 }
