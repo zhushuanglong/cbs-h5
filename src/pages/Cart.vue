@@ -162,11 +162,11 @@ export default {
         return;
       }
       this.$http.post('/orders/checkout', {
-        token: localStorage.userToken,
+        token: localStorage.userToken || '',
         type: 2,	// 是	Number	单订来源(1：PC端，2：H5，4：APP)
         coupon_id: '',	// 是	String或者null	优惠券id 没有则为空
-        integral: '',	// 是	Boolean	积分是否选择 ture或者false
-        date: Date.parse(new Date())	//否	string	用户本地时间
+        integral: this.isUsePoint,	// 是	Boolean	积分是否选择 ture或者false
+        date: Date.parse(new Date())	// 否	string	用户本地时间
       }).then((res) => {
         if (res && res.data && res.data.status) {
           this.$router.push({path: '/cart/secure/' + res.data.content});

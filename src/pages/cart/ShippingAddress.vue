@@ -1,6 +1,6 @@
 <template>
   <div class="shipping-address-main">
-    <topbar title="Shipping Address"></topbar>
+    <topbar title="Shipping Address" :backUrl="'cart/secure/' + $route.params.orderId"></topbar>
     <div class="address-con">
       <div class="address-detail">
         <div class="info">
@@ -14,14 +14,14 @@
       </div>
       <div class="operate">
         <div class="fl">
-          <input type="radio">
+          <input type="radio" name="radio">
           Set as Default Shipping Address
         </div>
         <div class="fr">
-          <div class="edit">
+          <div class="edit" @click="edit()">
             <i class="iconfont">&#xe621;</i>Edit
           </div>
-          <div class="delete">
+          <div class="delete" @click="del()">
             <i class="iconfont">&#xe63d;</i>Delete
           </div>
         </div>
@@ -40,7 +40,7 @@
       </div>
       <div class="operate">
         <div class="fl">
-          <input type="radio">
+          <input type="radio" name="radio">
           Set as Default Shipping Address
         </div>
         <div class="fr">
@@ -54,7 +54,7 @@
       </div>
     </div>
     <div class="global-fixed-btn">
-      <div class="fixed-btn">SAVE</div>
+      <router-link :to="{'path': '/cart/addAddress'}" class="fixed-btn">+ ADD NEW ADDRESS</router-link>
     </div>
   </div>
 </template>
@@ -66,16 +66,16 @@ export default {
   },
   computed: {},
   mounted () {},
-  watch: {
-    // 'isLogin': function () {
-    //   this.pageInit();
-    //   this.popupShow();
-    // }
+  watch: {},
+  methods: {
+    edit (addressId) {
+      this.$router.push({path: '/cart/editAddress/' + addressId}); // TODO 去编辑
+    },
+    del () {
+      console.log(12);
+    }
   },
-  methods: {},
-  beforeDestroy () {
-    // this.$refs.indexMain.removeEventListener('scroll', this.dispatchScroll, false);
-  }
+  beforeDestroy () {}
 };
 </script>
 
@@ -117,6 +117,7 @@ export default {
     .clearfix();
     .fl input {
       margin-left: 15/@rem;
+      margin-top: 0;
       .wh(34, 34);
     }
     .fr {

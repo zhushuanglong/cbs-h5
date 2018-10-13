@@ -53,7 +53,7 @@ export default new Router({
     },
     {
       name: 'secure',
-      path: '/cart/secure',
+      path: '/cart/secure/:orderId',
       component: function (resolve) {
         require.ensure([], function () {
           resolve(require('pages/cart/Secure'));
@@ -62,7 +62,7 @@ export default new Router({
     },
     {
       name: 'addAddress',
-      path: '/cart/addAddress',
+      path: '/cart/addAddress/:orderId',
       component: function (resolve) {
         require.ensure([], function () {
           resolve(require('pages/cart/AddAddress'));
@@ -71,7 +71,7 @@ export default new Router({
     },
     {
       name: 'shippingAddress',
-      path: '/cart/shippingAddress',
+      path: '/cart/shippingAddress/:orderId',
       component: function (resolve) {
         require.ensure([], function () {
           resolve(require('pages/cart/ShippingAddress'));

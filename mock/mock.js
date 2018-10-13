@@ -37,24 +37,9 @@ var setOnline = [
     url: '/detail'
   },
   {
-    name: 'addressDelete',
+    name: 'addressAdd',
     type: 'post',
-    url: '/address/delete'
-  },
-  {
-    name: 'addressEditAddress',
-    type: 'post',
-    url: '/address/editAddress'
-  },
-  {
-    name: 'addressDefaultAddress',
-    type: 'post',
-    url: '/address/defaultAddress'
-  },
-  {
-    name: 'storeDecodeAddress',
-    type: 'post',
-    url: '/store/decodeAddress'
+    url: '/address/add'
   },
   {
     name: 'productsList',
@@ -144,29 +129,9 @@ var setOnline = [
     url: '/orders/checkout'
   },
   {
-    name: 'orderOrderList',
+    name: 'ordersPayment',
     type: 'post',
-    url: '/order/orderList'
-  },
-  {
-    name: 'orderOrderDetail',
-    type: 'post',
-    url: '/order/orderDetail'
-  },
-  {
-    name: 'orderOrderDetail',
-    type: 'post',
-    url: '/order/orderDetail'
-  },
-  {
-    name: 'orderOrderSignIntegral',
-    type: 'post',
-    url: '/order/orderSignIntegral'
-  },
-  {
-    name: 'orderDelOrder',
-    type: 'post',
-    url: '/order/delOrder'
+    url: '/orders/payment'
   },
   {// 交易流水
     name: 'personalFinance',
