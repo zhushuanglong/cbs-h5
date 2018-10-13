@@ -1,6 +1,5 @@
 <template>
   <div class="home-main" ref="indexMain">
-    <!-- <New :data="new_goods"></New> -->
     <Goods :data="store_goods"></Goods>
     <bottombar></bottombar>
   </div>
@@ -8,18 +7,15 @@
 
 <script>
 import Goods from './home/Goods.vue';
-import New from './home/New.vue';
 
 export default {
   name: 'home',
   components: {
-    Goods,
-    New
+    Goods
   },
   data () {
     return {
-      store_goods: [], // 商品数据
-      new_goods: [] // 上新
+      store_goods: [] // 商品数据
     };
   },
   computed: {},
@@ -33,8 +29,7 @@ export default {
         if (res && res.data && res.data.status) {
           let {data} = res.data;
           this.store_goods = data.store_goods; // 商品数据
-          this.new_goods = data.new_goods;
-          this.$store.dispatch('setTopbarTitle', data.brand_name);
+          // this.$store.dispatch('setTopbarTitle', data.brand_name);
         } else {
           // @TODO 数据错误
         }

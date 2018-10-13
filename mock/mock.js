@@ -27,6 +27,11 @@ var setOnline = [
     url: '/carts/add'
   },
   {
+    name: 'cartsReduce',
+    type: 'post',
+    url: '/carts/reduce'
+  },
+  {
     name: 'detail',
     type: 'post',
     url: '/detail'
@@ -132,6 +137,11 @@ var setOnline = [
     name: 'couponExchange',
     type: 'post',
     url: '/coupon/exchange'
+  },
+  {
+    name: 'ordersCheckout',
+    type: 'post',
+    url: '/orders/checkout'
   },
   {
     name: 'orderOrderList',

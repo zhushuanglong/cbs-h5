@@ -57,9 +57,7 @@ export default {
     return {
     }
   },
-  created () {
-    // this.$store.dispatch('setTopbarTitle', '店铺上新');
-  }
+  created () {}
 };
 </script>
 
