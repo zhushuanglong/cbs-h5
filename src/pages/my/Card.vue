@@ -16,14 +16,14 @@
       <li>
         <router-link :to="{path: '/my/income?type=1'}">
           <i class="iconfont">&#xe695;</i>
-          <div class="value">{{data.income}}</div>
+          <div class="value">${{data.income}}</div>
           <p>Accumulated Income</p>
         </router-link>
       </li>
       <li>
          <router-link :to="{path: '/my/income?type=2'}">
           <i class="iconfont">&#xe694;</i>
-          <div class="value">{{data.wait_account}}</div>
+          <div class="value">${{data.wait_account}}</div>
           <p>Wait for an account</p>
         </router-link>
       </li>
@@ -44,7 +44,12 @@ export default {
     data: {
       type: Object,
       default: () => {
-        return {};
+        return {
+          money: '0',
+          income: '0',
+          wait_account: '0',
+          funs: '0'
+        };
       }
     }
   },

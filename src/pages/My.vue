@@ -23,7 +23,8 @@
       </router-link>
     </div>
     <div class="index-order">
-      <Order v-for="item in orders" :data="item"></Order>
+      <Order v-for="item in orders" :key="item.id" :data="item" v-if="orders && orders.length"></Order>
+      <pageempty icon="&#xe693;" :margin-top="50" desc="You have no orders yet!" v-if="orders.length === 0"></pageempty>
     </div>
     <BottomBar></BottomBar>
   </div>
@@ -57,8 +58,10 @@ export default {
       }],
       avator: '', //头像
       cardData: {
-        money: 0,
-        integral: 0,
+        money: '0',
+        income: '0',
+        wait_account: '0',
+        funs: '0'
       },
       orders: [],
       username: '',
@@ -97,7 +100,6 @@ export default {
           this.cardData.wait_account=  res.content.wait_account; // 待入账
           this.cardData.income = res.content.income; // 收入
           this.cardData.funs = res.content.funs;
-          this.order = res.content.order;
           this.username = res.content.username;
           this.orders = res.content.orders;
           this.isLogin = true;

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import Qs from 'qs';
 import router from 'src/router';
+import projectConfig from '../../config'
 const config = {
     //baseURL: '',
     timeout: 200000, //
@@ -21,6 +22,7 @@ const config = {
 const AxiosInst = axios.create(config);
 //请求拦截器
 AxiosInst.interceptors.request.use((config) => {
+    // config.url = projectConfig.dev.serverName + ':' + projectConfig.dev.serverPort + config.url;
     // if (window.localStorage.getItem('userToken')) {
     //     config.headers.Authorization = 'Bearer ' + `${window.localStorage.getItem('userToken')}`;
     // }
@@ -52,8 +54,9 @@ AxiosInst.interceptors.response.use(response => {
     }
     return response;
 }, (error) => {
+    console.log(error)
     // 下面是接口回调的status ,因为我做了一些错误页面,所以都会指向对应的报错页面
-    if (error.response.status === 404) {
+    if (error.response && error.response.status === 404) {
         router.push({
             name: '404'
         });

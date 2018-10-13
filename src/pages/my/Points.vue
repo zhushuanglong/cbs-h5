@@ -48,7 +48,7 @@ export default {
       this.request('PersonalIntegral', this.params).then((res) => {
         if(res.status === 200 && res.content) {
           this.integral = res.content.integral;
-          this.personal_integral = res.personal_integral;
+          this.personal_integral = res.content.personal_integral;
         }
       }, err => {
         this.$Toast(err);

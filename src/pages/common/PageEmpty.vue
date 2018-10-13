@@ -1,5 +1,5 @@
 <template>
-    <div class="page-empty">
+    <div class="page-empty" :style="{'margin-top': marginTop / rem + 'rem'}">
       <div class="empty-icon"><i class="iconfont" v-html="icon"></i></div>
       <p class="desc">
         {{desc}}
@@ -16,6 +16,15 @@ export default {
     desc: {
       type: String,
       default: ''
+    },
+    marginTop: {
+      type: Number,
+      default: 280
+    }
+  },
+  data() {
+    return {
+      rem: 100
     }
   }
 }
@@ -23,8 +32,6 @@ export default {
 <style lang="less">
 @import "~less/tool.less";
 .page-empty{
-  position: fixed;
-  top: 385/@rem;
   margin: 0 auto;
   .empty-icon{
     margin: 0 auto;

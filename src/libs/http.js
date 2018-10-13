@@ -73,17 +73,17 @@ Http.install = function (Vue) {
             }).catch((error) => {
                 if (error.status === 200) {
                     if (!error.data) {
-                        this.$Message.error('接口输出异常...');
+                        this.$Toast('接口输出异常...');
                         console.log('Customize Notice', error);
                     } else if (error.data && error.data.code === 2000) {
-                        this.$Message.error(error.data.msg);
+                        this.$Toast(error.data.msg);
                         console.log('Customize Notice', error);
                     }
                 } else if (error.status === 500) {
-                    this.$Message.error('后端服务请求500错误');
+                    this.$Toast('后端服务请求500错误');
                     console.log('Customize Notice', error);
                 } else {
-                    this.$Message.error('服务请求出错');
+                    this.$Toast('服务请求出错');
                     console.log('Customize Notice', error);
                 }
                 closeLoading();
@@ -112,17 +112,17 @@ Http.install = function (Vue) {
             }).catch((error) => {
                 if (error.status === 200) {
                     if (!error.data) {
-                        this.$Message.error('接口输出异常...');
+                        this.$Toast('接口输出异常...');
                         console.log('Customize Notice', error);
                     } else if (error.data && error.data.code === 2000) {
-                        this.$Message.error(error.data.msg);
+                        this.$Toast(error.data.msg);
                         console.log('Customize Notice', error);
                     }
                 } else if (error.status === 500) {
-                    this.$Message.error('后端服务请求500错误,如一直出现错误,请联系我们');
+                    this.$Toast('后端服务请求500错误,如一直出现错误,请联系我们');
                     console.log('Customize Notice', error);
                 } else {
-                    this.$Message.error('服务请求出错');
+                    this.$Toast('服务请求出错');
                     console.log('Customize Notice', error);
                 }
                 closeLoading();

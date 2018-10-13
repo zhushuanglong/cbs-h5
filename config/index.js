@@ -21,7 +21,10 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {},
-    cssSourceMap: false
+    cssSourceMap: false,
+    serverName: 'http://api.cucoe.net',
+    serverPort: 80
+
   }
 };
 

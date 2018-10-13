@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <div class="history-view">
     <topbar title="History View" backUrl="my"></topbar>
     <goods-list :list="goodsList" v-if="goodsList.length"></goods-list>
-    <pageempty icon="&#xe693;" desc="Sorry, we couldn‘t find anything in your 
+    <pageempty icon="&#xe693;"  desc="Sorry, we couldn‘t find anything in your 
 history" v-if="goodsList.length === 0" ></pageempty>
   </div>
 </template>
@@ -17,7 +17,7 @@ export default {
         pageSize: 20
       },
       total: 0,
-      totalPage: 1
+      totalPage: 1,
     }
   },
   components: { GoodsList },
@@ -43,5 +43,9 @@ export default {
 }
 </script>
 <style lang="less">
+@import "~less/tool.less";
 
+.history-view{
+  padding-top: 90/@rem;
+}
 </style>
