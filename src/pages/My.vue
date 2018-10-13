@@ -2,7 +2,10 @@
   <div class="my-main">
     <div class="my-top">
       <div class="my-top-info">
-        <a class="img fl" href="javascript:;"><img class="head" :src="avator"></a>
+        <a class="img fl" href="javascript:;">
+          <img class="head" :src="avator" v-if="avator">
+          <img class="head" src="~img/my/head.png" v-if="!avator">
+        </a>
         <div class="nickname fl" @click="userLogin">{{username}}</div>
       </div>
       <ul class="my-top-des">
@@ -64,7 +67,7 @@ export default {
         funs: '0'
       },
       orders: [],
-      username: '',
+      username: 'Sign In / Register',
       isLogin: false
     };
   },
@@ -93,7 +96,7 @@ export default {
     // 个人主页
     getPersonalIndex() {
       this.request('PersonalIndex').then((res) => {
-        if(res.status === 200) {
+        if(res.status === 200 && res.content) {
           this.avator = res.content.img; //头像
           this.cardData.money = res.content.money; // 用户余额
           this.cardData.integral = res.content.integral; // 积分

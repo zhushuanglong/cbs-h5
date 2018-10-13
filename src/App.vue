@@ -10,4 +10,5 @@
 @import "~less/base";
 @import "~less/animate";
 @import "~less/font";
+@import "~less/mint/index";
 </style>

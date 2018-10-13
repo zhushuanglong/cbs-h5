@@ -49,6 +49,13 @@ Object.keys(proxyTable).forEach(function (context) {
   }
   app.use(proxyMiddleware(options.filter || context, options))
 });
+var allowCrossDomain = function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  next();
+};
+app.use(allowCrossDomain);
 
 // handle fallback for HTML5 history API    HTML5 history API处理回退
 app.use(require('connect-history-api-fallback')());

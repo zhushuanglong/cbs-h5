@@ -124,7 +124,7 @@ export default {
           this.getOrderDesc();
         }
       }, err => {
-        this.$Toast(err)
+        this.$Toast(err.data.msg);
       })
     },
     // 确认收货

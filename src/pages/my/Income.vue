@@ -49,7 +49,7 @@ export default {
           this.total_page = res.content.total_page
         }
       }, err => {
-        this.$Toast(err);
+        this.$Toast(err.data.msg);
       })
     },
     // 待入账
@@ -62,7 +62,7 @@ export default {
           this.total_page = res.content.total_page
         }
       }, err => {
-        this.$Toast(err);
+        this.$Toast(err.data.msg);
       })
     }
   }

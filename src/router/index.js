@@ -257,7 +257,12 @@ export default new Router({
           resolve(require('components/layout/404.vue'));
         }, '404');
       }
+    },
+    {
+      path: '*',
+      redirect: '/my'
     }
+
   ]
 });
 

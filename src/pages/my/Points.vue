@@ -101,6 +101,8 @@ export default {
       color: #000;
     }
     .history {
+      margin-top: 20/@rem;
+      background: #fff;
       .title{
         padding: 0 20/@rem;
         line-height: 92/@rem;

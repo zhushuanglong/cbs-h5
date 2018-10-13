@@ -1,13 +1,13 @@
 <template>
   <div>
-    <topbar title="My Coupons" backUrl="my"></topbar>
+    <topbar title="My Balance" backUrl="my"></topbar>
     <div class="finance">
       <div class="finance-count">
         <div class="icon"><i class="iconfont">&#xe694;</i></div>
         <div class="number">${{money}}</div>
       </div>
       <div class="finance-detail">
-        <div class="title">History</div>
+        <div class="title">The detail</div>
         <div class="detail-list">
           <div v-for="item in finance" class="detail-item">
             <p class="item item1 clearfix"><span class="name fl">{{item.operate_type}}</span><span class="time fr">{{item.created_at}}</span></p>
@@ -48,6 +48,7 @@ export default {
   padding-top: 90/@rem;
   .finance-count {
     height: 230/@rem;
+    background: #fff;
   }
   .icon{
     position: absolute;
@@ -69,7 +70,9 @@ export default {
     padding-top: 84/@rem
   }
   .finance-detail{
+    margin-top: 20/@rem;
     padding: 0 20/@rem;
+    background: #fff;
     .title{
       color: #939399;
       font-size: 28/@rem;
