@@ -37,7 +37,7 @@ export default {
         redeemCode: this.redeemCode
       }).then((res) => {
         if(res.status === 200 && res.content) {
-          this.couponList = res.content || [];
+          this.couponList = res.content.coupons || [];
         }
       }, err => {
         this.$Toast(err);

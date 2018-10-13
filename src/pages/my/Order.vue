@@ -8,10 +8,10 @@
     </div>
     <div class="my-order-list" v-else>
       <div class="top">
-        <div class="time">{{data.ordertime}}</div>
+        <div class="time">Order ID：{{data.orderid}}</div>
         <div class="status">{{orderStatusDesc}}</div>
       </div>
-      <router-link class="detail" v-for="item in data.ordergoods" :to="{ name: 'orderDetail', query: {id: item.orderid, order_status: item.orderstatus}}">
+      <router-link class="detail" v-for="item in data.ordergoods" :to="{ name: 'orderDetail', query: {orderid: data.orderid, order_status: data.orderstatus}}">
         <div class="img fl">
           <img :src="item.img">
         </div>
@@ -25,10 +25,10 @@
       <div class="operate clearfix">
         <!-- 订单状态(订单状态 1-待付款 3-待发货 4-待收货 5-交易完成 6-交易取消 ) -->
         <!-- TODO 代付款  按钮是红色   其他时候都是正常颜色 -->
-        <div class="operate-two" v-if="orderHandle.pay">Pay now ${{this.finalAmount}}</div>
-        <div class="operate-two" @click="handleCollect" v-if="orderHandle.collect">I get it</div>
-        <div class="" @click="getLogistics" v-if="orderHandle.logistic">Logistics Info</div>
-        <div class="" v-if="orderHandle.delete" @click="handleDelete">Delete</div>
+        <div class="operate-item operate-two" v-if="orderHandle.pay">Pay now{{this.finalTime}}</div>
+        <div class="operate-item operate-two" @click="handleCollect" v-if="orderHandle.collect">I get it</div>
+        <div class="operate-item" @click="getLogistics" v-if="orderHandle.logistic">Logistics Info</div>
+        <div class="operate-item" v-if="orderHandle.delete" @click="handleDelete">Delete</div>
       </div>
     </div>
     <confirm :show.sync="confirmModal.show" :title="confirmModal.title"  :content="confirmModal.content" :on-ok="confirmModal.action"  okText="Yes"></confirm>
@@ -45,6 +45,11 @@ export default {
     operate: {
       type: Boolean,
       default: true
+    },
+    handleCb: {
+      // 操作回调
+      type: Function,
+      default: () => {} 
     }
   },
   data() {
@@ -60,15 +65,34 @@ export default {
       },
       confirmModal: {},
       orderHandle: [],
-      finalAmount: 0
+      finalAmount: 0,
+      finalTime: 0,
     }
   },
   mounted() {
     this.orderstatus = this.data.orderstatus;
     this.orderid = this.data.orderid;
     this.getOrderDesc();
+    this.getCountDown();
   },
   methods: {
+    getCountDown() {
+      let now = Date.now();
+      let orderTime = new Date(this.data.ordertime).getTime();
+      let t = now - orderTime;
+      console.log(t);
+      let min = Math.floor((t / 60000) % 60);
+      let sec = Math.floor((t / 1000) % 60);
+      let timer = setInterval(function() {
+        if (t > 0) {
+          min = min < 10 ? '0' + min : min;
+          sec = sec < 10 ? '0' + sec : sec;
+        } else {
+          clearInterval(timer);
+        }
+        this.finalTime = min + ':' + sec;
+      }, 100);
+    },
     getOrderDesc() {
       let handle = {};
       if(+this.orderstatus === 1) {
@@ -113,19 +137,31 @@ export default {
       }).then((res) => {
         if(res.status === 200) {
           this.confirmModal.show = false;
-          this.getOrderDetail();
+          this.handleCb && this.handleCb()
           this.$Toast('success');
         }
       }, err => {
         this.$Toast(err)
       })
     },
-    // 删除订单
+     // 确认收货
     handleDelete() {
+      this.confirmModal = {
+        show: true,
+        type: 'confirm',
+        content: 'Are you sure to delete the order？',
+        action: this.handleDeleteCb
+      }
+    },
+    // 删除订单
+    handleDeleteCb() {
       this.request('OrdersDelete', {
         order_id: this.orderid
       }).then((res) => {
         if(res.status === 200) {
+          this.$Toast(res.msg)
+          this.handleCb && this.handleCb()
+        } else {
           this.$Toast(res.msg)
         }
       }, err => {
@@ -140,6 +176,15 @@ export default {
           order_id: this.orderid
         }
       })
+    },
+    // 空对象判断
+    emptyObj(obj) {
+      var b = function() {
+      for(var key in obj) {
+        return false;
+      }
+        return true;
+      }
     }
   }
 };
@@ -226,8 +271,10 @@ export default {
   .operate {
     position: relative;
     width: 100%;
-    height: 100/@rem;
     border-top: 1px solid #f0f0f3;
+    .operate-item{
+      margin: 20/@rem;
+    }
     & > div {
       float: right;
       margin-right: 20/@rem;

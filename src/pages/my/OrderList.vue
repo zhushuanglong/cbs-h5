@@ -56,7 +56,7 @@ export default {
     getOrderList() {
       this.request('OrdersList', this.params).then((res) => {
         if(res.status === 200) {
-          this.orders = res.content.orders || [];
+          this.orders = res.content.orderData || [];
         } else {
           this.$Toast(res.msg);
         }
@@ -71,7 +71,7 @@ export default {
 <style lang="less">
 @import "~less/tool.less";
 .c-order{
-  padding-top: 100/@rem;
+  padding-top: 90/@rem;
   .order-tabs{
     padding: 0 5/@rem;
     height: 88/@rem;
