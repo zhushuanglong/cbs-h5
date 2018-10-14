@@ -6,7 +6,7 @@
       <div class="title"><i class="iconfont">&#xe61e;</i>Shipping Address</div>
       <div class="line"></div>
       <div class="shipping-con">
-        <router-link :to="{path: '/cart/addAddress'}" class="empty" v-if="0">
+        <router-link :to="{path: '/cart/addAddress/' + $route.params.orderId}" class="empty" v-if="0">
           + Add a shipping address
           <i class="iconfont gray2">&#xe62e;</i>
         </router-link>
@@ -139,6 +139,7 @@ export default {
     .shipping-con {
       position: relative;
       line-height: 90/@rem;
+      padding-bottom: 20/@rem;
       .empty {
         display: block;
         color: @gray2;

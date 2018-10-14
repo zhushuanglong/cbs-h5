@@ -42,6 +42,26 @@ var setOnline = [
     url: '/address/add'
   },
   {
+    name: 'addressList',
+    type: 'post',
+    url: '/address/list'
+  },
+  {
+    name: 'addressInfo',
+    type: 'post',
+    url: '/address/info'
+  },
+  {
+    name: 'addressEdit',
+    type: 'post',
+    url: '/address/edit'
+  },
+  {
+    name: 'addressDelete',
+    type: 'post',
+    url: '/address/delete'
+  },
+  {
     name: 'productsList',
     type: 'post',
     url: '/products/list'

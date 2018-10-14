@@ -1,78 +1,95 @@
 <template>
   <div class="shipping-address-main">
     <topbar title="Shipping Address" :backUrl="'cart/secure/' + $route.params.orderId"></topbar>
-    <div class="address-con">
+    <div class="address-con" v-for="item in data">
       <div class="address-detail">
         <div class="info">
-          <div class="fl">QIAN.XIAO</div>
-          <div class="fr">+001123455534545</div>
+          <div class="fl">{{item.recipients}}</div>
+          <div class="fr">{{item.iphone}}</div>
         </div>
-        <div class="address">608 kingsley st，apt 10，nomal，lllinois，United States 61761</div>
+        <div class="address">{{item.address}}</div>
         <div class="pos">
           <i class="iconfont gray2">&#xe62e;</i>
         </div>
       </div>
       <div class="operate">
         <div class="fl">
-          <input type="radio" name="radio">
+          <input type="radio" name="radio" v-if="item.is_default === 1" checked>
+          <input type="radio" name="radio" v-else>
           Set as Default Shipping Address
         </div>
         <div class="fr">
-          <div class="edit" @click="edit()">
+          <div class="edit" @click="edit(item.id)">
             <i class="iconfont">&#xe621;</i>Edit
           </div>
-          <div class="delete" @click="del()">
-            <i class="iconfont">&#xe63d;</i>Delete
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="address-con">
-      <div class="address-detail">
-        <div class="info">
-          <div class="fl">QIAN.XIAO</div>
-          <div class="fr">+001123455534545</div>
-        </div>
-        <div class="address">608 kingsley st，apt 10，nomal，lllinois，United States 61761</div>
-        <div class="pos">
-          <i class="iconfont gray2">&#xe62e;</i>
-        </div>
-      </div>
-      <div class="operate">
-        <div class="fl">
-          <input type="radio" name="radio">
-          Set as Default Shipping Address
-        </div>
-        <div class="fr">
-          <div class="edit">
-            <i class="iconfont">&#xe621;</i>Edit
-          </div>
-          <div class="delete">
+          <div class="delete" @click="del(item.id)">
             <i class="iconfont">&#xe63d;</i>Delete
           </div>
         </div>
       </div>
     </div>
     <div class="global-fixed-btn">
-      <router-link :to="{'path': '/cart/addAddress'}" class="fixed-btn">+ ADD NEW ADDRESS</router-link>
+      <router-link :to="{'path': '/cart/addAddress/' + $route.params.orderId}" class="fixed-btn">+ ADD NEW ADDRESS</router-link>
     </div>
+    <confirm :show.sync="confirmModal.show" :title="confirmModal.title"  :content="confirmModal.content" :on-ok="confirmModal.action"  okText="Yes"></confirm>
   </div>
 </template>
 
 <script>
 export default {
   data () {
-    return {}
+    return {
+      data: [],
+      confirmModal: {}
+    }
   },
   computed: {},
+  created () {
+    this.getAddressList();
+  },
   mounted () {},
   watch: {},
   methods: {
-    edit (addressId) {
-      this.$router.push({path: '/cart/editAddress/' + addressId}); // TODO 去编辑
+    getAddressList () {
+      this.$http.post('/address/list', {
+        token: localStorage.userToken || '',
+        page: 1
+      }).then((res) => {
+        if (res && res.data && res.data.status) {
+          this.data = res.data.content;
+        } else {
+          // @TODO 数据错误
+        }
+      }, () => {
+        // @TODO 网络错误
+      });
     },
-    del () {
-      console.log(12);
+    edit (addressId) {
+      this.$router.push({path: '/cart/addAddress/' + this.$route.params.orderId + '?addressId=' + addressId});
+    },
+    del (addressId) {
+      let self = this;
+      self.confirmModal = {
+        show: true,
+        title: 'Do you confirm delete?',
+        onText: 'Yes',
+        content: `Delete the Address!`,
+        action: function () {
+          self.$http.post('/address/delete', {
+            token: localStorage.userToken || '',
+            addressId: self.addressId
+          }).then((res) => {
+            if (res && res.data && res.data.status) {
+              self.confirmModal.show = false;
+              self.$Toast('success');
+            } else {
+              // @TODO 数据错误
+            }
+          }, () => {
+            // @TODO 网络错误
+          });
+        }
+      }
     }
   },
   beforeDestroy () {}
@@ -116,8 +133,9 @@ export default {
     .height(70);
     .clearfix();
     .fl input {
-      margin-left: 15/@rem;
-      margin-top: 0;
+      margin-left: 20/@rem;
+      vertical-align: top;
+      margin-top: 18/@rem;
       .wh(34, 34);
     }
     .fr {
@@ -129,7 +147,7 @@ export default {
       i {
         color: #929299;
         font-size: 32/@rem;
-        vertical-align: middle;
+        vertical-align: top;
         margin-right: 5/@rem;
       }
     }

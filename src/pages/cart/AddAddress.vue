@@ -1,6 +1,6 @@
 <template>
   <div class="add-address-main">
-    <topbar title="Add Address" backUrl="cart/shippingAddress"></topbar>
+    <topbar title="Add Address" :backUrl="backUrl"></topbar>
 
     <ul class="address-ul">
       <li>
@@ -63,18 +63,33 @@ export default {
   data () {
     return {
       data: {
-        default: false
-      } // 提交的数据
+        default: false,
+      }, // 提交的数据
+      addressId: null,
+      backUrl: 'cart/secure/' + this.$route.params.orderId
     };
   },
   computed: {},
-  created () {},
+  created () {
+    this.addressId = this.$route.query.addressId;
+    if (this.addressId) { // 如果存在就是编辑页面
+      this.$http.post('/address/info', {
+        token: localStorage.userToken || '',
+        address_id: this.addressId
+      }).then((res) => {
+        if (res && res.data && res.data.status) {
+          this.data = res.data.content;
+        }
+      }, () => {});
+      
+      this.backUrl = 'cart/shippingAddress/' + this.$route.params.orderId
+    }
+  },
   mounted () {},
   watch: {},
   methods: {
     submitAddress () {
       let data = Object.assign({}, this.data);
-      console.log(data);
       if (!data.firstname) {
         this.$Toast('Please fill in firstname');
         return;
@@ -111,7 +126,7 @@ export default {
       // state	是	string	州/省/区域 最大长度250字符
       this.$http.post('/address/add', data).then((res) => {
         if (res && res.data && res.data.status) {
-          this.$router.push({path: '/cart/shippingAddress'});
+          this.$router.push({path: '/' + this.backUrl});
         }
       }, () => {});
     }
