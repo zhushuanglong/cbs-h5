@@ -1,59 +1,59 @@
 <template>
   <div class="add-address-main">
-    <topbar :title="'Add Address'" :backUrl="'cart/secureCheckout'"></topbar>
+    <topbar title="Add Address" :backUrl="backUrl"></topbar>
 
     <ul class="address-ul">
       <li>
         <div class="label">First Name*</div>
-        <input type="text">
+        <input type="text" v-model="data.firstname">
       </li>
       <li>
         <div class="label">Last Name*</div>
-        <input type="text">
+        <input type="text" v-model="data.lastname">
       </li>
       <li>
         <div class="label">Country*</div>
-        <input type="text">
-        <i class="iconfont gray2">&#xe62e;</i>
+        <input type="text" v-model="data.country">
+        <!-- <i class="iconfont gray2">&#xe62e;</i> -->
       </li>
       <li>
         <div class="label">State/Province*</div>
-        <input type="text">
-        <i class="iconfont gray2">&#xe62e;</i>
+        <input type="text" v-model="data.state">
+        <!-- <i class="iconfont gray2">&#xe62e;</i> -->
       </li>
       <li>
         <div class="label">City*</div>
-        <input type="text">
+        <input type="text" v-model="data.city">
       </li>
       <li>
         <div class="label">Address Line 1*</div>
-        <input type="text" placeholder="Street，Address，Company Name，C/O">
+        <input type="text" v-model="data.street" placeholder="Street，Address，Company Name，C/O">
       </li>
       <li>
         <div class="label">Address Line 2(Optional)</div>
-        <input type="text" placeholder="Apartment，Suite，Unite，Builting，Floor，etc">
+        <input type="text" v-model="data.suburb" placeholder="Apartment，Suite，Unite，Builting，Floor，etc">
       </li>
       <li>
         <div class="label">ZIP/Post Code*</div>
-        <input type="text">
+        <input type="text" v-model="data.postalcode">
       </li>
       <li>
         <div class="label">Phone Number*</div>
-        <input class="phone" type="text">
-        <div class="phone-number-icon">
+        <input class="phone" type="text" v-model="data.iphone">
+        <!-- <div class="phone-number-icon">
           <div class="img"></div>
           <div class="des">+001</div>
-        </div>
+        </div> -->
       </li>
     </ul>
 
     <div class="set-defualt">
       Set as Default Shipping Address
-      <mt-switch v-model="isSetDefault"></mt-switch>
+      <mt-switch v-model="data.default"></mt-switch>
     </div>
 
     <div class="global-fixed-btn">
-      <div class="fixed-btn">SAVE</div>
+      <div class="fixed-btn" @click="submitAddress">SAVE</div>
     </div>
   </div>
 </template>
@@ -62,22 +62,76 @@
 export default {
   data () {
     return {
-      isSetDefault: false // 设置默认地址
+      data: {
+        default: false,
+      }, // 提交的数据
+      addressId: null,
+      backUrl: 'cart/secure/' + this.$route.params.orderId
     };
   },
   computed: {},
-  created () {},
-  mounted () {},
-  watch: {
-    // 'isLogin': function () {
-    //   this.pageInit();
-    //   this.popupShow();
-    // }
+  created () {
+    this.addressId = this.$route.query.addressId;
+    if (this.addressId) { // 如果存在就是编辑页面
+      this.$http.post('/address/info', {
+        token: localStorage.userToken || '',
+        address_id: this.addressId
+      }).then((res) => {
+        if (res && res.data && res.data.status) {
+          this.data = res.data.content;
+        }
+      }, () => {});
+      
+      this.backUrl = 'cart/shippingAddress/' + this.$route.params.orderId
+    }
   },
-  methods: {},
-  beforeDestroy () {
-    // this.$refs.indexMain.removeEventListener('scroll', this.dispatchScroll, false);
-  }
+  mounted () {},
+  watch: {},
+  methods: {
+    submitAddress () {
+      let data = Object.assign({}, this.data);
+      if (!data.firstname) {
+        this.$Toast('Please fill in firstname');
+        return;
+      }
+      if (!data.lastname) {
+        this.$Toast('Please fill in lastname');
+        return;
+      }
+      if (!data.country) {
+        this.$Toast('Please fill in country');
+        return;
+      }
+      if (!data.state) {
+        this.$Toast('Please fill in state/province');
+        return;
+      }
+      if (!data.city) {
+        this.$Toast('Please fill in city');
+        return;
+      }
+      if (!data.street) {
+        this.$Toast('Please fill in firstname');
+        return;
+      }
+      if (!data.postalcode) {
+        this.$Toast('Please fill in ZIP/Post Code');
+        return;
+      }
+      if (!data.iphone) {
+        this.$Toast('Please fill in Phone Number');
+        return;
+      }
+      // country	是	string	国家 最大长度50字符 TODO
+      // state	是	string	州/省/区域 最大长度250字符
+      this.$http.post('/address/add', data).then((res) => {
+        if (res && res.data && res.data.status) {
+          this.$router.push({path: '/' + this.backUrl});
+        }
+      }, () => {});
+    }
+  },
+  beforeDestroy () {}
 };
 </script>
 
@@ -109,9 +163,9 @@ export default {
         .whl(710,80);
         border:1px solid #c5c5c5;
         padding: 0 20/@rem;
-        &.phone {
-          padding-left: 200/@rem;
-        }
+        // &.phone {
+        //   padding-left: 200/@rem;
+        // }
       }
       i {
         position: absolute;

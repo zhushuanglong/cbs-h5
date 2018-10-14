@@ -6,19 +6,21 @@
       <div class="title"><i class="iconfont">&#xe61e;</i>Shipping Address</div>
       <div class="line"></div>
       <div class="shipping-con">
-        <router-link :to="{path: '/cart/addAddress'}" class="empty" v-if="0">
+        <router-link :to="{path: '/cart/addAddress/' + $route.params.orderId}" class="empty" v-if="0">
           + Add a shipping address
           <i class="iconfont gray2">&#xe62e;</i>
         </router-link>
-        <router-link :to="{path: '/cart/shippingAddress'}" class="address-detail" v-else>
-          <div class="info">
-            <div class="fl">QIAN.XIAO</div>
-            <div class="fr">+001123455534545</div>
-          </div>
-          <div class="address">608 kingsley st，apt 10，nomal，lllinois，United St-ates, 61761</div>
-          <div class="pos">
-            <i class="iconfont gray2">&#xe62e;</i>
-          </div>
+        <router-link :to="{path: '/cart/shippingAddress/' + $route.params.orderId}" class="address-detail" v-else>
+          <template v-for="item in data.user_address">
+            <div class="info" v-if="item.is_default === 1">
+              <div class="fl">{{item.recipients}}</div>
+              <div class="fr">+{{item.iphone}}</div>
+            </div>
+            <div class="address">{{item.address}}</div>
+            <div class="pos">
+              <i class="iconfont gray2">&#xe62e;</i>
+            </div>
+          </template>
         </router-link>
       </div>
     </div>
@@ -29,22 +31,22 @@
       </li>
       <li>
         <div class="label">Products Price</div>
-        <div class="pos-abs">$299.99</div>
+        <div class="pos-abs">${{data.price}}</div>
       </li>
       <li>
         <div class="label">Express Delivery</div>
-        <div class="pos-abs">Free</div>
+        <div class="pos-abs">{{+data.delivery || 'Free'}}</div>
       </li>
       <li>
         <div class="label">Available Balance</div>
         <div class="pos-abs red">
-          $28.6
+          {{data.money}}
           <mt-switch v-model="isBalance"></mt-switch>
         </div>
       </li>
       <li>
         <div class="label">Order Subtotal</div>
-        <div class="pos-abs red">$299.99</div>
+        <div class="pos-abs red">${{totalPrice}}</div>
       </li>
     </ul>
 
@@ -67,7 +69,7 @@
     </ul>
 
     <div class="global-fixed-btn">
-      <div class="fixed-btn">PLACE ORDER ( $299.99 )</div>
+      <div class="fixed-btn">PLACE ORDER ( ${{totalPrice}} )</div>
     </div>
   </div>
 </template>
@@ -76,14 +78,42 @@
 export default {
   data () {
     return {
-      isBalance: true
+      isBalance: true, // 余额
+      totalPrice: 0, // 总价
+      data: []
     };
   },
   computed: {},
-  created () {},
+  created () {
+    this.getOrdersData();
+  },
   mounted () {},
-  watch: {},
-  methods: {},
+  watch: {
+    'isBalance': function (value) {
+      if (value) {
+        this.totalPrice = window.returnFloat(+this.data.price - +this.data.money);
+      } else {
+        this.totalPrice = window.returnFloat(+this.data.price + +this.data.money);
+      }
+    }
+  },
+  methods: {
+    getOrdersData() {
+      this.$http.post('/orders/payment', {
+        token: localStorage.userToken || '',
+        orderId: this.$route.params.orderId
+      }).then((res) => {
+        if (res && res.data && res.data.status) {
+          this.data = res.data.content;
+          this.totalPrice = window.returnFloat(+this.data.price - +this.data.money);
+        } else {
+          // @TODO 数据错误
+        }
+      }, () => {
+        // @TODO 网络错误
+      });
+    }
+  },
   beforeDestroy () {}
 };
 </script>
@@ -109,6 +139,7 @@ export default {
     .shipping-con {
       position: relative;
       line-height: 90/@rem;
+      padding-bottom: 20/@rem;
       .empty {
         display: block;
         color: @gray2;

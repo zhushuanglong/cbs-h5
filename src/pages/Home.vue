@@ -29,7 +29,6 @@ export default {
         if (res && res.data && res.data.status) {
           let {data} = res.data;
           this.store_goods = data.store_goods; // 商品数据
-          // this.$store.dispatch('setTopbarTitle', data.brand_name);
         } else {
           // @TODO 数据错误
         }
