@@ -7,15 +7,17 @@
         <div class="content fl">
           <p class="title">Logistics status: {{logisStatus}}</p>
           <p>Type of logistics：{{express}}</p>
-          <p>Tracking number：{{expressNumber}}<span class="copy">COPY</span></p>
+          <p>Tracking number：<span id="orderid">{{expressNumber}}</span><span :data-clipboard-text="expressNumber" @click="copyOrderid" class="copy">COPY</span></p>
           <p>Official TEL：{{tel}}</p>
         </div>
       </div>
       <div class="logistics-list">
         <p class="l-title">Logistics info</p>
         <ul>
-          <li class="l-detail" v-for="item in logisDetail">
+          <li class="l-detail" v-for="(item, index) in logisDetail">
             <span class="icon"></span>
+            <span class="line-b" v-if="index < logisDetail.length -1"></span>
+            <span class="line-t" v-if="index > 0"></span>
             <div class="info">
               <p>{{item.description}}</p>
               <p>{{item.date}}</p>
@@ -27,6 +29,7 @@
   </div>
 </template>
 <script>
+import Clipboard from 'clipboard';
 export default {
   data() {
     return {
@@ -55,10 +58,27 @@ export default {
           this.expressNumber = res.content.number;
           this.express = res.content.type;
           this.logisStatus = res.content.status;
-          this.tel = res.content.tel
+          this.tel = res.content.tel;
         }
       }, err => {
         this.$Toast(err)
+      })
+    },
+    // 复制订单号
+    copyOrderid() {
+      const clipboard = new Clipboard('.copy');
+      clipboard.on('success', e => {
+        console.log('复制成功');
+        this.$Toast('Successful copy');
+        // 释放内存
+        clipboard.destroy();
+      })
+      clipboard.on('error', e => {
+        this.$Toast('Replication failed');
+        // 不支持复制
+        console.log('该浏览器不支持自动复制');
+        // 释放内存
+        clipboard.destroy();
       })
     }
   }
@@ -98,10 +118,11 @@ export default {
         display: block;
         width:72/@rem;
         height:40/@rem;
-        line-height: 40/@rem;
+        line-height: 38/@rem;
         font-size: 22/@rem;
         border:1px solid rgba(147,147,153,1);
         border-radius:22/@rem;
+        text-align: center;
       }
     }
   }
@@ -129,6 +150,22 @@ export default {
         width: 12/@rem;
         height: 12/@rem;
         border-radius: 50%;
+        background-color: #939399;
+      }
+      .line-b{
+        position: absolute;
+        left: 44/@rem;
+        top: 62/@rem;
+        width: 1px;
+        height: 60/@rem;
+        background-color: #939399;
+      }
+      .line-t{
+        position: absolute;
+        left: 44/@rem;
+        top: 0/@rem;
+        width: 1px;
+        height: 60/@rem;
         background-color: #939399;
       }
       .info{

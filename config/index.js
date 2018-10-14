@@ -36,21 +36,21 @@ module.exports = {
         changeOrigin: true,
         secure: false
       },
-      '/orders/*': {
-        target: 'http://api.cucoe.net',
-        changeOrigin: true,
-        secure: false
-      },
+      // '/orders/*': {
+      //   target: 'http://api.cucoe.net',
+      //   changeOrigin: true,
+      //   secure: false
+      // },
       '/products/*': {
         target: 'http://api.cucoe.net',
         changeOrigin: true,
         secure: false
       },
-      '/promotions/*': {
-        target: 'http://api.cucoe.net',
-        changeOrigin: true,
-        secure: false
-      },
+      // '/promotions/*': {
+      //   target: 'http://api.cucoe.net',
+      //   changeOrigin: true,
+      //   secure: false
+      // },
       '/carts/*': {
         target: 'http://api.cucoe.net',
         changeOrigin: true,

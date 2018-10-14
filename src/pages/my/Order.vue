@@ -73,25 +73,27 @@ export default {
     this.orderstatus = this.data.orderstatus;
     this.orderid = this.data.orderid;
     this.getOrderDesc();
-    this.getCountDown();
+    if(this.data.orderstatus === 1) {
+      this.getCountDown();
+    }
   },
   methods: {
     getCountDown() {
-      let now = Date.now();
       let orderTime = new Date(this.data.ordertime).getTime();
-      let t = now - orderTime;
-      console.log(t);
-      let min = Math.floor((t / 60000) % 60);
-      let sec = Math.floor((t / 1000) % 60);
+      const self = this;
       let timer = setInterval(function() {
+        let now = new Date().getTime();
+        let t = now - orderTime;
+        let min = Math.floor((t / 60000) % 60);
+        let sec = Math.floor((t / 1000) % 60);
         if (t > 0) {
           min = min < 10 ? '0' + min : min;
           sec = sec < 10 ? '0' + sec : sec;
         } else {
           clearInterval(timer);
         }
-        this.finalTime = min + ':' + sec;
-      }, 100);
+        self.finalTime = min + ':' + sec;
+      }, 1000);
     },
     getOrderDesc() {
       let handle = {};
@@ -159,8 +161,9 @@ export default {
         order_id: this.orderid
       }).then((res) => {
         if(res.status === 200) {
-          this.$Toast(res.msg)
-          this.handleCb && this.handleCb()
+          // this.$Toast(res.msg)
+          this.confirmModal.show = false;
+          this.handleCb && this.handleCb();
         } else {
           this.$Toast(res.msg)
         }
@@ -279,6 +282,7 @@ export default {
       float: right;
       margin-right: 20/@rem;
       .whl(162, 60);
+      line-height: 50/@rem;
       border-radius: 50/@rem;
       border: 1px solid @gray2;
       color: @gray2;

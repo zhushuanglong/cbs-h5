@@ -275,8 +275,13 @@ var setOnline = [
   // 促销列表
   {
     name: 'promotionsList',
-    type: 'post',
+    type: 'get',
     url: '/promotions/list'
+  },
+  {// 订单列表
+    name: 'ordersList',
+    type: 'post',
+    url: '/orders/list'
   },
   {// 订单删除
     name: 'ordersDelete',

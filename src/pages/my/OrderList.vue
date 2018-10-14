@@ -7,7 +7,7 @@
       </li>
     </ul>
     <div class="order-list">
-      <order v-for="item in orders" :data="item" :key="item.orderid" v-if="orders.length"></order>
+      <order :handle-cb="getOrderList" v-for="(item, index) in orders" :data="item" :key="index" v-if="orders.length"></order>
       <pageempty icon="&#xe637;" :margin-top="200" desc="You have no related orders yet!" v-if="orders.length === 0" ></pageempty>
     </div>
   </div>
