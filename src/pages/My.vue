@@ -45,6 +45,8 @@ export default {
     Order
   },
   data () {
+    let userToken = window.localStorage.getItem('userToken');
+    let username = !userToken ? 'Sign In / Register' : ''
     return {
       tabs: [{
         name: 'Points',
@@ -67,7 +69,7 @@ export default {
         funs: '0'
       },
       orders: [],
-      username: '',
+      username: username,
       isLogin: false
     };
   },

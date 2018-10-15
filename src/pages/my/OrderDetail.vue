@@ -6,7 +6,7 @@
         {{orderDesc}}
       </div>
       <div class="address">
-        <i class="iconfont address-icon">&#xe624;</i>
+        <i class="iconfont address-icon">&#xe651;</i>
         <p class="user"><span class="name">{{name}}</span><span>{{telephone.toString().slice(0, 3)}}*****{{telephone.toString().slice(7, 10)}}</span></p>
         <p class="adddress-detail">Ship to：{{address}}</p>
       </div>
@@ -160,6 +160,7 @@ export default {
         order_id: this.orderid
       }).then((res) => {
         if(res.status === 200) {
+          this.confirmModal.show = false;
           this.getOrderDetail();
           this.$Toast(res.msg)
         }

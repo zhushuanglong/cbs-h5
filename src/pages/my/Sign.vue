@@ -92,8 +92,13 @@ export default {
       }
     },
     paramsValid() {
+      const regemail = new RegExp(/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/);
       if(!this.params.email) {
-        this.$Toast('email no empty');
+        this.$Toast('E-mail can not be empty');
+        return false
+      }
+      if(!regemail.test(this.params.email)) {
+        this.$Toast('E-mail format is incorrect');
         return false
       }
       if(!this.params.password) {
