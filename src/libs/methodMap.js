@@ -2,6 +2,14 @@
  * 请求地址API
  */
 const methodMap = {
+    /** 首页 **/
+    Home: {url: '/home', method: 'post'},
+    /** 商品详情 **/
+    ProductsDetail: {url: '/products/detail', method: 'get'},
+    /** 商品列表 **/
+    ProductsList: {url: '/products/list', method: 'post'},
+    /** 购物车添加 **/
+    CartsAdd: {url: '/carts/add', method: 'post'},
     /** 注册 **/
     UsersRegister: {url: '/users/register', method: 'post'},
     /** 登录 **/

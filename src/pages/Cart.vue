@@ -1,6 +1,6 @@
 <template>
   <div class="cart-main">
-    <topbar :title="'Shopping Cart'" :backUrl="'home'"></topbar>
+    <topbar title="Shopping Cart" :backUrl="'detail/' + $route.query.id"></topbar>
     <!-- 空 -->
     <template v-if="0">
       <div class="cart-empty">

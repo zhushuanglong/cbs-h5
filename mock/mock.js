@@ -32,9 +32,9 @@ var setOnline = [
     url: '/carts/reduce'
   },
   {
-    name: 'detail',
-    type: 'post',
-    url: '/detail'
+    name: 'productsDetail',
+    type: 'get',
+    url: '/products/detail'
   },
   {
     name: 'addressAdd',
@@ -115,11 +115,6 @@ var setOnline = [
     name: 'searchSearchlist',
     type: 'post',
     url: '/search/searchlist'
-  },
-  {
-    name: 'homeStoreList',
-    type: 'post',
-    url: '/home/storeList'
   },
   {
     name: 'listsGoodslist',

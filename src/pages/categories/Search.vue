@@ -7,7 +7,7 @@
         </router-link>
         <form action="" class="input fl">
           <i class="iconfont">&#xe66e;</i>
-          <input ref="inputSearchRef" class="w660 t3s" type="text" name="search" placeholder="What are you looking for?" @focus="inputFocus" >
+          <input ref="inputSearchRef" class="w660 t3s" type="text" name="search" placeholder="What are you looking for?" @focus="inputFocus" @blur="inputBlur">
         </form>
         <div class="btn-search" @click="clickSearchResult">Search</div>
       </div>
@@ -94,9 +94,11 @@
     <div class="search-con" v-show="dataSearch.length">
       <ul>
         <li v-for="item in dataSearch">
-          <img :src="item.img">
-          <p class="p1">{{item.name}}</p>
-          <p class="p2">${{item.price}}</p>
+          <router-link :to="{path: '/detail/' + item.id}">
+            <img :src="item.img">
+            <p class="p1">{{item.name}}</p>
+            <p class="p2">${{item.price}}</p>
+          </router-link>
         </li>
       </ul>
     </div>
@@ -190,22 +192,22 @@ export default {
   methods: {
     // 获取商品列表信息
     getProductsList (option) {
-      // @TODO 这里加朵菊花
-      this.$http.post('/products/list', {
+      this.request('ProductsList', {
         cate: option.cate || '',
         title: option.title || '', // 搜索内容
         sort: option.sort || '',
         page: 1
       }).then((res) => {
-        if (res && res.data && res.data.status) {
-          this.dataSearch = res.data.content.goods;
+        if (res.status === 200 && res.content) {
+          this.dataSearch = res.content.goods;
           this.isShowSearchHistory = false; // 隐藏搜索历史
           option.title && this.getHistory(option.title); // 记录搜索历史
         } else {
           this.dataSearch = [];
         }
-      }, () => {
+      }, err => {
         this.dataSearch = [];
+        this.$Toast(err);
       });
     },
     // 记录搜索历史 - 最多记录15个
@@ -230,6 +232,9 @@ export default {
     },
     inputFocus () {
       this.isShowSearchHistory = true;
+    },
+    inputBlur () {
+      this.isShowSearchHistory = false;
     },
     // 点击搜索按钮
     clickSearchResult () {
@@ -453,6 +458,9 @@ export default {
       float: left;
       &:nth-child(2n) {
         margin-right: 0;
+      }
+      a {
+        display: block;
       }
     }
     p {

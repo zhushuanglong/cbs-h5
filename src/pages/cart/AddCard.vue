@@ -56,16 +56,9 @@ export default {
   computed: {},
   created () {},
   mounted () {},
-  watch: {
-    // 'isLogin': function () {
-    //   this.pageInit();
-    //   this.popupShow();
-    // }
-  },
+  watch: {},
   methods: {},
-  beforeDestroy () {
-    // this.$refs.indexMain.removeEventListener('scroll', this.dispatchScroll, false);
-  }
+  beforeDestroy () {}
 };
 </script>
 
