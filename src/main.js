@@ -1,12 +1,10 @@
 import Vue from 'vue';
-import VueResource from 'vue-resource';
 import App from './App';
 import router from './router';
 import VueCookie from 'vue-cookie';
 import initComponents from './initComponents';
 import Http from './libs/http';
 Vue.use(VueCookie);
-Vue.use(VueResource);
 initComponents(Vue);
 // vue-resource配置项
 Vue.http.options.emulateJSON = true;

@@ -99,18 +99,16 @@ export default {
   },
   methods: {
     getOrdersData() {
-      this.$http.post('/orders/payment', {
+      this.request('OrdersPayment', {
         token: localStorage.userToken || '',
         orderId: this.$route.params.orderId
       }).then((res) => {
-        if (res && res.data && res.data.status) {
-          this.data = res.data.content;
+        if (res.status === 200 && res.content) {
+          this.data = res.content;
           this.totalPrice = window.returnFloat(+this.data.price - +this.data.money);
-        } else {
-          // @TODO 数据错误
         }
-      }, () => {
-        // @TODO 网络错误
+      }, err => {
+        this.$Toast(err);
       });
     }
   },

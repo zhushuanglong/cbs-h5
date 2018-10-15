@@ -86,16 +86,15 @@ export default {
   methods: {
     // 获取购物车数据
     getCartData () {
-      this.$http.post('/carts', {}).then((res) => {
-        if (res && res.data && res.data.status) {
-          let data = res.data;
-          this.cartsData = data.content;
+      this.request('Carts', {
+        token: localStorage.userToken || ''
+      }).then((res) => {
+        if (res.status === 200 && res.content) {
+          this.cartsData = res.content;
           this.computeTotalPrice();
-        } else {
-          // @TODO 数据错误
         }
-      }, () => {
-        // @TODO 网络错误
+      }, err => {
+        this.$Toast(err);
       });
     },
     // 计算总价格
@@ -126,12 +125,16 @@ export default {
       clearTimeout(self.addSt);
       // 函数节流
       self.addSt = setTimeout(function() {
-        self.$http.post('/carts/add', {
+        self.request('CartsAdd', {
           token: localStorage.userToken || '',
           good_id: item.id,
           sku_id: item.sku_id,
           num: item.num
-        }).then((res) => {}, () => {});
+        }).then((res) => {
+          if (res.status === 200) {}
+        }, err => {
+          self.$Toast(err);
+        });
       }, 1000);
     },
     // 减少 - 登录后
@@ -145,12 +148,16 @@ export default {
       clearTimeout(self.reduceSt);
       // 函数节流
       self.reduceSt = setTimeout(function() {
-        self.$http.post('/carts/reduce', {
-          token: '', // @TODO
+        self.request('CartsReduce', {
+          token: localStorage.userToken || '',
           good_id: item.id,
           sku_id: item.sku_id,
           num: item.num
-        }).then((res) => {}, () => {});
+        }).then((res) => {
+          if (res.status === 200) {}
+        }, err => {
+          self.$Toast(err);
+        });
       }, 1000);
     },
     // 提交购物车
@@ -161,20 +168,18 @@ export default {
         this.$router.push({path: '/my/sign'});
         return;
       }
-      this.$http.post('/orders/checkout', {
+      this.request('OrdersCheckout', {
         token: localStorage.userToken || '',
         type: 2,	// 是	Number	单订来源(1：PC端，2：H5，4：APP)
         coupon_id: '',	// 是	String或者null	优惠券id 没有则为空
         integral: this.isUsePoint,	// 是	Boolean	积分是否选择 ture或者false
         date: Date.parse(new Date())	// 否	string	用户本地时间
       }).then((res) => {
-        if (res && res.data && res.data.status) {
-          this.$router.push({path: '/cart/secure/' + res.data.content});
-        } else {
-          // @TODO 数据错误
+        if (res.status === 200 && res.content) {
+          this.$router.push({path: '/cart/secure/' + res.content});
         }
-      }, () => {
-        // @TODO 网络错误
+      }, err => {
+        this.$Toast(err);
       });
     }
   },

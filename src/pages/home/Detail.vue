@@ -424,8 +424,9 @@ export default {
         if (res.status === 200) {
           let self = this;
           // 跳转到购物车
-          self.$Toast('Success', {
-            duration: 500
+          self.$Toast({
+            message: 'Success',
+            duration: 800
           });
           setTimeout(function() {
             document.body.scrollTop = document.documentElement.scrollTop = 0; // 滚动到顶部

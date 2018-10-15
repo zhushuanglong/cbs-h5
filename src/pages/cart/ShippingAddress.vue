@@ -29,7 +29,7 @@
       </div>
     </div>
     <div class="global-fixed-btn">
-      <router-link :to="{'path': '/cart/addAddress/' + $route.params.orderId}" class="fixed-btn">+ ADD NEW ADDRESS</router-link>
+      <router-link :to="{'path': '/cart/addAddress/' + $route.params.orderId + '?from=shipping'}" class="fixed-btn">+ ADD NEW ADDRESS</router-link>
     </div>
     <confirm :show.sync="confirmModal.show" :title="confirmModal.title"  :content="confirmModal.content" :on-ok="confirmModal.action"  okText="Yes"></confirm>
   </div>
@@ -51,17 +51,15 @@ export default {
   watch: {},
   methods: {
     getAddressList () {
-      this.$http.post('/address/list', {
+      this.request('AddressList', {
         token: localStorage.userToken || '',
         page: 1
       }).then((res) => {
-        if (res && res.data && res.data.status) {
-          this.data = res.data.content;
-        } else {
-          // @TODO 数据错误
+        if (res.status === 200 && res.content) {
+          this.data = res.content;
         }
-      }, () => {
-        // @TODO 网络错误
+      }, err => {
+        this.$Toast(err);
       });
     },
     edit (addressId) {
@@ -75,18 +73,22 @@ export default {
         onText: 'Yes',
         content: `Delete the Address!`,
         action: function () {
-          self.$http.post('/address/delete', {
+          self.request('AddressDelete', {
             token: localStorage.userToken || '',
-            addressId: self.addressId
+            addressId: addressId
           }).then((res) => {
-            if (res && res.data && res.data.status) {
+            if (res.status === 200 && res.content) {
               self.confirmModal.show = false;
-              self.$Toast('success');
-            } else {
-              // @TODO 数据错误
+              self.$Toast({
+                message: 'Success',
+                duration: 1200
+              });
+              setTimeout(function() {
+                self.data = res.content;
+              }, 500);
             }
-          }, () => {
-            // @TODO 网络错误
+          }, err => {
+            self.$Toast(err);
           });
         }
       }

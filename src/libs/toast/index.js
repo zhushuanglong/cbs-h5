@@ -4,6 +4,7 @@
 import './toast.css';
 class Toast {
 }
+
 Toast.install = function (Vue, options) {
     let opt = {
         defaultType: 'bottom',
@@ -12,13 +13,18 @@ Toast.install = function (Vue, options) {
     for (let property in options) {
         opt[property] = options[property];
     }
-    Vue.prototype.$toast = function (tips, type) {
+    Vue.prototype.$toast = function (tips, type, duration) {
         let curType;
         if (type) {
             curType = type;
         } else {
             curType = opt.defaultType;
         }
+
+        if (duration) {
+            opt.duration = duration;
+        }
+
         if (document.querySelector('.lx-toast')) {
             // 如果toast还在，则不再执行
             return;

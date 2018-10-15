@@ -62,26 +62,33 @@
 export default {
   data () {
     return {
-      data: {
+      data: { // 提交的数据
         default: false,
-      }, // 提交的数据
+      },
       addressId: null,
       backUrl: 'cart/secure/' + this.$route.params.orderId
     };
   },
   computed: {},
   created () {
+    // 如果存在addressId就是编辑页面
     this.addressId = this.$route.query.addressId;
-    if (this.addressId) { // 如果存在就是编辑页面
-      this.$http.post('/address/info', {
+    if (this.addressId) {
+      this.request('AddressInfo', {
         token: localStorage.userToken || '',
         address_id: this.addressId
       }).then((res) => {
-        if (res && res.data && res.data.status) {
-          this.data = res.data.content;
+        if (res.status === 200 && res.content) {
+          this.data = res.content;
         }
-      }, () => {});
-      
+      }, err => {
+        this.$Toast(err);
+      });
+      // 返回页面控制
+      this.backUrl = 'cart/shippingAddress/' + this.$route.params.orderId
+    }
+    // 如果是是shippingAddress页面点击新增过来的
+    if (this.$route.query.from === 'shipping') {
       this.backUrl = 'cart/shippingAddress/' + this.$route.params.orderId
     }
   },
@@ -122,13 +129,22 @@ export default {
         this.$Toast('Please fill in Phone Number');
         return;
       }
-      // country	是	string	国家 最大长度50字符 TODO
-      // state	是	string	州/省/区域 最大长度250字符
-      this.$http.post('/address/add', data).then((res) => {
-        if (res && res.data && res.data.status) {
-          this.$router.push({path: '/' + this.backUrl});
+      // country	是	string	国家 最大长度50字符 - 目前自行填写
+      // state	是	string	州/省/区域 最大长度250字符  - 目前自行填写
+      this.request('AddressAdd', data).then((res) => {
+        if (res.status === 200) {
+          let self = this;
+          self.$Toast({
+            message: 'Success',
+            duration: 800
+          });
+          setTimeout(function() {
+            self.$router.push({path: '/' + self.backUrl});
+          }, 1000);
         }
-      }, () => {});
+      }, err => {
+        this.$Toast(err);
+      });
     }
   },
   beforeDestroy () {}
