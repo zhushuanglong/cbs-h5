@@ -6,8 +6,6 @@ import initComponents from './initComponents';
 import Http from './libs/http';
 Vue.use(VueCookie);
 initComponents(Vue);
-// vue-resource配置项
-Vue.http.options.emulateJSON = true;
 Vue.use(Http);
 // rem 换算
 import { remChange } from './components/basic/remChange';
