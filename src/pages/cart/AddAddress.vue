@@ -86,11 +86,12 @@ export default {
       });
       // 返回页面控制
       this.backUrl = 'cart/shippingAddress/' + this.$route.params.orderId
-    }
-    // 如果是是shippingAddress页面点击新增过来的
-    if (this.$route.query.from === 'shipping') {
+    } else if (this.$route.query.from === 'shipping') { // 如果是是shippingAddress页面点击新增过来的
       this.backUrl = 'cart/shippingAddress/' + this.$route.params.orderId
-    }
+    } 
+    // else if (this.$route.query.from === 'addCard') {
+    //   this.backUrl = 'cart/addCard/' + this.$route.params.orderId
+    // }
   },
   mounted () {},
   watch: {},

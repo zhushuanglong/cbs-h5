@@ -18,6 +18,8 @@ const methodMap = {
     OrdersCheckout: {url: '/orders/checkout', method: 'post'},
     /** 支付确认页面 **/
     OrdersPayment: {url: '/orders/payment', method: 'post'},
+    /** 去支付 **/
+    OrdersPay: {url: '/orders/pay', method: 'post'},
     /** 地址信息 **/
     AddressInfo: {url: '/address/info', method: 'post'},
     /** 地址列表 **/
@@ -26,6 +28,8 @@ const methodMap = {
     AddressAdd: {url: '/address/add', method: 'post'},
     /** 地址删除 **/
     AddressDelete: {url: '/address/delete', method: 'post'},
+    /** 地址默认 **/
+    AddressDefault: {url: '/address/default', method: 'post'},
     /** 注册 **/
     UsersRegister: {url: '/users/register', method: 'post'},
     /** 登录 **/

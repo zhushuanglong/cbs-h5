@@ -62,6 +62,11 @@ var setOnline = [
     url: '/address/delete'
   },
   {
+    name: 'addressDefault',
+    type: 'post',
+    url: '/address/default'
+  },
+  {
     name: 'productsList',
     type: 'post',
     url: '/products/list'
@@ -147,6 +152,11 @@ var setOnline = [
     name: 'ordersPayment',
     type: 'post',
     url: '/orders/payment'
+  },
+  {
+    name: 'OrdersPay',
+    type: 'post',
+    url: '/orders/pay'
   },
   {// 交易流水
     name: 'personalFinance',

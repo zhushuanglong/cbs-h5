@@ -14,8 +14,8 @@
       </div>
       <div class="operate">
         <div class="fl">
-          <input type="radio" name="radio" v-if="item.is_default === 1" checked>
-          <input type="radio" name="radio" v-else>
+          <input type="radio" name="radio" @click="addressDefault(item.id)" v-if="item.is_default === 1" checked>
+          <input type="radio" name="radio" @click="addressDefault(item.id)" v-else>
           Set as Default Shipping Address
         </div>
         <div class="fr">
@@ -92,6 +92,22 @@ export default {
           });
         }
       }
+    },
+    addressDefault (addressId) {
+      this.request('AddressDefault', {
+        token: localStorage.userToken || '',
+        addressId: addressId
+      }).then((res) => {
+        if (res.status === 200 && res.content) {
+          this.data = res.content;
+          this.$Toast({
+            message: 'Setting default success',
+            duration: 1000
+          });
+        }
+      }, err => {
+        this.$Toast(err);
+      });
     }
   },
   beforeDestroy () {}
