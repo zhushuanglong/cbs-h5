@@ -7,7 +7,7 @@
         </router-link>
         <form action="" class="input fl">
           <i class="iconfont">&#xe66e;</i>
-          <input ref="inputSearchRef" class="w660 t3s" type="text" name="search" placeholder="What are you looking for?" @focus="inputFocus" @blur="inputBlur">
+          <input ref="inputSearchRef" class="w660 t3s J_searchInput" type="text" name="search" placeholder="What are you looking for?" @focus="inputFocus" @blur="inputBlur">
         </form>
         <div class="btn-search" @click="clickSearchResult">Search</div>
       </div>
@@ -62,7 +62,7 @@
           <div class="line"></div>
           <input type="text" class="input-max" placeholder="Max">
         </li>
-        <li>
+        <!-- <li>
           <div class="lable">
             <p>Size</p>
             <i class="iconfont">&#xe611;</i>
@@ -82,26 +82,28 @@
             </div>
           </div>
         </li>
-        <li></li>
+        <li></li> -->
       </ul>
       <div class="filter-btn">
         <div class="btn-reset fl">RESET</div>
         <div class="btn-apply fl">APPLY</div>
       </div>
     </div>
+    <div class="search-mask" v-show="isShowSearchMask"></div>
     <div class="bg-mask" :class="{'show': isShowFilterCon}"></div>
 
     <div class="search-con" v-show="dataSearch.length">
       <ul>
         <li v-for="item in dataSearch">
           <router-link :to="{path: '/detail/' + item.id}">
-            <img :src="item.img">
+            <img v-lazy="item.img">
             <p class="p1">{{item.name}}</p>
             <p class="p2">${{item.price}}</p>
           </router-link>
         </li>
       </ul>
     </div>
+    <div class="loading" v-show="dataSearch.length">{{loadingContent}}</div>
 
     <FloatMenu></FloatMenu>
 
@@ -120,14 +122,22 @@ export default {
   },
   data () {
     return {
-      searchParam: '', // 搜索参数
       dataSearch: [], // 搜索内容
       historyArr: localStorage.getItem('cbs_history') && localStorage.getItem('cbs_history').split(',') || [],
       isShowSearchHistory: true, // 搜索历史
       conditionsName: 'sort', // 条件
       clickSortIndex: 0, // 排序搜索条件
+      isFinishedLoading: false, // 是否完成loading
+      isShowSearchMask: false, // 搜索蒙层
       isShowSortCon: false, // 显示sort内容
       isShowFilterCon: false, // 显示filter内容
+      loadingContent: '', // 加载提示
+      searchParams: { // 搜索的参数
+        cate: '',
+        title: '', // 搜索内容
+        sort: '',
+        page: 1
+      },
       sortArr: [
         {
           name: 'Best Match',
@@ -187,28 +197,71 @@ export default {
     }
   },
   mounted () {
-    // this.$refs.inputSearchRef.focus();
+    if (this.$route.params.name === 'fromcate') {
+      this.$refs.inputSearchRef.focus();
+      this.isShowSearchMask = true;
+    }
+    this.loadMore();
   },
   methods: {
     // 获取商品列表信息
     getProductsList (option) {
+      // 初始化
+      this.loadingContent = 'Loading...';
+      this.isFinishedLoading = false;
+      this.loadingEmpty = false;
+      if (option.page === 1) {
+        this.dataSearch = [];
+      }
+      // 搜索条件
+      this.searchParams = option;
+      // 发送请求
       this.request('ProductsList', {
         cate: option.cate || '',
         title: option.title || '', // 搜索内容
         sort: option.sort || '',
-        page: 1
+        page: option.page
       }).then((res) => {
         if (res.status === 200 && res.content) {
-          this.dataSearch = res.content.goods;
+          this.loadingContent = '';
           this.isShowSearchHistory = false; // 隐藏搜索历史
           option.title && this.getHistory(option.title); // 记录搜索历史
+          // 滚动加载
+          console.log(option.page);
+          if (option.page < res.content.total_page) {
+            this.loadingEmpty = false;
+          } else {
+            this.loadingContent = 'No More';
+            this.loadingEmpty = true;
+          }
+          // 数据处理
+          this.dataSearch = this.dataSearch.concat(res.content.goods);
         } else {
-          this.dataSearch = [];
+          this.loadingEmpty = true;
+          this.loadingContent = 'No More';
         }
+        this.isFinishedLoading = true;
       }, err => {
-        this.dataSearch = [];
+        // this.dataSearch = [];
         this.$Toast(err);
+        this.isFinishedLoading = true;
       });
+    },
+    // 加载更多
+    loadMore () {
+      let self = this;
+      window.onscroll = function () {
+        var a = document.documentElement.scrollTop || document.body.scrollTop; // 滚动条y轴上的距离
+        var b = document.documentElement.clientHeight || document.body.clientHeight; // 可视区域的高度
+        var c = document.documentElement.scrollHeight || document.body.scrollHeight; // 可视化的高度与溢出的距离（总高度）
+        if (a + b >= c - 200 && self.isFinishedLoading && !self.loadingEmpty) {
+          let page = self.searchParams.page + 1;
+          Object.assign(self.searchParams, {
+            page: page
+          });
+          self.getProductsList(self.searchParams);
+        }
+      }
     },
     // 记录搜索历史 - 最多记录15个
     getHistory (title) {
@@ -231,9 +284,11 @@ export default {
       localStorage.setItem('cbs_history', arr);
     },
     inputFocus () {
+      this.isShowSearchMask = true;
       this.isShowSearchHistory = true;
     },
     inputBlur () {
+      this.isShowSearchMask = false;
       this.isShowSearchHistory = false;
     },
     // 点击搜索按钮
@@ -244,6 +299,7 @@ export default {
       inputSearchRef.blur();
       // 获取商品列表信息
       this.getProductsList({
+        page: 1,
         title: inputSearchRef.value.trim()
       });
     },
@@ -255,8 +311,6 @@ export default {
         page: 1,
         sort: item.sort
       });
-      // this.$route.params.name = item.name;
-      // console.log(this.$route.params.name);
     },
     // 点击条件
     clickConditions (status) {
@@ -510,7 +564,7 @@ export default {
       padding: 20/@rem;
       li {
         position: relative;
-        border-bottom: 1px solid #d3d3db;
+        // border-bottom: 1px solid #d3d3db;
         .label {
           .height(60);
         }
@@ -599,6 +653,20 @@ export default {
     p {
       .height(50);
     }
+  }
+  .loading {
+    text-align: center;
+    .height(80);
+  }
+  .search-mask {
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 90;
   }
 }
 </style>
