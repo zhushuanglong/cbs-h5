@@ -1,5 +1,6 @@
 <template>
   <div class="detail-main">
+    <topbar title="Failure Payment" :backUrl="backUrl" :detailId="$route.params.id"></topbar>
     <div class="detail-swipe">
       <Swipe class="my-swipe big-img-swipe" ref="bigImgSwipeRef" :nextCallback="nextCallback">
         <SwipeItem v-for="img in imgSwipe">
@@ -21,10 +22,12 @@
 
     <ul class="detail-something">
       <li class="detail-coupon">
-        <img src="~img/detail/s1.png">
-        <span class="gray2">（Rewards {{data.coupon && data.coupon.length}}）</span>
-        <span class="span1">Recive</span>
-        <i class="iconfont">&#xe62e;</i>
+        <router-link :to="{path: '/my/coupons?detail=' + $route.params.id}">
+          <img src="~img/detail/s1.png">
+          <span class="gray2">（Rewards {{data.coupon && data.coupon.length}}）</span>
+          <span class="span1">Recive</span>
+          <i class="iconfont">&#xe62e;</i>
+        </router-link>
       </li>
       <li class="detail-sale">
         <img src="~img/detail/s2.png">
@@ -33,14 +36,16 @@
         <i class="iconfont">&#xe62e;</i>
       </li>
       <li class="detail-point">
-        <img src="~img/detail/s3.png">
-        Earn {{data.max_integral}} Points，100 points equals to U.S. $1.00
-        <i class="iconfont">&#xe62e;</i>
+        <router-link :to="{path: '/my/points?detail=' + $route.params.id}">
+          <img src="~img/detail/s3.png">
+          Earn {{data.max_integral}} Points，100 points equals to U.S. $1.00
+          <i class="iconfont">&#xe62e;</i>
+        </router-link>
       </li>
     </ul>
 
     <div class="detail-sku" @click="footCartClick">
-      <div class="sku-label fl">Select {{this.goodsData.oneValue || `Color`}}&nbsp;,&nbsp;{{this.goodsData.twoValue ||`Size`}}&nbsp;&&nbsp;{{this.goodsData.twoValue && this.goodsData.saleNum || `Quantiy`}}</div>
+      <div class="sku-label fl">Select {{goodsData.oneValue || `Color`}}&nbsp;,&nbsp;{{goodsData.twoValue ||`Size`}}&nbsp;&&nbsp;{{goodsData.twoValue && goodsData.saleNum || `Quantiy`}}</div>
       <i class="iconfont">&#xe62e;</i>
     </div>
 
@@ -159,11 +164,15 @@ export default {
       oneSkuNum: 0, // sku第一排动态属性高亮
       el: {}, // dom 集合
       skuId: null, // sku id
-      submitLocked: false // 提交锁
+      submitLocked: false, // 提交锁
+      backUrl: 'home' // 返回路径
     }
   },
   created () {
     this.getDetailData();
+    if (this.$route.query.from) {
+      this.backUrl = decodeURIComponent(this.$route.query.from);
+    }
   },
   mounted () {
     let self = this;
@@ -411,7 +420,7 @@ export default {
       if (this.submitLocked) {
         return;
       }
-      
+
       if (!this.submitLocked) {
         this.submitLocked = true;
       }
@@ -456,6 +465,7 @@ export default {
 <style lang="less">
 @import "~less/tool.less";
 .detail-main {
+  padding-top: 90/@rem;
   padding-bottom: 90/@rem;
   .detail-swipe {
     .big-img-swipe {
@@ -514,6 +524,10 @@ export default {
   .detail-something {
     display: block;
     margin-top: 20/@rem;
+    .detail-coupon a,
+    .detail-point a {
+      display: block;
+    }
     li {
       position: relative;
       padding: 0 20/@rem;

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <topbar title="My Coupons" backUrl="my"></topbar>
+    <topbar title="My Coupons" :backUrl="backUrl"></topbar>
     <div class="my-coupon">
       <div class="c-search">
         <input type="text" v-model="redeemCode" class="s-input" placeholder="Enter promo code here"/>
@@ -17,7 +17,7 @@
       </div>
       <pageempty :margin-top="185" v-if="couponList && couponList.length === 0" icon="&#xe691;" desc="You don‘t have any available coupons now!"></pageempty>
     </div>
-  </div> 
+  </div>
 </template>
 <script>
 export default {
@@ -25,7 +25,14 @@ export default {
     return {
       searchContent: '',
       couponList: [],
-      redeemCode: ''
+      redeemCode: '',
+      backUrl: 'my' // 返回地址
+    }
+  },
+  created() {
+    // 来自详情页
+    if (this.$route.query.detail) {
+      this.backUrl = 'detail/' + this.$route.query.detail;
     }
   },
   mounted() {
@@ -61,7 +68,7 @@ export default {
     width: 684/@rem;
     height:100%;
     padding: 0 22/@rem;
-    
+
   }
   .search-btn{
     position: absolute;
