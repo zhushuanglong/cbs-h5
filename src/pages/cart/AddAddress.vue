@@ -97,35 +97,35 @@ export default {
     submitAddress () {
       let data = Object.assign({}, this.data);
       if (!data.firstname) {
-        this.$Toast('Please fill in firstname');
+        this.$Toast('Firstname must be more than 2 letters');
         return;
       }
       if (!data.lastname) {
-        this.$Toast('Please fill in lastname');
+        this.$Toast('Lastname must be more than 2 letters');
         return;
       }
       if (!data.country) {
-        this.$Toast('Please fill in country');
+        this.$Toast('Country  must be more than 2 letters');
         return;
       }
       if (!data.state) {
-        this.$Toast('Please fill in state/province');
+        this.$Toast('State/province  must be more than 2 letters');
         return;
       }
       if (!data.city) {
-        this.$Toast('Please fill in city');
+        this.$Toast('City must be more than 2 letters');
         return;
       }
       if (!data.street) {
-        this.$Toast('Please fill in firstname');
+        this.$Toast('Firstname must be more than 2 letters');
         return;
       }
       if (!data.postalcode) {
-        this.$Toast('Please fill in ZIP/Post Code');
+        this.$Toast('ZIP/Post Code must be more than 2 letters');
         return;
       }
       if (!data.iphone) {
-        this.$Toast('Please fill in Phone Number');
+        this.$Toast('Phone Number must be more than 2 letters');
         return;
       }
       // country	是	string	国家 最大长度50字符 - 目前自行填写

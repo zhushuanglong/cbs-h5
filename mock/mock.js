@@ -27,11 +27,6 @@ var setOnline = [
     url: '/carts/add'
   },
   {
-    name: 'cartsReduce',
-    type: 'post',
-    url: '/carts/reduce'
-  },
-  {
     name: 'cardsList',
     type: 'post',
     url: '/cards/list'

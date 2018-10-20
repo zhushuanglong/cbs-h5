@@ -439,6 +439,7 @@ export default {
       }
       // 提交表单
       this.request('CartsAdd', {
+        token: localStorage.getItem('userToken') || '',
         good_id: +this.$route.query.id,
         sku_id: +this.skuId,
         num: +this.goodsData.saleNum
