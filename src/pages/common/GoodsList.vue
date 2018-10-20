@@ -5,7 +5,7 @@
        <a :href="item.stock > 0 ? 'detail/' + item.id : 'javascript:;'">
          <img :src="item.img" alt="" class="img">
          <p class="title">{{item.name}}</p>
-         <p class="price">${{item.price}}</p>
+         <p class="price">${{item.price}}<span class="prom-price">${{item.prom_price}}</span></p>
        </a>
        <div class="solt-out" v-if="item.stock === 0">
          <img src="../../images/my/soltout.png" alt="">
@@ -63,15 +63,21 @@ export default {
       width: 100%;
       text-align: center
     }
+    .prom-price{
+      font-size: 24/@rem;
+      color: #939399;
+      margin-left: 10/@rem;
+      text-decoration: line-through;
+    }
     .solt-out{
       position: absolute;
       top: 0;
-      background-color: rgba(100, 100, 100, 0.1);
+      background-color: rgba(255, 255, 255, 0.5);
       width: 365/@rem;
       height: 365/@rem;
       img{
         margin-top: 100/@rem;
-        width: 160/@rem;
+        width: 185/@rem;
         height: 160/@rem;
       }
     }
