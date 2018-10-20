@@ -60,7 +60,6 @@ export default {
   methods: {
     getAddressList () {
       this.request('AddressList', {
-        token: localStorage.userToken || '',
         page: 1
       }).then((res) => {
         if (res.status === 200 && res.content) {
@@ -77,12 +76,11 @@ export default {
       let self = this;
       self.confirmModal = {
         show: true,
-        title: 'Do you confirm delete?',
+        title: 'Confirmed to delete?',
         onText: 'Yes',
         content: `Delete the Address!`,
         action: function () {
           self.request('AddressDelete', {
-            token: localStorage.userToken || '',
             address_id: addressId
           }).then((res) => {
             if (res.status === 200 && res.content) {
@@ -105,7 +103,6 @@ export default {
     },
     addressDefault (addressId) {
       this.request('AddressDefault', {
-        token: localStorage.userToken || '',
         address_id: addressId
       }).then((res) => {
         if (res.status === 200 && res.content) {

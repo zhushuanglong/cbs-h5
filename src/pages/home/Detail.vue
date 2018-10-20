@@ -1,6 +1,6 @@
 <template>
   <div class="detail-main">
-    <topbar title="Failure Payment" :backUrl="backUrl" :detailId="$route.params.id"></topbar>
+    <topbar title="Failure Payment" :backUrl="backUrl" :detailId="$route.query.id"></topbar>
     <div class="detail-swipe">
       <Swipe class="my-swipe big-img-swipe" ref="bigImgSwipeRef" :nextCallback="nextCallback">
         <SwipeItem v-for="img in imgSwipe">
@@ -439,8 +439,7 @@ export default {
       }
       // 提交表单
       this.request('CartsAdd', {
-        token: localStorage.getItem('userToken') || '',
-        good_id: +this.$route.params.id,
+        good_id: +this.$route.query.id,
         sku_id: +this.skuId,
         num: +this.goodsData.saleNum
       }).then((res) => {
@@ -457,7 +456,7 @@ export default {
             self.isMaskShow = false;
             self.isPopupSkuShow = false;
             self.$router.push({
-              path: '/cart?id=' + self.$route.params.id
+              path: '/cart?id=' + self.$route.query.id
             });
           }, 1000);
         } else {

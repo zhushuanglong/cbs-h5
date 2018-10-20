@@ -1,6 +1,6 @@
 <template>
-  <div class="point-modal a-fadeinT" v-show="showPoint">
-    <div class="info">
+  <div class="point-modal" v-show="showPoint">
+    <div class="info a-fadeinT">
       <p class="detail">Points Rules</p>
       <span class="close" @click="clickPointClose"><i class="iconfont">&#xe63f;</i></span>
       <p class="title">WaiWaiMall Points Rules</p>
@@ -47,13 +47,13 @@ export default {
 <style lang="less">
 @import "~less/tool.less";
 .point-modal {
-  background-color: rgba(0, 0, 0, 0.5);
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 2222;
+  z-index: 222;
+  background-color: rgba(0, 0, 0, 0.5);
   .info{
     position: absolute;
     bottom: 0;
