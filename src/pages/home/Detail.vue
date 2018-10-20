@@ -21,26 +21,24 @@
     </div>
 
     <ul class="detail-something">
-      <li class="detail-coupon">
-        <router-link :to="{path: '/my/coupons?detail=' + $route.params.id}">
-          <img src="~img/detail/s1.png">
-          <span class="gray2">（Rewards {{data.coupon && data.coupon.length}}）</span>
-          <span class="span1">Recive</span>
-          <i class="iconfont">&#xe62e;</i>
-        </router-link>
-      </li>
-      <li class="detail-sale">
-        <img src="~img/detail/s2.png">
-        {{data.promotion && data.promotion.role}}
-        <span class="span2">More</span>
+      <li class="detail-coupon" @click="clickShowCouponModal">
+        <img src="~img/detail/s1.png">
+        <span class="gray2">（Rewards {{data.coupon && data.coupon.length}}）</span>
+        <span class="span1">Recive</span>
         <i class="iconfont">&#xe62e;</i>
       </li>
-      <li class="detail-point">
-        <router-link :to="{path: '/my/points?detail=' + $route.params.id}">
-          <img src="~img/detail/s3.png">
-          Earn {{data.max_integral}} Points，100 points equals to U.S. $1.00
+      <li class="detail-sale">
+        <router-link :to="{path: '/activity'}">
+          <img src="~img/detail/s2.png">
+          {{data.promotion && data.promotion.role}}
+          <span class="span2">More</span>
           <i class="iconfont">&#xe62e;</i>
         </router-link>
+      </li>
+      <li class="detail-point" @click="clickShowPointModal">
+        <img src="~img/detail/s3.png">
+        Earn {{data.max_integral}} Points，100 points equals to U.S. $1.00
+        <i class="iconfont">&#xe62e;</i>
       </li>
     </ul>
 
@@ -135,22 +133,30 @@
         <i class="iconfont sku-close" @click="skuCloseClick">&#xe63f;</i>
       </div>
     </div>
+
+    <Coupon :showCoupon.sync="isShowCoupon" :coupons="data.coupon || []"></Coupon>
+    <Point :showPoint.sync="isShowPoint"></Point>
   </div>
 </template>
 
 <script>
 import { Swipe, SwipeItem } from 'components/swipe';
-
+import Coupon from 'common/Coupon.vue';
+import Point from './Point.vue';
 export default {
   props: {},
   components: {
     Swipe,
-    SwipeItem
+    SwipeItem,
+    Coupon,
+    Point
   },
   data () {
     return {
       data: {},
       isShowFloatMenu: false, // 浮动menu
+      isShowCoupon: false, // 是否显示coupon弹层
+      isShowPoint: false,
       goodsData: {
         saleNum: 1
       }, // 选中的商品信息
@@ -404,6 +410,13 @@ export default {
       this.isPopupSkuShow = false;
       this.isBackMenuShow = false;
     },
+    // 点击coupon
+    clickShowCouponModal () {
+      this.isShowCoupon = true;
+    },
+    clickShowPointModal () {
+      this.isShowPoint = true;
+    },
     // 点击加入购物车
     footCartClick () {
       this.isMaskShow = true;
@@ -420,12 +433,13 @@ export default {
       if (this.submitLocked) {
         return;
       }
-
+      // 提交锁
       if (!this.submitLocked) {
         this.submitLocked = true;
       }
       // 提交表单
       this.request('CartsAdd', {
+        token: localStorage.getItem('userToken') || '',
         good_id: +this.$route.params.id,
         sku_id: +this.skuId,
         num: +this.goodsData.saleNum
@@ -524,8 +538,7 @@ export default {
   .detail-something {
     display: block;
     margin-top: 20/@rem;
-    .detail-coupon a,
-    .detail-point a {
+    .detail-sale a {
       display: block;
     }
     li {

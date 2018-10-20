@@ -62,6 +62,20 @@
   }
 });
 
+/* 从右进入 */
+.a-fadeinR {
+  -webkit-animation: fadeinR .3s ease-out backwards;
+  animation: fadeinR .3s ease-out backwards;
+  .transformStyle();
+}
+.keyframes(all, fadeinR, {
+  0% {
+    transform: translateX(100/@rem);
+  }
+  100% {
+    transform: translate(0);
+  }
+});
 
 // 旋转
 .rotate180 {

@@ -32,6 +32,31 @@ var setOnline = [
     url: '/carts/reduce'
   },
   {
+    name: 'cardsList',
+    type: 'post',
+    url: '/cards/list'
+  },
+  {
+    name: 'cardsInfo',
+    type: 'post',
+    url: '/cards/info'
+  },
+  {
+    name: 'cardsDefault',
+    type: 'post',
+    url: '/cards/default'
+  },
+  {
+    name: 'cardsEdit',
+    type: 'post',
+    url: '/cards/edit'
+  },
+  {
+    name: 'cardsDelete',
+    type: 'post',
+    url: '/cards/delete'
+  },
+  {
     name: 'productsDetail',
     type: 'get',
     url: '/products/detail'

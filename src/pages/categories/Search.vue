@@ -50,7 +50,7 @@
       </div>
     </div>
 
-    <div class="filter-con" v-show="isShowFilterCon">
+    <div class="filter-con a-fadeinR" v-show="isShowFilterCon">
       <div class="filter-title">
         <i class="iconfont" @click="closeFilter">&#xe63f;</i>
         <p>Filter</p>
@@ -58,9 +58,9 @@
       <ul class="filter-detail">
         <li>
           <div class="label mt">Price</div>
-          <input type="text" placeholder="Min">
+          <input type="text" placeholder="Min" v-model="filterParams.minPrice">
           <div class="line"></div>
-          <input type="text" class="input-max" placeholder="Max">
+          <input type="text" class="input-max" placeholder="Max" v-model="filterParams.maxPrice">
         </li>
         <!-- <li>
           <div class="lable">
@@ -85,8 +85,8 @@
         <li></li> -->
       </ul>
       <div class="filter-btn">
-        <div class="btn-reset fl">RESET</div>
-        <div class="btn-apply fl">APPLY</div>
+        <div class="btn-reset fl" @click="filterReset">RESET</div>
+        <div class="btn-apply fl" @click="filterApply">APPLY</div>
       </div>
     </div>
     <div class="search-mask" v-show="isShowSearchMask"></div>
@@ -123,6 +123,7 @@ export default {
   data () {
     return {
       dataSearch: [], // 搜索内容
+      filterParams: {}, // 过滤条件
       historyArr: localStorage.getItem('cbs_history') && localStorage.getItem('cbs_history').split(',') || [],
       isShowSearchHistory: true, // 搜索历史
       conditionsName: 'sort', // 条件
@@ -218,8 +219,10 @@ export default {
       // 发送请求
       this.request('ProductsList', {
         cate: option.cate || '',
-        title: option.title || '', // 搜索内容
+        title: option.title && encodeURIComponent(option.title) || '', // 搜索内容
         sort: option.sort || '',
+        minprice: option.minprice || '',
+        maxprice: option.maxprice || '',
         page: option.page
       }).then((res) => {
         if (res.status === 200 && res.content) {
@@ -227,7 +230,6 @@ export default {
           this.isShowSearchHistory = false; // 隐藏搜索历史
           option.title && this.getHistory(option.title); // 记录搜索历史
           // 滚动加载
-          console.log(option.page);
           if (option.page < res.content.total_page) {
             this.loadingEmpty = false;
           } else {
@@ -326,6 +328,20 @@ export default {
     },
     closeFilter () {
       this.isShowFilterCon = false;
+    },
+    // 过滤条件 重置
+    filterReset () {
+      this.filterParams = {};
+    },
+    // 过滤
+    filterApply () {
+      this.isShowFilterCon = !this.isShowFilterCon;
+      this.getProductsList({
+        minprice: this.filterParams.minPrice,
+        maxprice: this.filterParams.maxPrice,
+        page: 1
+      });
+
     }
   },
   beforeDestroy () {}
