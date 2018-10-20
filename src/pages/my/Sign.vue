@@ -24,6 +24,7 @@ export default {
     return {
       type: 'sign',
       params: {
+        touristToken: window.localStorage.getItem('touristToken') ||　'',
         email: '',
         password: ''
       }

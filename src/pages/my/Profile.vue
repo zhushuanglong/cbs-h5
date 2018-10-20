@@ -102,7 +102,9 @@ export default {
       this.request('PersonalInfo').then((res) => {
         if(res.status === 200 && res.content) {
           this.params = res.content;
-          this.params.birth = formatToHMS(this.params.birth);
+          if(this.params.birth) {
+            this.params.birth = formatToHMS(this.params.birth);
+          }
         }
       }, err => {
         this.$Toast(err);
@@ -138,6 +140,7 @@ export default {
       this.confirmModal.show = false;
       localStorage.removeItem('userInfo');
       localStorage.removeItem('userToken');
+      localStorage.removeItem('touristToken');
       this.$router.go(-1)
     },
     toAddress() {
