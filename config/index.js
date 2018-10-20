@@ -21,11 +21,11 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/personal/*': {
-        target: 'http://api.cucoe.net',
-        changeOrigin: true,
-        secure: false
-      },
+      // '/personal/*': {
+      //   target: 'http://api.cucoe.net',
+      //   changeOrigin: true,
+      //   secure: false
+      // },
       '/users/*': {
         target: 'http://api.cucoe.net',
         changeOrigin: true,
@@ -46,11 +46,11 @@ module.exports = {
         changeOrigin: true,
         secure: false
       },
-      '/promotions/*': {
-        target: 'http://api.cucoe.net',
-        changeOrigin: true,
-        secure: false
-      },
+      // '/promotions/*': {
+      //   target: 'http://api.cucoe.net',
+      //   changeOrigin: true,
+      //   secure: false
+      // },
       '/carts/*': {
         target: 'http://api.cucoe.net',
         changeOrigin: true,
