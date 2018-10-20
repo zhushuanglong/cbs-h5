@@ -80,7 +80,7 @@ export default new Router({
     },
     {
       name: 'addCard',
-      path: '/cart/addCard',
+      path: '/cart/addCard/:orderId',
       component: function (resolve) {
         require.ensure([], function () {
           resolve(require('pages/cart/AddCard'));
@@ -89,7 +89,7 @@ export default new Router({
     },
     {
       name: 'successful',
-      path: '/cart/successful',
+      path: '/cart/successful/:orderId',
       component: function (resolve) {
         require.ensure([], function () {
           resolve(require('pages/cart/Successful'));
@@ -98,7 +98,7 @@ export default new Router({
     },
     {
       name: 'failure',
-      path: '/cart/failure',
+      path: '/cart/failure/:orderId',
       component: function (resolve) {
         require.ensure([], function () {
           resolve(require('pages/cart/Failure'));

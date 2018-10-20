@@ -2,6 +2,34 @@
  * 请求地址API
  */
 const methodMap = {
+    /** 首页 **/
+    Home: {url: '/home', method: 'post'},
+    /** 商品详情 **/
+    ProductsDetail: {url: '/products/detail', method: 'get'},
+    /** 商品列表 **/
+    ProductsList: {url: '/products/list', method: 'post'},
+    /** 购物车 **/
+    Carts: {url: '/carts', method: 'post'},
+    /** 购物车添加 **/
+    CartsAdd: {url: '/carts/add', method: 'post'},
+    /** 购物车减少 **/
+    CartsReduce: {url: '/carts/reduce', method: 'post'},
+    /** 购物车提交 **/
+    OrdersCheckout: {url: '/orders/checkout', method: 'post'},
+    /** 支付确认页面 **/
+    OrdersPayment: {url: '/orders/payment', method: 'post'},
+    /** 去支付 **/
+    OrdersPay: {url: '/orders/pay', method: 'post'},
+    /** 地址信息 **/
+    AddressInfo: {url: '/address/info', method: 'post'},
+    /** 地址列表 **/
+    AddressList: {url: '/address/list', method: 'post'},
+    /** 地址添加 **/
+    AddressAdd: {url: '/address/add', method: 'post'},
+    /** 地址删除 **/
+    AddressDelete: {url: '/address/delete', method: 'post'},
+    /** 地址默认 **/
+    AddressDefault: {url: '/address/default', method: 'post'},
     /** 注册 **/
     UsersRegister: {url: '/users/register', method: 'post'},
     /** 登录 **/

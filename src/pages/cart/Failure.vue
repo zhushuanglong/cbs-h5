@@ -1,6 +1,6 @@
 <template>
   <div class="failure-main">
-    <topbar :title="'Failure Payment'" :backUrl="'order'"></topbar>
+    <topbar title="Failure Payment" backUrl="my/orderList"></topbar>
     <div class="failure-con">
       <div class="title">
         <i class="iconfont">&#xe63f;</i>
@@ -9,7 +9,7 @@
       <p class="f32">Order amount: $888</p>
       <p>Payment failed, please pay again.</p>
     </div>
-    <div class="btn-order">VIEW THE ORDER</div>
+    <router-link :to="{path: '/my/orderDetail?orderid=' + $route.params.orderId}" class="btn-order">VIEW THE ORDER</router-link>
   </div>
 </template>
 
@@ -21,16 +21,9 @@ export default {
   computed: {},
   created () {},
   mounted () {},
-  watch: {
-    // 'isLogin': function () {
-    //   this.pageInit();
-    //   this.popupShow();
-    // }
-  },
+  watch: {},
   methods: {},
-  beforeDestroy () {
-    // this.$refs.indexMain.removeEventListener('scroll', this.dispatchScroll, false);
-  }
+  beforeDestroy () {}
 };
 </script>
 

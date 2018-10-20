@@ -32,9 +32,9 @@ var setOnline = [
     url: '/carts/reduce'
   },
   {
-    name: 'detail',
-    type: 'post',
-    url: '/detail'
+    name: 'productsDetail',
+    type: 'get',
+    url: '/products/detail'
   },
   {
     name: 'addressAdd',
@@ -60,6 +60,11 @@ var setOnline = [
     name: 'addressDelete',
     type: 'post',
     url: '/address/delete'
+  },
+  {
+    name: 'addressDefault',
+    type: 'post',
+    url: '/address/default'
   },
   {
     name: 'productsList',
@@ -117,11 +122,6 @@ var setOnline = [
     url: '/search/searchlist'
   },
   {
-    name: 'homeStoreList',
-    type: 'post',
-    url: '/home/storeList'
-  },
-  {
     name: 'listsGoodslist',
     type: 'post',
     url: '/lists/goodslist'
@@ -152,6 +152,11 @@ var setOnline = [
     name: 'ordersPayment',
     type: 'post',
     url: '/orders/payment'
+  },
+  {
+    name: 'OrdersPay',
+    type: 'post',
+    url: '/orders/pay'
   },
   {// 交易流水
     name: 'personalFinance',

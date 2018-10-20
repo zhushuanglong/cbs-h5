@@ -1,13 +1,11 @@
 {
-  "status": true,
-  "messages": "",
-  "data": {
-    "max_stock": "1616",
+  "status": 200,
+  "msg": "success",
+  "content": {
     "code": "CS0001",
     "name": "2018 summer new fashions lotus leaf long sleeved",
     "summary": "test",
     "max_integral": 20,
-
     "coupon": [
       {
         "price": 10,

@@ -1,6 +1,6 @@
 <template>
   <div class="successful-main">
-    <topbar :title="'Successful Payment'" :backUrl="'order'"></topbar>
+    <topbar title="Successful Payment" backUrl="my/orderList"></topbar>
     <div class="successful-con">
       <div class="title">
         <i class="iconfont">&#xe602;</i>
@@ -9,8 +9,8 @@
       <p class="f32">Order amount: $888</p>
       <p>Thank you for your order, we will deliver the goods soon</p>
     </div>
-    <div class="btn-order">VIEW THE ORDER</div>
-    <div class="btn-shopping">GO SHOPPING</div>
+    <router-link :to="{path: '/my/orderDetail?orderid=' + $route.params.orderId}" class="btn-order">VIEW THE ORDER</router-link>
+    <router-link :to="{path: '/home'}" class="btn-shopping">GO SHOPPING</router-link>
   </div>
 </template>
 
@@ -22,16 +22,9 @@ export default {
   computed: {},
   created () {},
   mounted () {},
-  watch: {
-    // 'isLogin': function () {
-    //   this.pageInit();
-    //   this.popupShow();
-    // }
-  },
+  watch: {},
   methods: {},
-  beforeDestroy () {
-    // this.$refs.indexMain.removeEventListener('scroll', this.dispatchScroll, false);
-  }
+  beforeDestroy () {}
 };
 </script>
 
@@ -68,6 +61,7 @@ export default {
   }
 
   .btn-order {
+    display: block;
     .whl(710, 88);
     margin: 0 auto;
     background-color: @red;
@@ -77,6 +71,7 @@ export default {
     margin-top: 43/@rem;
   }
   .btn-shopping {
+    display: block;
     .whl(710, 88);
     margin: 0 auto;
     background-color: #fff;

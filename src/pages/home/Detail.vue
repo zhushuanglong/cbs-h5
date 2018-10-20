@@ -1,5 +1,6 @@
 <template>
   <div class="detail-main">
+    <topbar title="Failure Payment" :backUrl="backUrl" :detailId="$route.params.id"></topbar>
     <div class="detail-swipe">
       <Swipe class="my-swipe big-img-swipe" ref="bigImgSwipeRef" :nextCallback="nextCallback">
         <SwipeItem v-for="img in imgSwipe">
@@ -21,26 +22,30 @@
 
     <ul class="detail-something">
       <li class="detail-coupon">
-        <img src="~img/detail/s1.png">
-        <span class="gray2">（Rewards {{data.coupon.length}}）</span>
-        <span class="span1">Recive</span>
-        <i class="iconfont">&#xe62e;</i>
+        <router-link :to="{path: '/my/coupons?detail=' + $route.params.id}">
+          <img src="~img/detail/s1.png">
+          <span class="gray2">（Rewards {{data.coupon && data.coupon.length}}）</span>
+          <span class="span1">Recive</span>
+          <i class="iconfont">&#xe62e;</i>
+        </router-link>
       </li>
       <li class="detail-sale">
         <img src="~img/detail/s2.png">
-        {{data.promotion.role}}
+        {{data.promotion && data.promotion.role}}
         <span class="span2">More</span>
         <i class="iconfont">&#xe62e;</i>
       </li>
       <li class="detail-point">
-        <img src="~img/detail/s3.png">
-        Earn {{data.max_integral}} Points，100 points equals to U.S. $1.00
-        <i class="iconfont">&#xe62e;</i>
+        <router-link :to="{path: '/my/points?detail=' + $route.params.id}">
+          <img src="~img/detail/s3.png">
+          Earn {{data.max_integral}} Points，100 points equals to U.S. $1.00
+          <i class="iconfont">&#xe62e;</i>
+        </router-link>
       </li>
     </ul>
 
     <div class="detail-sku" @click="footCartClick">
-      <div class="sku-label fl">Select {{this.goodsData.oneValue || `Color`}}&nbsp;,&nbsp;{{this.goodsData.twoValue ||`Size`}}&nbsp;&&nbsp;{{this.goodsData.twoValue && this.goodsData.saleNum || `Quantiy`}}</div>
+      <div class="sku-label fl">Select {{goodsData.oneValue || `Color`}}&nbsp;,&nbsp;{{goodsData.twoValue ||`Size`}}&nbsp;&&nbsp;{{goodsData.twoValue && goodsData.saleNum || `Quantiy`}}</div>
       <i class="iconfont">&#xe62e;</i>
     </div>
 
@@ -159,11 +164,15 @@ export default {
       oneSkuNum: 0, // sku第一排动态属性高亮
       el: {}, // dom 集合
       skuId: null, // sku id
-      submitLocked: false // 提交锁
+      submitLocked: false, // 提交锁
+      backUrl: 'home' // 返回路径
     }
   },
   created () {
     this.getDetailData();
+    if (this.$route.query.from) {
+      this.backUrl = decodeURIComponent(this.$route.query.from);
+    }
   },
   mounted () {
     let self = this;
@@ -179,16 +188,12 @@ export default {
   methods: {
     // 获取详情页基础数据
     getDetailData () {
-      
-      this.$http.post('/detail', {}).then((res) => {
-        if (res && res.data && res.data.status) {
-          let {data} = res.data;
-          this.data = data;
-        } else {
-          // @TODO 数据错误
+      this.request('ProductsDetail', {}).then((res) => {
+        if (res.status === 200 && res.content) {
+          this.data = res.content;
         }
-      }, () => {
-        // @TODO 网络错误
+      }, err => {
+        this.$Toast(err);
       }).then(() => {
         this.getOneSkuData();
       }).then(() => {
@@ -415,31 +420,37 @@ export default {
       if (this.submitLocked) {
         return;
       }
-      
+
       if (!this.submitLocked) {
         this.submitLocked = true;
       }
       // 提交表单
-      this.$http.post('/carts/add', {
-        token: localStorage.userToken || '',
+      this.request('CartsAdd', {
         good_id: +this.$route.params.id,
         sku_id: +this.skuId,
-        num: +this.goodsData.num
+        num: +this.goodsData.saleNum
       }).then((res) => {
-        if (res && res.data && res.data.status) {
-          document.body.scrollTop = document.documentElement.scrollTop = 0; // 滚动到顶部
-          this.submitLocked = false; // 解锁
-          this.isMaskShow = false;
-          this.isPopupSkuShow = false;
+        if (res.status === 200) {
+          let self = this;
           // 跳转到购物车
-          this.$router.push({
-            path: '/cart'
+          self.$Toast({
+            message: 'Success',
+            duration: 800
           });
+          setTimeout(function() {
+            document.body.scrollTop = document.documentElement.scrollTop = 0; // 滚动到顶部
+            self.submitLocked = false; // 解锁
+            self.isMaskShow = false;
+            self.isPopupSkuShow = false;
+            self.$router.push({
+              path: '/cart?id=' + self.$route.params.id
+            });
+          }, 1000);
         } else {
           this.submitLocked = false; // 解锁
         }
-      }, () => {
-        this.submitLocked = false; // 解锁
+      }, err => {
+        this.$Toast(err);
       });
     },
     // 弹出SKU点击关闭
@@ -454,6 +465,7 @@ export default {
 <style lang="less">
 @import "~less/tool.less";
 .detail-main {
+  padding-top: 90/@rem;
   padding-bottom: 90/@rem;
   .detail-swipe {
     .big-img-swipe {
@@ -512,6 +524,10 @@ export default {
   .detail-something {
     display: block;
     margin-top: 20/@rem;
+    .detail-coupon a,
+    .detail-point a {
+      display: block;
+    }
     li {
       position: relative;
       padding: 0 20/@rem;

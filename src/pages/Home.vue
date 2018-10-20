@@ -25,15 +25,12 @@ export default {
   watch: {},
   methods: {
     getHomeData () {
-      this.$http.post('/home', {}).then((res) => {
-        if (res && res.data && res.data.status) {
-          let {data} = res.data;
-          this.store_goods = data.store_goods; // 商品数据
-        } else {
-          // @TODO 数据错误
+      this.request('Home', {}).then((res) => {
+        if (res.status === 200 && res.content) {
+          this.store_goods = res.content.store_goods; // 商品数据
         }
-      }, () => {
-        // @TODO 网络错误
+      }, err => {
+        this.$Toast(err);
       });
     }
   },

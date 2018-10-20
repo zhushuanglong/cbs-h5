@@ -9,7 +9,9 @@
         <a class="back" href="javascript:;" v-else  @click="pageBack"><i class="iconfont" >&#xe62f;</i></a>
       </template>
       <div class="title">{{title}}</div>
-      <i v-if="$route.name === 'detail'" class="iconfont cart">&#xe624;</i>
+      <router-link :to="{path: '/cart?id=' + detailId}" v-if="$route.name === 'detail'">
+        <i class="iconfont cart">&#xe624;</i>
+      </router-link>
     </div>
   </div>
 </template>
@@ -24,6 +26,11 @@ export default {
     },
     // back url
     backUrl: {
+      type: String,
+      default: ''
+    },
+    // detail id
+    detailId: {
       type: String,
       default: ''
     },
