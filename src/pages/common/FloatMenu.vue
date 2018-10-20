@@ -8,16 +8,16 @@
           <router-link :to="{path: '/home'}"><i class="iconfont">&#xe618;</i></router-link>
         </li>
         <li>
-          <div class="name">SEARCH</div>
-          <router-link :to="{path: '/search'}"><i class="iconfont">&#xe620;</i></router-link>
+          <div class="name">CATEGORIES</div>
+          <router-link :to="{path: '/categories'}"><i class="iconfont">&#xe620;</i></router-link>
         </li>
         <li>
           <div class="name">CART</div>
           <router-link :to="{path: '/cart'}"><i class="iconfont">&#xe624;</i></router-link>
         </li>
         <li>
-          <div class="name">SHARE</div>
-          <router-link :to="{path: '/share'}"><i class="iconfont">&#xe684;</i></router-link>
+          <div class="name">Account</div>
+          <router-link :to="{path: '/my'}"><i class="iconfont">&#xe62b;</i></router-link>
         </li>
       </ul>
     </div>
@@ -93,11 +93,11 @@ export default {
       }
       li {
         position: relative;
-        width: 200/@rem;
+        width: 260/@rem;
         height: 80/@rem;
         margin-bottom: 30/@rem;
         .name {
-          width: 110/@rem;
+          width: 170/@rem;
           height: 80/@rem;
           padding-top: 25/@rem;
           text-align: right;

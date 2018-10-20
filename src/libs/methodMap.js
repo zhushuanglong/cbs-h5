@@ -14,6 +14,16 @@ const methodMap = {
     CartsAdd: {url: '/carts/add', method: 'post'},
     /** 购物车减少 **/
     CartsReduce: {url: '/carts/reduce', method: 'post'},
+    /** 银行卡列表 **/
+    CardsList: {url: '/cards/list', method: 'post'},
+    /** 银行卡信息 **/
+    CardsInfo: {url: '/cards/info', method: 'post'},
+    /** 设置默认银行卡 **/
+    CardsDefault: {url: '/cards/default', method: 'post'},
+    /** 银行卡编辑 **/
+    CardsEdit: {url: '/cards/edit', method: 'post'},
+    /** 银行卡删除 **/
+    CardsDelete: {url: '/cards/delete', method: 'post'},
     /** 购物车提交 **/
     OrdersCheckout: {url: '/orders/checkout', method: 'post'},
     /** 支付确认页面 **/

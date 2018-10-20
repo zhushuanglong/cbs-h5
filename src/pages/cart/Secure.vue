@@ -58,15 +58,22 @@
         <!-- <div class="pos">
           <i class="iconfont gray2">&#xe62e;</i>
         </div> -->
-        <div class="card-detail" v-for="item in data.cards">
-          <div class="card-number">{{item.number}}</div>
+        <div class="card-detail" v-for="item in cards">
+          <div class="card-number">
+            <router-link class="fl" :to="{path: '/cart/addCard/' + $route.params.orderId + '?cardId=' + item.id}">
+              <span>Card No. :</span>
+              <span class="gray2">{{item.number}}</span>
+              <i class="iconfont gray2">&#xe62e;</i>
+            </router-link>
+            <div class="fr" @click="clickCardDel(item.id, item.number)">
+              <i class="iconfont">&#xe63d;</i>Delete
+            </div>
+          </div>
           <div class="pos-abs">
             <input type="radio" name="card" @click="radioClick(item.number)">
           </div>
         </div>
-        <div class="card-new" @click="addNewCard">
-          + ADD NEW CARD
-        </div>
+        <div class="card-new" @click="addNewCard">+ Add a shipping address</div>
       </li>
       <li>
         <div class="label">PayPal</div>
@@ -79,6 +86,8 @@
     <div class="global-fixed-btn">
       <div class="fixed-btn" @click="orderPay">PLACE ORDER ( ${{totalPrice}} )</div>
     </div>
+
+    <confirm :show.sync="confirmModal.show" :title="confirmModal.title"  :content="confirmModal.content" :on-ok="confirmModal.action"  okText="Yes"></confirm>
   </div>
 </template>
 
@@ -89,14 +98,17 @@ export default {
       isBalance: true, // 余额
       totalPrice: 0, // 总价
       data: [],
+      cards: [], // 银行卡列表
       addressId: '', // 地址ID
       cardNumber: '', // 卡号
-      payType: 0 // 支付方式  2-paypal 3-stripe
+      payType: 0, // 支付方式  2-paypal 3-stripe
+      confirmModal: {}
     };
   },
   computed: {},
   created () {
     this.getOrdersData();
+    this.getCardsData();
   },
   mounted () {},
   watch: {
@@ -104,7 +116,7 @@ export default {
       if (value) {
         this.totalPrice = window.returnFloat(+this.data.price - +this.data.money);
       } else {
-        this.totalPrice = window.returnFloat(+this.data.price + +this.data.money);
+        this.totalPrice = window.returnFloat(+this.data.price);
       }
     }
   },
@@ -132,6 +144,19 @@ export default {
       }, err => {
         this.$Toast(err);
         this.errJump ();
+      });
+    },
+    // 获取银行卡信息
+    getCardsData () {
+      this.request('CardsList', {
+        token: localStorage.userToken || '',
+        order_id: this.$route.params.orderId
+      }).then((res) => {
+        if (res.status === 200 && res.content) {
+          this.cards = res.content.cards || [];
+        }
+      }, err => {
+        this.$Toast(err);
       });
     },
     // 错误ID跳转
@@ -193,7 +218,7 @@ export default {
             }, 1000);
           }
           if (self.payType === 3) {
-            
+
             self.$Toast({
               message: 'Payment Success',
               duration: 1200
@@ -226,6 +251,37 @@ export default {
       // 银行支付卡号
       this.payType = 3;
       this.cardNumber = +value;
+    },
+    // 删除card
+    clickCardDel (cardId, cardNumber) {
+      let self = this;
+      self.confirmModal = {
+        show: true,
+        title: 'Do you confirm delete?',
+        onText: 'Yes',
+        content: `Delete the card!`,
+        action: function () {
+          self.request('CardsDelete', {
+            token: localStorage.userToken || '',
+            card_id: cardId
+          }).then((res) => {
+            if (res.status === 200 && res.content) {
+              self.confirmModal.show = false;
+              self.$Toast({
+                message: 'Success',
+                duration: 800
+              });
+              self.cards = res.content.cards;
+              // 如果是选中的card 被删除
+              if (self.cardNumber === +cardNumber) {
+                self.cardNumber = '';
+              }
+            }
+          }, err => {
+            self.$Toast(err);
+          });
+        }
+      }
     }
   },
   beforeDestroy () {}
@@ -343,13 +399,37 @@ export default {
       height: auto;
       .card-detail {
         position: relative;
-        .height(90);
+        margin-bottom: 20/@rem;
+      }
+      .card-number {
+        .whl(640, 100);
+        background: rgba(243,242,242,1);
+        border-radius: 10/@rem;
+        padding: 0 20/@rem;
+        font-size: 28/@rem;
+        .clearfix();
+        .fl {
+          .height(100);
+          i {
+            vertical-align: middle;
+          }
+        }
+        .fr {
+          font-size: 24/@rem;
+          color: @gray2;
+          i {
+            font-size: 34/@rem;
+            margin-right: 5/@rem;
+            vertical-align: middle;
+          }
+        }
       }
       .card-new {
         display: block;
         border: 1px dashed @gray3;
         margin: 20/@rem 0;
-        padding: 0 10/@rem;
+        padding: 0 20/@rem;
+        color: @gray2;
       }
     }
   }

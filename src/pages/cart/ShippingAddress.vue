@@ -83,7 +83,7 @@ export default {
         action: function () {
           self.request('AddressDelete', {
             token: localStorage.userToken || '',
-            addressId: addressId
+            address_id: addressId
           }).then((res) => {
             if (res.status === 200 && res.content) {
               self.confirmModal.show = false;
@@ -106,7 +106,7 @@ export default {
     addressDefault (addressId) {
       this.request('AddressDefault', {
         token: localStorage.userToken || '',
-        addressId: addressId
+        address_id: addressId
       }).then((res) => {
         if (res.status === 200 && res.content) {
           this.data = res.content;

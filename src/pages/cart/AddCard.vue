@@ -1,57 +1,51 @@
 <template>
   <div class="add-card-main">
-    <topbar :title="'Add a credit/debit card'" :backUrl="'cart/secure/' + $route.params.orderId"></topbar>
+    <topbar :title="topbarTitle" :backUrl="'cart/secure/' + $route.params.orderId"></topbar>
     <div class="card-con">
       <div class="card-img"><div class="img"></div></div>
       <div class="card-num">
         <p>CARD NUMBER</p>
-        <p class="gray2 mt"><input class="gray2" type="text" placeholder="0000 0000 0000"  v-model="data.number"></p>
+        <p class="gray2 mt">
+          <input class="gray2" type="text" placeholder="0000 0000 0000"  v-model="data.number">
+        </p>
       </div>
       <div class="card-info">
         <div class="fl br">
           <p class="p1">EXPIRE</p>
           <p class="p2">
-            <input class="gray2" type="text" placeholder="moth" v-model="data.moth">
-            <input class="gray2" type="text" placeholder="year" v-model="data.year">
+            <input class="gray2" type="text" placeholder="06/23" v-model="data.exp">
           </p>
         </div>
         <div class="fl pl">
           <p class="p1">CVV</p>
           <p class="p2">
-            <input class="gray2" type="text" placeholder="000" v-model="data.cvv">
+            <input class="gray2" type="text" placeholder="000" v-model="data.cvc">
           </p>
         </div>
       </div>
-      <!-- <div class="card-remeber">
+      <div class="card-remeber">
         <p>Remember this card for future use</p>
+        <div class="pos" v-show="isShowLockedDom"></div>
         <mt-switch v-model="isSetDefault"></mt-switch>
-      </div> -->
+      </div>
     </div>
 
-    <div class="secure-shipping">
+    <div class="secure-shipping" v-if="JSON.stringify(address).length > 2">
       <div class="title"><i class="iconfont">&#xe61e;</i>Shipping Address</div>
       <div class="line"></div>
       <div class="shipping-con">
-        <!-- <router-link :to="{path: '/cart/addAddress/' + $route.params.orderId + '?from=addCard'}" class="empty" v-if="1">
-          + Add a shipping address
-          <i class="iconfont gray2">&#xe62e;</i>
-        </router-link> -->
-        <router-link :to="{path: '/cart/shippingAddress', query: {orderId: $route.params.orderId}}" class="address-detail">
-          <template v-for="item in data.user_address" v-if="item.is_default === 1">
-            <div class="info">
-              <div class="fl">{{item.recipients}}</div>
-              <div class="fr">+{{item.iphone}}</div>
-            </div>
-            <div class="address">{{item.address}}</div>
-            <!-- <div class="pos">
-              <i class="iconfont gray2">&#xe62e;</i>
-            </div> -->
-          </template>
-        </router-link>
+        <div class="address-detail">
+          <div class="info">
+            <div class="fl">{{address.firstname}}&nbsp;{{address.lastname}}</div>
+            <div class="fr">+{{address.iphone}}</div>
+          </div>
+          <div class="address">{{address.country}}&nbsp;{{address.state}}&nbsp;{{address.city}}&nbsp;{{address.street}}&nbsp;{{address.suburb}}</div>
+        </div>
       </div>
     </div>
     <div class="global-fixed-btn">
-      <div class="fixed-btn" @click="orderPay">PURCHASE</div>
+      <div class="fixed-btn" v-if="!$route.query.cardId" @click="orderPay">PURCHASE</div>
+      <div class="fixed-btn" v-else @click="save">SAVE</div>
     </div>
   </div>
 </template>
@@ -60,33 +54,76 @@
 export default {
   data () {
     return {
-      // isSetDefault: false,
+      isSetDefault: false,
       addressId: '',
-      data: []
+      topbarTitle: 'Add a credit/debit card',
+      data: {},
+      address: {},
+      isEdit: false,
+      isShowLockedDom: false
     };
   },
   computed: {},
   created () {
-    this.getOrdersData();
+    if (this.$route.query.cardId) {
+      this.topbarTitle = 'Edit card';
+      this.isEdit = true;
+      this.getEditOrdersData();
+    } else {
+      this.getAddOrdersData();
+    }
   },
   mounted () {},
-  watch: {},
+  watch: {
+    'isSetDefault': function (value) {
+      // 加一个蒙层锁
+      if (this.isShowLockedDom) {
+        return;
+      }
+      this.isShowLockedDom = true;
+      this.request('CardsDefault', {
+        token: localStorage.userToken || '',
+        card_id: this.$route.query.cardId
+      }).then((res) => {
+        if (res.status === 200) {
+          this.isShowLockedDom = false;
+        }
+      }, err => {
+        this.$Toast(err);
+      });
+    }
+  },
   methods: {
-    // 获取订单信息 - 获取地址信息
-    getOrdersData () {
+    // 银行卡信息 - 新增
+    getAddOrdersData () {
       this.request('OrdersPayment', {
         token: localStorage.userToken || '',
         order_id: this.$route.params.orderId
       }).then((res) => {
         if (res.status === 200 && res.content) {
           this.data = res.content;
-          let userAddress = this.data.user_address;
-          let len = userAddress.length;
-          for (let i = 0; i < len; i++) {
-            if (userAddress[i].is_default === 1) {
-              this.addressId = userAddress[i].id;
-            }
-          }
+          // let userAddress = this.data.user_address;
+          // let len = userAddress.length;
+          // for (let i = 0; i < len; i++) {
+          //   if (userAddress[i].is_default === 1) {
+          //     this.addressId = userAddress[i].id;
+          //   }
+          // }
+        }
+      }, err => {
+        this.$Toast(err);
+      });
+    },
+    // 银行卡信息 - 编辑
+    getEditOrdersData () {
+      this.request('CardsInfo', {
+        token: localStorage.userToken || '',
+        card_id: this.$route.query.cardId
+      }).then((res) => {
+        if (res.status === 200 && res.content) {
+          this.data = res.content.card || {};
+          this.address = res.content.address || {};
+          this.isSetDefault = res.content.card.is_default || false;
         }
       }, err => {
         this.$Toast(err);
@@ -154,6 +191,40 @@ export default {
       }, err => {
         this.$Toast(err);
       });
+    },
+    // 保存修改
+    save () {
+      let data = {};
+      let self = this;
+      if (!this.data.number) {
+        this.$Toast('Please fill in number');
+        return;
+      }
+      if (!this.data.exp) {
+        this.$Toast('Please fill in exp');
+        return;
+      }
+      if (!this.data.cvc) {
+        this.$Toast('Please fill in cvc');
+        return;
+      }
+      Object.assign(data, this.data, {
+        token: localStorage.userToken || '',
+      });
+      this.request('CardsEdit', data).then((res) => {
+        if (res.status === 200) {
+          self.$Toast({
+            message: 'Save Success',
+            duration: 1200
+          });
+          setTimeout(function() {
+            self.$router.push({path: '/cart/secure/' + self.$route.params.orderId});
+            window.yyPayData = {};
+          }, 1000);
+        }
+      }, err => {
+        this.$Toast(err);
+      });
     }
   },
   beforeDestroy () {}
@@ -170,7 +241,7 @@ export default {
     width: 100%;
     padding: 20/@rem;
     // height: 458/@rem;
-    height: 375/@rem;
+    height: 460/@rem;
     background-color: #fff;
     margin-top: 20/@rem;
     .card-img {
@@ -214,8 +285,7 @@ export default {
       }
       .p2 {
         input {
-          width: 120/@rem;
-          margin-right: 30/@rem;
+          width: 260/@rem;
           .height(60);
         }
       }
@@ -230,6 +300,14 @@ export default {
         position: absolute;
         top: 20/@rem;
         right: 0;
+      }
+      .pos {
+        position: absolute;
+        top: 0/@rem;
+        right: 0;
+        width: 100/@rem;
+        height: 90/@rem;
+        z-index: 2;
       }
     }
   }

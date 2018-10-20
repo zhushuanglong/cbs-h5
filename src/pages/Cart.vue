@@ -37,8 +37,12 @@
           <div class="cart-label">Activity Discounts</div>
           <div class="cart-pos">{{cartsData.specialoffer}}</div>
         </div>
-        <div class="cart-coupon cart-rel">
-          <div class="cart-label">Coupon <span class="gray2">( no coupons )</span></div>
+        <div class="cart-coupon cart-rel" @click="clickShowCoupon">
+          <div class="cart-label">
+            Coupon
+            <span v-if="cartsData.coupon && cartsData.coupon.length">( {{cartsData.coupon.length}} )</span>
+            <span v-else class="gray2">( no coupons )</span>
+          </div>
           <div class="cart-pos">
             <i class="iconfont gray2">&#xe62e;</i>
           </div>
@@ -51,21 +55,28 @@
       <div class="global-fixed-btn">
         <div @click="submitCart()" class="fixed-btn">CONTINUE CHECKOUT ( <span>${{totalPrice}}</span> )</div>
       </div>
+
+      <Coupon :showCoupon.sync="isShowCoupon" :coupons="cartsData.coupon || []"></Coupon>
     </template>
   </div>
 </template>
 
 <script>
+import Coupon from 'common/Coupon.vue';
 export default {
   name: 'cart',
-  components: {},
+  components: {
+    Coupon
+  },
   data () {
     return {
       cartsData: [],
+      isShowCoupon: false, // 显示优惠券
+      couponId: '', // 优惠券ID
       isUsePoint: false, // 是否使用积分
       addSt: null, // 添加数据节流st
       reduceSt: null, // 减少数据节流st
-      totalPrice: 0 
+      totalPrice: 0
     };
   },
   computed: {},
@@ -108,7 +119,7 @@ export default {
     },
     // 增加 - 登录前
     addNoLogin () {
-      // TODO STH      
+      // TODO STH
     },
     // 减少 - 登录前
     reduceNoLogin () {
@@ -160,6 +171,10 @@ export default {
         });
       }, 1000);
     },
+    // 弹出券
+    clickShowCoupon () {
+      this.isShowCoupon = true;
+    },
     // 提交购物车
     submitCart () {
       // 判定是否有登录token
@@ -171,7 +186,7 @@ export default {
       this.request('OrdersCheckout', {
         token: localStorage.userToken || '',
         type: 2,	// 是	Number	单订来源(1：PC端，2：H5，4：APP)
-        coupon_id: '',	// 是	String或者null	优惠券id 没有则为空
+        coupon_id: this.couponId,	// 是	String或者null	优惠券id 没有则为空
         integral: this.isUsePoint,	// 是	Boolean	积分是否选择 ture或者false
         date: Date.parse(new Date())	// 否	string	用户本地时间
       }).then((res) => {
