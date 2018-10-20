@@ -1,14 +1,13 @@
 <template>
   <div class="home-index">
     <div class="top-bar">
-      <i class="iconfont search-icon fl">&#xe620;</i>
+      <i class="iconfont search-icon fl" @click="goToSearch">&#xe620;</i>
       <img src="../../images/home/logo.png" class="logo" alt="">
       <i class="share iconfont fr">&#xe628;</i>
     </div>
     <Banner :list="banners"></Banner>
     <Navs :list="navList"></Navs>
-    <div class="belt">
-      <img src="http://yun.fepath.com/belt.png" alt="">
+    <div class="belt" v-html="diypage" v-if="diypage">
     </div>
     <div class="home-recommend">
       <p class="home-recommend-title">Recommended</p>
@@ -19,8 +18,8 @@
             <p class="goods-title">{{item.name}}</p>
             <p class="goods-price">
               <span class="price-now">$102</span>
-              <span class="price-origin">$102</span>
-              <span class="price-rebate">$102</span>
+              <!-- <span class="price-origin">$102</span> -->
+              <!-- <span class="price-rebate">$102</span> -->
             </p>
           </router-link>
         </li>
@@ -34,52 +33,10 @@ import Navs from './Navs'
 export default {
   data() {
     return {
-      banners: [
-        {
-          imgUrl: 'http://gw.alicdn.com/imgextra/i2/2585780740/TB2aqY2srwrBKNjSZPcXXXpapXa_!!2585780740-0-daren.jpg_570x10000Q75.jpg_.webp',
-          url: 'http://www.baidu.com'
-        },
-        {
-          imgUrl: 'http://gw.alicdn.com/imgextra/i2/2585780740/TB2aqY2srwrBKNjSZPcXXXpapXa_!!2585780740-0-daren.jpg_570x10000Q75.jpg_.webp',
-          url: 'http://www.baidu.com'
-        }
-      ],
-      recommends: [
-        {
-          img: 'http://yun.fepath.com/goods-img.png',
-          title: 'Button Up Denim Jacket ...'
-        },
-        {
-          img: 'http://yun.fepath.com/goods-img.png',
-          title: 'Button Up Denim Jacket ...'
-        },
-        {
-          img: 'http://yun.fepath.com/goods-img.png',
-          title: 'Button Up Denim Jacket ...'
-        },
-        {
-          img: 'http://yun.fepath.com/goods-img.png',
-          title: 'Button Up Denim Jacket ...'
-        }
-      ],
-      navList: [
-        {
-          imgUrl: '',
-          name: 'Featured'
-        },
-        {
-          imgUrl: '',
-          name: 'Featured'
-        },
-        {
-          imgUrl: '',
-          name: 'Featured'
-        },
-        {
-          imgUrl: '',
-          name: 'Featured'
-        }
-      ]
+      banners: [],
+      recommends: [],
+      navList: [],
+      diypage: ''
     }
   },
   components: {
@@ -96,10 +53,15 @@ export default {
           this.navList = res.content.icons;
           this.banners = res.content.banners;
           this.recommends = res.content.goods;
+          this.diypage = res.content.diypage;
         }
       }, err => {
         this.$Toast(err);
       });
+    },
+    // 去搜索
+    goToSearch () {
+
     }
   }
 }
@@ -126,10 +88,6 @@ export default {
   }
   .belt{
     margin-top: 20/@rem;
-    img{
-      width: 100%;
-      display: block;
-    }
   }
   .home-recommend{
     margin-top: 20/@rem;

@@ -22,12 +22,13 @@
         </ul>
       </div>
     </div>
-    
+    <float-menu></float-menu>
   </div>
 </template>
 <script>
 import Countdown from 'common/Countdown';
-import GoodsList from 'common/GoodsList'
+import GoodsList from 'common/GoodsList';
+import FloatMenu from 'common/FloatMenu'
 export default {
   data() {
     return {
@@ -48,7 +49,8 @@ export default {
   },
   components: {
     Countdown,
-    GoodsList
+    GoodsList,
+    FloatMenu
   },
   mounted() {
     this.activityId = this.$route.query.activity_id || 0

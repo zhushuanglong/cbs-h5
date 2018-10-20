@@ -22,21 +22,16 @@
       </ul>
     </div>
     <div class="bg-mask" :class="{'show': isMaskShow}" @click="changeMaskClick"></div>
-    <floatmenu></floatmenu>
   </div>
 </template>
 
 <script>
-import floatmenu from 'common/FloatMenu'
 export default {
   data () {
     return {
       isBackMenuShow: false, // back菜单按钮
       isMaskShow: false
     }
-  },
-  components: {
-    floatmenu
   },
   methods: {
     // 返回菜单
