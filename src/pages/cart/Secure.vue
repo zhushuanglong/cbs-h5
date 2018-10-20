@@ -1,16 +1,15 @@
 <template>
   <div class="secure-main">
-    <topbar :title="`Secure Checkout`" :backUrl="`cart`"></topbar>
-
+    <topbar title="Secure Checkout"></topbar>
     <div class="secure-shipping">
       <div class="title"><i class="iconfont">&#xe61e;</i>Shipping Address</div>
       <div class="line"></div>
       <div class="shipping-con">
-        <router-link :to="{path: '/cart/addAddress/' + $route.params.orderId}" class="empty" v-if="addressId === ''">
+        <router-link :to="{path: '/cart/addAddress', query: {orderId: $route.params.orderId}}" class="empty" v-if="addressId === ''">
           + Add a shipping address
           <i class="iconfont gray2">&#xe62e;</i>
         </router-link>
-        <router-link :to="{path: '/cart/shippingAddress/' + $route.params.orderId}" class="address-detail" v-else>
+        <router-link :to="{path: '/cart/shippingAddress', query: {orderId: $route.params.orderId}}" class="address-detail" v-else>
           <template v-for="item in data.user_address" v-if="item.is_default === 1">
             <div class="info">
               <div class="fl">{{item.recipients}}</div>

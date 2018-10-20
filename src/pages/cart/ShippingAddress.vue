@@ -1,6 +1,6 @@
 <template>
   <div class="shipping-address-main">
-    <topbar title="Shipping Address" :backUrl="'cart/secure/' + $route.params.orderId"></topbar>
+    <topbar title="Shipping Address"></topbar>
     <div class="address-con" v-for="item in data">
       <div class="address-detail">
         <div class="info">
@@ -29,7 +29,7 @@
       </div>
     </div>
     <div class="global-fixed-btn">
-      <router-link :to="{'path': '/cart/addAddress/' + $route.params.orderId + '?from=shipping'}" class="fixed-btn">+ ADD NEW ADDRESS</router-link>
+      <router-link :to="{path: '/cart/addAddress', query: {orderId: this.$route.query.orderId || ''}}" class="fixed-btn">+ ADD NEW ADDRESS</router-link>
     </div>
     <confirm :show.sync="confirmModal.show" :title="confirmModal.title"  :content="confirmModal.content" :on-ok="confirmModal.action"  okText="Yes"></confirm>
   </div>
@@ -43,7 +43,15 @@ export default {
       confirmModal: {}
     }
   },
-  computed: {},
+  computed: {
+    backUrl: function() {
+      if(this.$route.query.orderId) {
+        return 'cart/secure/' + this.$route.query.orderId;
+      } else {
+        return null
+      }
+    }
+  },
   created () {
     this.getAddressList();
   },
@@ -63,7 +71,7 @@ export default {
       });
     },
     edit (addressId) {
-      this.$router.push({path: '/cart/addAddress/' + this.$route.params.orderId + '?addressId=' + addressId});
+      this.$router.push({path: '/cart/addAddress', query: {orderId: this.$route.params.orderId, addressId: addressId}});
     },
     del (addressId) {
       let self = this;
@@ -86,6 +94,8 @@ export default {
               setTimeout(function() {
                 self.data = res.content;
               }, 500);
+            } else {
+              self.$Toast(res.msg);
             }
           }, err => {
             self.$Toast(err);

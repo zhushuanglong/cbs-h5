@@ -128,7 +128,6 @@ export default {
   },
 
   beforeDestroy () {
-    // this.$refs.indexMain.removeEventListener('scroll', this.dispatchScroll, false);
   }
 };
 </script>

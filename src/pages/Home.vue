@@ -1,17 +1,16 @@
 <template>
   <div class="home-main" ref="indexMain">
-    <Goods :data="store_goods"></Goods>
+    <homeindex></homeindex>
     <bottombar></bottombar>
   </div>
 </template>
 
 <script>
-import Goods from './home/Goods.vue';
-
+import homeindex from './home/Index'
 export default {
   name: 'home',
   components: {
-    Goods
+    homeindex
   },
   data () {
     return {

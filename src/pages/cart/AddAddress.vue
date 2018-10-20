@@ -1,6 +1,6 @@
 <template>
   <div class="add-address-main">
-    <topbar title="Add Address" :backUrl="backUrl"></topbar>
+    <topbar title="Add Address"></topbar>
 
     <ul class="address-ul">
       <li>
@@ -66,7 +66,6 @@ export default {
         default: false,
       },
       addressId: null,
-      backUrl: 'cart/secure/' + this.$route.params.orderId
     };
   },
   computed: {},
@@ -85,9 +84,9 @@ export default {
         this.$Toast(err);
       });
       // 返回页面控制
-      this.backUrl = 'cart/shippingAddress/' + this.$route.params.orderId
+      // this.backUrl = 'cart/shippingAddress/' + this.$route.params.orderId
     } else if (this.$route.query.from === 'shipping') { // 如果是是shippingAddress页面点击新增过来的
-      this.backUrl = 'cart/shippingAddress/' + this.$route.params.orderId
+      // this.backUrl = 'cart/shippingAddress/' + this.$route.params.orderId
     } 
     // else if (this.$route.query.from === 'addCard') {
     //   this.backUrl = 'cart/addCard/' + this.$route.params.orderId
@@ -140,7 +139,12 @@ export default {
             duration: 800
           });
           setTimeout(function() {
-            self.$router.push({path: '/' + self.backUrl});
+            self.$router.replace({
+              name: 'shippingAddress',
+              query: {
+                orderId: self.$route.query.orderId || ''
+              }
+            });
           }, 1000);
         }
       }, err => {

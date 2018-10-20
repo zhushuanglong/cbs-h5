@@ -36,7 +36,7 @@
           + Add a shipping address
           <i class="iconfont gray2">&#xe62e;</i>
         </router-link> -->
-        <router-link :to="{path: '/cart/shippingAddress/' + $route.params.orderId}" class="address-detail">
+        <router-link :to="{path: '/cart/shippingAddress', query: {orderId: $route.params.orderId}}" class="address-detail">
           <template v-for="item in data.user_address" v-if="item.is_default === 1">
             <div class="info">
               <div class="fl">{{item.recipients}}</div>
