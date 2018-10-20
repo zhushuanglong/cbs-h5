@@ -1,6 +1,6 @@
 <template>
-  <div class="coupon-modal a-fadeinT" v-show="showCoupon">
-    <div class="coupon-info">
+  <div class="coupon-modal" v-show="showCoupon">
+    <div class="coupon-info a-fadeinT">
       <p class="detail">Receive Coupons</p>
       <span class="close" @click="clickCouponClose"><i class="iconfont">&#xe63f;</i></span>
       <ul>

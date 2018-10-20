@@ -17,7 +17,7 @@ export default new Router({
     },
     {
       name: 'detail', // 私有H5
-      path: '/detail/:id', // 商品ID
+      path: '/detail', // 商品ID
       component: function (resolve) {
         require.ensure([], function () {
           resolve(require('pages/home/Detail'));
@@ -53,7 +53,7 @@ export default new Router({
     },
     {
       name: 'secure',
-      path: '/cart/secure/:orderId',
+      path: '/cart/secure',
       component: function (resolve) {
         require.ensure([], function () {
           resolve(require('pages/cart/Secure'));
@@ -80,7 +80,7 @@ export default new Router({
     },
     {
       name: 'addCard',
-      path: '/cart/addCard/:orderId',
+      path: '/cart/addCard',
       component: function (resolve) {
         require.ensure([], function () {
           resolve(require('pages/cart/AddCard'));
@@ -89,7 +89,7 @@ export default new Router({
     },
     {
       name: 'successful',
-      path: '/cart/successful/:orderId',
+      path: '/cart/successful',
       component: function (resolve) {
         require.ensure([], function () {
           resolve(require('pages/cart/Successful'));
@@ -98,7 +98,7 @@ export default new Router({
     },
     {
       name: 'failure',
-      path: '/cart/failure/:orderId',
+      path: '/cart/failure',
       component: function (resolve) {
         require.ensure([], function () {
           resolve(require('pages/cart/Failure'));

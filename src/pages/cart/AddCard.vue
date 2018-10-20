@@ -1,6 +1,6 @@
 <template>
   <div class="add-card-main">
-    <topbar :title="topbarTitle" :backUrl="'cart/secure/' + $route.params.orderId"></topbar>
+    <topbar :title="topbarTitle" :backUrl="'cart/secure/' + $route.query.orderId"></topbar>
     <div class="card-con">
       <div class="card-img"><div class="img"></div></div>
       <div class="card-num">
@@ -17,7 +17,7 @@
           </p>
         </div>
         <div class="fl pl">
-          <p class="p1">CVV</p>
+          <p class="p1">CVC</p>
           <p class="p2">
             <input class="gray2" type="text" placeholder="000" v-model="data.cvc">
           </p>
@@ -80,25 +80,25 @@ export default {
       if (this.isShowLockedDom) {
         return;
       }
-      this.isShowLockedDom = true;
-      this.request('CardsDefault', {
-        token: localStorage.userToken || '',
-        card_id: this.$route.query.cardId
-      }).then((res) => {
-        if (res.status === 200) {
-          this.isShowLockedDom = false;
-        }
-      }, err => {
-        this.$Toast(err);
-      });
+      if (this.isEdit) {
+        this.isShowLockedDom = true;
+        this.request('CardsDefault', {
+          card_id: this.$route.query.cardId || ''
+        }).then((res) => {
+          if (res.status === 200) {
+            this.isShowLockedDom = false;
+          }
+        }, err => {
+          this.$Toast(err);
+        });
+      }
     }
   },
   methods: {
     // 银行卡信息 - 新增
     getAddOrdersData () {
       this.request('OrdersPayment', {
-        token: localStorage.userToken || '',
-        order_id: this.$route.params.orderId
+        order_id: this.$route.query.orderId
       }).then((res) => {
         if (res.status === 200 && res.content) {
           this.data = res.content;
@@ -117,8 +117,7 @@ export default {
     // 银行卡信息 - 编辑
     getEditOrdersData () {
       this.request('CardsInfo', {
-        token: localStorage.userToken || '',
-        card_id: this.$route.query.cardId
+        card_id: this.$route.query.cardId || ''
       }).then((res) => {
         if (res.status === 200 && res.content) {
           this.data = res.content.card || {};
@@ -130,12 +129,21 @@ export default {
       });
     },
     orderPay () {
-      let payData = Object.assign({}, window.yyPayData || {}, {
+      let payData = {
         number: this.data.number,	// 否	string	银行卡号
-        expm: this.data.moth,	// 否	string	银行卡到期月份
-        expy: this.data.year,	// 否	string	银行卡到期年
-        cvc: this.data.cvv 	// 否	string	银行卡安全码
-      });
+        exp: this.data.exp,	// 否	string	银行卡到期月份
+        cvc: this.data.cvc 	// 否	string	银行卡安全码
+      };
+
+      // 如果是编辑 - 需要传用户的地址信息
+      if (isEdit) {
+        Object.assign(payData, {
+          order_id: this.$route.query.orderId,
+          address_id:this.$route.query.addressId,
+          balance: this.$route.query.balance,
+          pay_type: this.$route.query.payType,
+        });
+      }
 
       if (!payData.number) {
         this.$Toast('Please Fill In Card Number');
@@ -174,8 +182,7 @@ export default {
               duration: 1200
             });
             setTimeout(function() {
-              self.$router.push({path: '/cart/successful/' + self.$route.params.orderId});
-              window.yyPayData = {};
+              self.$router.push({path: '/cart/successful?orderId=' + self.$route.query.orderId});
             }, 1000);
           }
         } else {
@@ -184,8 +191,7 @@ export default {
             duration: 1200
           });
           setTimeout(function() {
-            self.$router.push({path: '/cart/failure/' + self.$route.params.orderId});
-            window.yyPayData = {};
+            self.$router.push({path: '/cart/failure?orderId=' + self.$route.query.orderId});
           }, 1000);
         }
       }, err => {
@@ -208,9 +214,7 @@ export default {
         this.$Toast('Please fill in cvc');
         return;
       }
-      Object.assign(data, this.data, {
-        token: localStorage.userToken || '',
-      });
+      Object.assign(data, this.data);
       this.request('CardsEdit', data).then((res) => {
         if (res.status === 200) {
           self.$Toast({
@@ -218,8 +222,7 @@ export default {
             duration: 1200
           });
           setTimeout(function() {
-            self.$router.push({path: '/cart/secure/' + self.$route.params.orderId});
-            window.yyPayData = {};
+            self.$router.push({path: '/cart/secure', query: {orderId: self.$route.query.orderId}});
           }, 1000);
         }
       }, err => {

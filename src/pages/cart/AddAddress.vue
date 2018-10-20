@@ -74,7 +74,6 @@ export default {
     this.addressId = this.$route.query.addressId;
     if (this.addressId) {
       this.request('AddressInfo', {
-        token: localStorage.userToken || '',
         address_id: this.addressId
       }).then((res) => {
         if (res.status === 200 && res.content) {
@@ -87,7 +86,7 @@ export default {
       // this.backUrl = 'cart/shippingAddress/' + this.$route.params.orderId
     } else if (this.$route.query.from === 'shipping') { // 如果是是shippingAddress页面点击新增过来的
       // this.backUrl = 'cart/shippingAddress/' + this.$route.params.orderId
-    } 
+    }
     // else if (this.$route.query.from === 'addCard') {
     //   this.backUrl = 'cart/addCard/' + this.$route.params.orderId
     // }

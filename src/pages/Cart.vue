@@ -1,6 +1,6 @@
 <template>
   <div class="cart-main">
-    <topbar title="Shopping Cart" :backUrl="'detail/' + $route.query.id"></topbar>
+    <topbar title="Shopping Cart" :backUrl="'detail?id=' + $route.query.id"></topbar>
     <!-- 空 -->
     <template v-if="0">
       <div class="cart-empty">
@@ -13,14 +13,14 @@
     <!-- 有 -->
     <template v-else>
       <div class="cart-have">
-        <div class="cart-enjoy">
+        <router-link :to="{path: '/activity'}" class="cart-enjoy">
           <span class="img"></span>
           <span>{{cartsData.promotion_msg}}</span>
           <i class="iconfont">&#xe62e;</i>
-        </div>
+        </router-link>
         <div class="cart-list">
           <div class="detail" v-for="item in cartsData.goods">
-            <router-link :to="{path: '/detail/' + item.id}" class="img fl">
+            <router-link :to="{path: '/detail?id=' + item.id}" class="img fl">
               <img :src="item.img">
             </router-link>
             <div class="info fl">
@@ -97,11 +97,13 @@ export default {
   methods: {
     // 获取购物车数据
     getCartData () {
-      this.request('Carts', {
-        token: localStorage.userToken || ''
-      }).then((res) => {
+      this.request('Carts', {}).then((res) => {
         if (res.status === 200 && res.content) {
           this.cartsData = res.content;
+          if (!localStorage.userToken) {
+            // 认定是游客访问
+            localStorage.userToken = res.content.token;
+          }
           this.computeTotalPrice();
         }
       }, err => {
@@ -137,7 +139,6 @@ export default {
       // 函数节流
       self.addSt = setTimeout(function() {
         self.request('CartsAdd', {
-          token: localStorage.userToken || '',
           good_id: item.id,
           sku_id: item.sku_id,
           num: item.num
@@ -160,7 +161,6 @@ export default {
       // 函数节流
       self.reduceSt = setTimeout(function() {
         self.request('CartsReduce', {
-          token: localStorage.userToken || '',
           good_id: item.id,
           sku_id: item.sku_id,
           num: item.num
@@ -191,7 +191,7 @@ export default {
         date: Date.parse(new Date())	// 否	string	用户本地时间
       }).then((res) => {
         if (res.status === 200 && res.content) {
-          this.$router.push({path: '/cart/secure/' + res.content});
+          this.$router.push({path: '/cart/secure?orderId=' + res.content});
         }
       }, err => {
         this.$Toast(err);
@@ -213,6 +213,7 @@ export default {
   }
 
   .cart-enjoy {
+    display: block;
     position: relative;
     width: 100%;
     background: #ffffff;

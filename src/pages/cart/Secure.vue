@@ -1,15 +1,15 @@
 <template>
   <div class="secure-main">
-    <topbar title="Secure Checkout"></topbar>
+    <topbar title="Secure Checkout" backUrl="cart"></topbar>
     <div class="secure-shipping">
       <div class="title"><i class="iconfont">&#xe61e;</i>Shipping Address</div>
       <div class="line"></div>
       <div class="shipping-con">
-        <router-link :to="{path: '/cart/addAddress', query: {orderId: $route.params.orderId}}" class="empty" v-if="addressId === ''">
+        <router-link :to="{path: '/cart/addAddress', query: {orderId: $route.query.orderId}}" class="empty" v-if="addressId === ''">
           + Add a shipping address
           <i class="iconfont gray2">&#xe62e;</i>
         </router-link>
-        <router-link :to="{path: '/cart/shippingAddress', query: {orderId: $route.params.orderId}}" class="address-detail" v-else>
+        <router-link :to="{path: '/cart/shippingAddress', query: {orderId: $route.query.orderId}}" class="address-detail" v-else>
           <template v-for="item in data.user_address" v-if="item.is_default === 1">
             <div class="info">
               <div class="fl">{{item.recipients}}</div>
@@ -60,7 +60,7 @@
         </div> -->
         <div class="card-detail" v-for="item in cards">
           <div class="card-number">
-            <router-link class="fl" :to="{path: '/cart/addCard/' + $route.params.orderId + '?cardId=' + item.id}">
+            <router-link class="fl" :to="{path: '/cart/addCard', query: {orderId: $route.query.orderId, cardId: item.id}}">
               <span>Card No. :</span>
               <span class="gray2">{{item.number}}</span>
               <i class="iconfont gray2">&#xe62e;</i>
@@ -73,7 +73,7 @@
             <input type="radio" name="card" @click="radioClick(item.number)">
           </div>
         </div>
-        <div class="card-new" @click="addNewCard">+ Add a shipping address</div>
+        <div class="card-new" @click="addNewCard">+ Add a new card</div>
       </li>
       <li>
         <div class="label">PayPal</div>
@@ -124,8 +124,7 @@ export default {
     // 获取订单信息
     getOrdersData () {
       this.request('OrdersPayment', {
-        token: localStorage.userToken || '',
-        order_id: this.$route.params.orderId
+        order_id: this.$route.query.orderId
       }).then((res) => {
         if (res.status === 200 && res.content) {
           this.data = res.content;
@@ -149,8 +148,7 @@ export default {
     // 获取银行卡信息
     getCardsData () {
       this.request('CardsList', {
-        token: localStorage.userToken || '',
-        order_id: this.$route.params.orderId
+        order_id: this.$route.query.orderId
       }).then((res) => {
         if (res.status === 200 && res.content) {
           this.cards = res.content.cards || [];
@@ -172,18 +170,15 @@ export default {
     },
     // 添加新卡
     addNewCard () {
-      window.yyPayData = {};
       if (this.addressId === '') {
         this.$Toast('Please add a shipping address');
       } else {
-        window.yyPayData = {
-          token: localStorage.userToken || '',
-          order_id: +this.$route.params.orderId, // 订单号
-          address_id:	+this.addressId, // 地址id
-          balance: this.isBalance, // 是否使用余额
-          pay_type: this.payType
-        };
-        this.$router.push({path: '/cart/addCard/' + this.$route.params.orderId});
+        this.$router.push({path: '/cart/addCard', query: {
+          orderId: 'this.$route.query.orderId',
+          addressId: +this.addressId,
+          balance: this.isBalance,
+          payType: this.payType
+        }});
       }
     },
     // 订单支付
@@ -198,8 +193,7 @@ export default {
       }
       // 若有卡或者使用Paypal支付，并选择了Credit／Debit card
       this.request('OrdersPay', {
-        token: localStorage.userToken || '',
-        order_id: +this.$route.params.orderId, // 订单号
+        order_id: +this.$route.query.orderId, // 订单号
         address_id:	+this.addressId, // 地址id
         balance: this.isBalance, // 是否使用余额
         pay_type: this.payType, //	是	Number	支付方式 2-paypal 3-stripe
@@ -224,7 +218,7 @@ export default {
               duration: 1200
             });
             setTimeout(function() {
-              self.$router.push({path: '/cart/successful/' + self.$route.params.orderId});
+              self.$router.push({path: '/cart/successful?orderId=' + self.$route.query.orderId});
             }, 1000);
           }
         } else {
@@ -233,7 +227,7 @@ export default {
             duration: 1200
           });
           setTimeout(function() {
-            self.$router.push({path: '/cart/failure/' + self.$route.params.orderId});
+            self.$router.push({path: '/cart/failure?orderId=' + self.$route.query.orderId});
           }, 1000);
         }
       }, err => {
@@ -257,12 +251,11 @@ export default {
       let self = this;
       self.confirmModal = {
         show: true,
-        title: 'Do you confirm delete?',
+        title: 'Confirmed to delete?',
         onText: 'Yes',
         content: `Delete the card!`,
         action: function () {
           self.request('CardsDelete', {
-            token: localStorage.userToken || '',
             card_id: cardId
           }).then((res) => {
             if (res.status === 200 && res.content) {

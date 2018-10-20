@@ -9,7 +9,7 @@
       <p class="f32">Order amount: $888</p>
       <p>Payment failed, please pay again.</p>
     </div>
-    <router-link :to="{path: '/my/orderDetail?orderid=' + $route.params.orderId}" class="btn-order">VIEW THE ORDER</router-link>
+    <router-link :to="{path: '/my/orderDetail?orderid=' + $route.query.orderId}" class="btn-order">VIEW THE ORDER</router-link>
   </div>
 </template>
 
