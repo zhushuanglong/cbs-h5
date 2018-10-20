@@ -35,7 +35,7 @@ export default new Router({
     },
     {
       name: 'search',
-      path: '/categories/search/:name',
+      path: '/categories/search',
       component: function (resolve) {
         require.ensure([], function () {
           resolve(require('pages/categories/Search'));

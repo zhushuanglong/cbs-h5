@@ -2,7 +2,7 @@
   <div class="g-navs">
     <ul class="clearfix">
       <li class="navs-item" v-for="item in list">
-        <router-link :to="{path: '/categories/search/cate_' + item.cate}">
+        <router-link :to="{path: '/categories/search?name=' + item.cate}">
           <img class="nav-img" :src="item.img">
           <p class="nav-title">{{item.title}}</p>
         </router-link>

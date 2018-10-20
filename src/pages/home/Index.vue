@@ -61,7 +61,9 @@ export default {
     },
     // 去搜索
     goToSearch () {
-
+      this.$router.push({
+        name: 'search'
+      })
     }
   }
 }
