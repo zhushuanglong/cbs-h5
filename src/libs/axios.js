@@ -12,7 +12,7 @@ const config = {
         console.log(data)
         // 这里可以在发送请求之前对请求数据做处理，比如form-data格式化等，这里可以使用开头引入的Qs（这个模块在安装axios的时候就已经安装了，不需要另外安装）
         if (window.localStorage.getItem('userToken') && data) {
-            data['token'] = window.localStorage.getItem('userToken') || window.localStorage.getItem('touristToken') ||　'';
+            data['token'] = window.localStorage.getItem('userToken') ||　'';
         }
         data = Qs.stringify(data);
         return data;
@@ -26,6 +26,9 @@ AxiosInst.interceptors.request.use((config) => {
     // if (window.localStorage.getItem('userToken')) {
     //     config.headers.Authorization = 'Bearer ' + `${window.localStorage.getItem('userToken')}`;
     // }
+    if(config.method=='get'){
+       config.params.token = window.localStorage.getItem('userToken') || '';
+    }
     return config;
 }, (err) => {
     return Promise.reject(err);
@@ -43,15 +46,15 @@ AxiosInst.interceptors.response.use(response => {
         return Promise.reject(response);
     }
     // 没有token是402，token失效是403
-    if (code === 402 || code === 403) {
-        window.localStorage.removeItem('userInfo');
-        window.localStorage.removeItem('userToken');
-        router.push({
-            name: 'my'
-        });
-        return Promise.reject(response);
-        //return response;
-    }
+    // if (code === 402 || code === 403) {
+    //     window.localStorage.removeItem('userInfo');
+    //     window.localStorage.removeItem('userToken');
+    //     // router.push({
+    //     //     name: 'sign'
+    //     // });
+    //     return Promise.reject(response);
+    //     //return response;
+    // }
     return response;
 }, (error) => {
     console.log(error)

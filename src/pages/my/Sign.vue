@@ -48,9 +48,7 @@ export default {
           if(res.status === 200 && res.content) {
             window.localStorage && window.localStorage.setItem('userToken', res.content.token);
             window.localStorage && window.localStorage.setItem('userId', res.content.user_id);
-            this.$router.push({
-              name: 'my'
-            })
+            this.$router.go(-1);
           } else {
             this.$Toast(res.msg)
           }
@@ -81,9 +79,7 @@ export default {
               member_since: res.content.member_since,
               email: res.content.email
             }))
-            this.$router.push({
-              name: 'my'
-            })
+            this.$router.go(-1);
           } else {
             this.$Toast(res.msg)
           }

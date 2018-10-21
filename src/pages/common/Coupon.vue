@@ -1,5 +1,5 @@
 <template>
-  <div class="coupon-modal" v-if="show && coupons.length">
+  <div class="coupon-modal" v-if="show">
     <div class="coupon-info a-fadeinT">
       <p class="detail">Receive Coupons</p>
       <span class="close" @click="clickCouponClose"><i class="iconfont">&#xe63f;</i></span>
@@ -54,7 +54,9 @@ export default {
         }).then((res) => {
           if(res.status === 200) {
             item.datestatus = 2;
-          } else {
+          } else if(res.status === 402 || res.status === 403) {
+            this.$router.push({name: 'sign'})
+          } else{
             this.$Toast(res.msg)
           }
         })

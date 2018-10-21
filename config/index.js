@@ -21,11 +21,11 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      // '/personal/*': {
-      //   target: 'http://api.cucoe.net',
-      //   changeOrigin: true,
-      //   secure: false
-      // },
+      '/personal/*': {
+        target: 'http://api.cucoe.net',
+        changeOrigin: true,
+        secure: false
+      },
       '/users/*': {
         target: 'http://api.cucoe.net',
         changeOrigin: true,
@@ -36,22 +36,37 @@ module.exports = {
         changeOrigin: true,
         secure: false
       },
-      // '/orders/*': {
-      //   target: 'http://api.cucoe.net',
-      //   changeOrigin: true,
-      //   secure: false
-      // },
-      // '/products/*': {
-      //   target: 'http://api.cucoe.net',
-      //   changeOrigin: true,
-      //   secure: false
-      // },
-      // '/promotions/*': {
-      //   target: 'http://api.cucoe.net',
-      //   changeOrigin: true,
-      //   secure: false
-      // },
-      '/carts/*': {
+      '/coupons/*': {
+        target: 'http://api.cucoe.net',
+        changeOrigin: true,
+        secure: false
+      },
+      '/orders/*': {
+        target: 'http://api.cucoe.net',
+        changeOrigin: true,
+        secure: false
+      },
+      '/products/*': {
+        target: 'http://api.cucoe.net',
+        changeOrigin: true,
+        secure: false
+      },
+      '/home': {
+        target: 'http://api.cucoe.net',
+        changeOrigin: true,
+        secure: false
+      },
+      '/promotions/*': {
+        target: 'http://api.cucoe.net',
+        changeOrigin: true,
+        secure: false
+      },
+      '/carts': {
+        target: 'http://api.cucoe.net',
+        changeOrigin: true,
+        secure: false
+      },
+      '/cates': {
         target: 'http://api.cucoe.net',
         changeOrigin: true,
         secure: false

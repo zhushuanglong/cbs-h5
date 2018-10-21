@@ -2,7 +2,7 @@
   <div class="cart-main">
     <topbar title="Shopping Cart"></topbar>
     <!-- 空 -->
-    <template v-if="0">
+    <template v-if="cartEmpty">
       <div class="cart-empty">
         <div class="img"></div>
         <p>Your shopping cart is currently empty</p>
@@ -11,9 +11,9 @@
       <bottombar></bottombar>
     </template>
     <!-- 有 -->
-    <template v-else>
+    <template v-if="cartsData && cartsData.goods">
       <div class="cart-have">
-        <router-link :to="{path: '/activity'}" class="cart-enjoy">
+        <router-link :to="{path: '/activity?activity_id=' + cartsData.promotion_id}" class="cart-enjoy">
           <span class="img"></span>
           <span>{{cartsData.promotion_msg}}</span>
           <i class="iconfont">&#xe62e;</i>
@@ -57,7 +57,7 @@
       </div>
 
       <confirm :show.sync="confirmModal.show" :title="confirmModal.title"  :content="confirmModal.content" :on-ok="confirmModal.action"  okText="Yes"></confirm>
-      <Coupon :showCoupon.sync="isShowCoupon" :coupons="cartsData.coupon || []" :isClick="true" :clickCallback="clickCoupon"></Coupon>
+      <Coupon :show.sync="isShowCoupon" :coupons="cartsData.coupon || []" :isClick="true" :clickCallback="clickCoupon"></Coupon>
     </template>
   </div>
 </template>
@@ -79,14 +79,14 @@ export default {
       reduceSt: null, // 减少数据节流st
       totalPrice: 0,
       confirmModal: {},
+      cartEmpty: false,
       couponPrice: '$0' // 券价
     };
   },
   computed: {},
-  created () {
+  mounted () {
     this.getCartData();
   },
-  mounted () {},
   watch: {
     'isUsePoint': function (value) {
       // 积分的使用
@@ -105,12 +105,20 @@ export default {
           this.cartsData = res.content;
           if (!localStorage.userToken) {
             // 认定是游客访问
-            localStorage.userToken = res.content.token;
+            localStorage.setItem('userToken', res.content.token); 
           }
-          this.computeTotalPrice();
+          if (res.content) {
+            this.cartEmpty = false;
+            this.computeTotalPrice();
+          } else {
+            this.cartEmpty = true;
+          }
+        } else if (res.status === 402 || res.status === 403) {
+          this.cartEmpty = true;
+          // this.$router.push({name: 'sign'})
         }
       }, err => {
-        this.$Toast(err);
+        // this.$Toast(err);
       });
     },
     // 计算总价格
@@ -140,7 +148,12 @@ export default {
           sku_id: item.sku_id,
           num: item.num
         }).then((res) => {
-          if (res.status === 200) {}
+          console.log(rest)
+          if (res.status === 200) {
+            this.$Toast('add success')
+          } else {
+            this.$Toast(res.msg)
+          }
         }, err => {
           self.$Toast(err);
         });
@@ -224,6 +237,10 @@ export default {
       }).then((res) => {
         if (res.status === 200 && res.content) {
           this.$router.push({path: '/cart/secure?orderId=' + res.content});
+        } else if (res.status === 403 || res.status === 402) {
+          this.$router.push({name: 'sign'})
+        } else {
+          this.$Toast(res.msg)
         }
       }, err => {
         this.$Toast(err);

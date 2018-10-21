@@ -15,16 +15,16 @@
           <li v-for="(item, index) in category" :class="{'cur': categoriesCur === index}" @click="clickCategories(index, item)">{{item.name}}</li>
         </ul>
       </div>
-      <div class="detail">
+      <div class="detail" v-for="cate in secondCate">
         <div class="title">
-          <div class="label">Clothing</div>
+          <div class="label">{{cate.name}}</div>
           <div class="pos">All<i class="iconfont">&#xe62e;</i></div>
         </div>
         <ul>
-          <li v-for="item in secondCate">
-            <router-link :to="{path: '/categories/search', query: { cate:  + item.id }}">
-              <img src="https://gw3.alicdn.com/bao/uploaded/i1/1825922675/TB1l4q4wYwrBKNjSZPcXXXpapXa_!!0-item_pic.jpg_.webp">
-              <p>T-shirts</p>
+          <li v-for="ele in cate.sub">
+            <router-link :to="{path: '/categories/search', query: { cate:  + ele.id }}">
+              <img :src="ele.img">
+              <p>{{ele.name}}</p>
             </router-link>
           </li>
         </ul>
@@ -43,38 +43,7 @@ export default {
       category: [],
       secondCate: [],
       winHeight: 0,
-      categoriesArr: [
-        {
-          name: 'Men',
-        },
-        {
-          name: 'Kid & Toys',
-        },
-        {
-          name: 'Baby & Mom',
-        },
-        {
-          name: 'Baby & Mom',
-        },
-        {
-          name: 'Baby & Mom',
-        },
-        {
-          name: 'Baby & Mom',
-        },
-        {
-          name: 'Baby & Mom',
-        },
-        {
-          name: 'Baby & Mom',
-        },
-        {
-          name: 'Baby & Mom',
-        },
-        {
-          name: 'Baby & Mom',
-        }
-      ]
+      categoriesArr: []
     };
   },
   computed: {},
@@ -91,7 +60,7 @@ export default {
         if (res.status === 200) {
           this.category = res.content.cates || [];
           this.categoriesCur = 0;
-          this.secondCate = this.category[0];
+          this.secondCate = this.category[0] ? this.category[0].sub : [];
         } else {
           this.$Toast(res.msg)
         }

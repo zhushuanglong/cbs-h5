@@ -197,7 +197,9 @@ export default {
   methods: {
     // 获取详情页基础数据
     getDetailData () {
-      this.request('ProductsDetail', {}).then((res) => {
+      this.request('ProductsDetail', {
+        id: this.$route.query.id || ''
+      }).then((res) => {
         if (res.status === 200 && res.content) {
           this.data = res.content;
         }
@@ -449,11 +451,8 @@ export default {
       }).then((res) => {
         if (res.status === 200) {
           let self = this;
+          localStorage.setItem('userToken', res.content.token);
           // 跳转到购物车
-          self.$Toast({
-            message: 'Success',
-            duration: 800
-          });
           setTimeout(function() {
             document.body.scrollTop = document.documentElement.scrollTop = 0; // 滚动到顶部
             self.submitLocked = false; // 解锁
