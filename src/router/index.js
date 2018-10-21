@@ -8,7 +8,7 @@ export default new Router({
   routes: [
     {
       name: 'home',
-      path: '/home',
+      path: '/index',
       component: function (resolve) {
         require.ensure([], function () {
           resolve(require('pages/Home'));
@@ -260,7 +260,7 @@ export default new Router({
     },
     {
       path: '*',
-      redirect: '/my'
+      redirect: '/index'
     }
 
   ]
