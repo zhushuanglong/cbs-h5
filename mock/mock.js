@@ -318,6 +318,16 @@ var setOnline = [
     type: 'post',
     url: '/personal/info'
   },
+  {
+    name: 'cates',
+    type: 'post',
+    url: '/cates'
+  },
+  {
+    name: 'hotword',
+    type: 'post',
+    url: '/search/hotword'
+  }
 
 ];
 

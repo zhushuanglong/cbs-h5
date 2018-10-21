@@ -1,6 +1,6 @@
 <template>
   <div class="detail-main">
-    <topbar title="Failure Payment" :backUrl="backUrl" :detailId="$route.query.id"></topbar>
+    <topbar title="Failure Payment" :detailId="$route.query.id"></topbar>
     <div class="detail-swipe">
       <Swipe class="my-swipe big-img-swipe" ref="bigImgSwipeRef" :nextCallback="nextCallback">
         <SwipeItem v-for="img in imgSwipe">

@@ -12,6 +12,7 @@
         <div class="btn-search" @click="clickSearchResult">Search</div>
       </div>
     </div>
+    <!-- 热门关键词 -->
     <div class="search-history" v-show="dataSearch.length === 0">
       <div v-show="historyArr.length" class="label gray2">History</div>
       <ul v-show="historyArr.length">
@@ -24,6 +25,7 @@
         </li>
       </ul>
     </div>
+    <!-- 搜索结果 -->
     <div class="search-sort-pos" v-show="dataSearch.length">
       <div class="global-center search-sort">
         <div class="sort" @click="clickConditions('sort')" :class="{'cur': conditionsName === 'sort', 'show-sort-con': isShowSortCon}">
@@ -138,6 +140,7 @@ export default {
         sort: '',
         page: 1
       },
+      hotwords: [],
       sortArr: [
         {
           name: 'Best Match',
@@ -160,50 +163,60 @@ export default {
           sort: 'price-a'
         }
       ],
-      hotArr: [
-        {
-          name: 'LED',
-          hot: true
-        },
-        {
-          name: 'Mommy & Me'
-        },
-        {
-          name: 'Black Jumpsuit'
-        },
-        {
-          name: 'Black Jumpsuit and top'
-        }
-      ]
+      hotArr: []
     };
   },
   computed: {},
   created() {
-    let name = this.$route.query.name;
-    if (name !== 'fromcate' && name !== null && name !== '') { // 'fromcate'是从分类页面刚进来的name
-      let cate = name.split('slcate_')[1];
-      let obj = {
-        title: name,
-        page: 1
-      };
-      // 如果是分类页面点击类别过来的搜索条件是cate_cate_xxx
-      if (cate) {
-        obj = {
-          cate,
-          page: 1
-        }
-      }
-      this.getProductsList(obj);
-    }
+    // let name = this.$route.query.name;
+    // if (name !== 'fromcate' && name !== null && name !== '') { // 'fromcate'是从分类页面刚进来的name
+    //   let cate = name.split('slcate_')[1];
+    //   let obj = {
+    //     title: name,
+    //     page: 1
+    //   };
+    //   // 如果是分类页面点击类别过来的搜索条件是cate_cate_xxx
+    //   if (cate) {
+    //     obj = {
+    //       cate,
+    //       page: 1
+    //     }
+    //   }
+    //   this.getProductsList(obj);
+    // }
   },
   mounted () {
     if (this.$route.query.name === 'fromcate') {
       this.$refs.inputSearchRef.focus();
       this.isShowSearchMask = true;
     }
+    const query = this.$route.query;
+    let options = {
+      cate: query.cate || '',
+      title: query.title || ''
+    };
+    this.getProductsList(options);
     this.loadMore();
+    this.getHotWords();
   },
   methods: {
+    // 获取热门搜索词
+    getHotWords () {
+      this.request('SearchHotword', ).then((res) => {
+        if(res.status === 200) {
+          let hotArr = res.content.words || []
+          if(hotArr.length) {
+            hotArr.forEach((item) => {
+              item.hot = false;
+            })
+            hotArr[0].hot = true;
+          }
+          this.hotArr = hotArr;
+        } else {
+          this.$Toast(res.msg)
+        }
+      })
+    },
     // 获取商品列表信息
     getProductsList (option) {
       // 初始化

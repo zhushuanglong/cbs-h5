@@ -1,6 +1,6 @@
 <template>
   <div class="categories-main">
-    <div class="global-topbar">
+    <div class="global-topbar" id="category-topbar">
       <router-link :to="{path: '/categories/search?cateId='}" class="global-center search-bar">
         <div class="input fl">
           <i class="iconfont">&#xe66e;</i>
@@ -10,9 +10,9 @@
       </router-link>
     </div>
     <div class="categories-con">
-      <div class="left">
+      <div class="left" :style="{'min-height': winHeight}">
         <ul>
-          <li v-for="(item, index) in categoriesArr" :class="{'cur': categoriesCur === index}" @click="clickCategories(index)">{{item.name}}</li>
+          <li v-for="(item, index) in category" :class="{'cur': categoriesCur === index}" @click="clickCategories(index, item)">{{item.name}}</li>
         </ul>
       </div>
       <div class="detail">
@@ -21,8 +21,8 @@
           <div class="pos">All<i class="iconfont">&#xe62e;</i></div>
         </div>
         <ul>
-          <li v-for="item in categoriesArr">
-            <router-link :to="{path: '/categories/search', query: { cateId:  + item.cate }}">
+          <li v-for="item in secondCate">
+            <router-link :to="{path: '/categories/search', query: { cate:  + item.id }}">
               <img src="https://gw3.alicdn.com/bao/uploaded/i1/1825922675/TB1l4q4wYwrBKNjSZPcXXXpapXa_!!0-item_pic.jpg_.webp">
               <p>T-shirts</p>
             </router-link>
@@ -40,6 +40,9 @@ export default {
   data () {
     return {
       categoriesCur: 0,
+      category: [],
+      secondCate: [],
+      winHeight: 0,
       categoriesArr: [
         {
           name: 'Men',
@@ -75,11 +78,28 @@ export default {
     };
   },
   computed: {},
-  mounted () {},
+  mounted () {
+    const barHeight = document.getElementById('category-topbar');
+    this.winHeight = (document.documentElement.clientHeight - barHeight.offsetHeight) + 'px'
+    this.getCategory();
+  },
   watch: {},
   methods: {
-    clickCategories (index) {
+    // 获取分类
+    getCategory() {
+      this.request('Category', {}).then((res) => {
+        if (res.status === 200) {
+          this.category = res.content.cates || [];
+          this.categoriesCur = 0;
+          this.secondCate = this.category[0];
+        } else {
+          this.$Toast(res.msg)
+        }
+      })
+    },
+    clickCategories (index, item) {
       this.categoriesCur = index;
+      this.secondCate = item.sub;
     }
   },
   beforeDestroy () {}
@@ -134,7 +154,6 @@ export default {
     .left {
       float: left;
       height: 100%;
-      min-height: 10.7rem;
       overflow-y: scroll;
       width: 190/@rem;
       background-color: #F2F2F2;

@@ -78,7 +78,10 @@ const methodMap = {
     OrdersLogDetail: {url: '/orders/logDetail', method: 'post'},
     /** 物流信息 **/
     PersonalInfo: {url: '/personal/info', method: 'post'},
-
+    /** 类目 */
+    Category: {url: '/cates', method: 'post'},
+    /** 热门关键词 */
+    SearchHotword: {url: '/search/hotword', method: 'post'}
 };
 
 export default methodMap;
