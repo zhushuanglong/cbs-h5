@@ -146,21 +146,21 @@ export default {
       }
 
       if (!payData.number) {
-        this.$Toast('Please Fill In Card Number');
+        this.$Toast('Card Number must be more than 2 letters');
         return;
       }
 
       if (!payData.moth) {
-        this.$Toast('Please Fill In Expire Moth');
+        this.$Toast('Expire Moth must be more than 2 letters');
         return;
       }
 
       if (!payData.year) {
-        this.$Toast('Please Fill In Expire Year');
+        this.$Toast('Expire Year must be more than 2 letters');
         return;
       }
       if (!payData.cvv) {
-        this.$Toast('Please Fill In Cvv');
+        this.$Toast('Cvv must be more than 2 letters');
         return;
       }
       this.request('OrdersPay', payData).then((res) => {
@@ -203,15 +203,15 @@ export default {
       let data = {};
       let self = this;
       if (!this.data.number) {
-        this.$Toast('Please fill in number');
+        this.$Toast('number');
         return;
       }
       if (!this.data.exp) {
-        this.$Toast('Please fill in exp');
+        this.$Toast('exp');
         return;
       }
       if (!this.data.cvc) {
-        this.$Toast('Please fill in cvc');
+        this.$Toast('cvc');
         return;
       }
       Object.assign(data, this.data);

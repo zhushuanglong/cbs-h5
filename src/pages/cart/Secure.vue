@@ -45,7 +45,7 @@
       </li>
       <li>
         <div class="label">Order Subtotal</div>
-        <div class="pos-abs red">${{totalPrice}}</div>
+        <div class="pos-abs red">{{totalPrice}}</div>
       </li>
     </ul>
 
@@ -84,7 +84,7 @@
     </ul>
 
     <div class="global-fixed-btn">
-      <div class="fixed-btn" @click="orderPay">PLACE ORDER ( ${{totalPrice}} )</div>
+      <div class="fixed-btn" @click="orderPay">PLACE ORDER ( {{totalPrice}} )</div>
     </div>
 
     <confirm :show.sync="confirmModal.show" :title="confirmModal.title"  :content="confirmModal.content" :on-ok="confirmModal.action"  okText="Yes"></confirm>

@@ -56,6 +56,7 @@
         <div @click="submitCart()" class="fixed-btn">CONTINUE CHECKOUT ( <span>${{totalPrice}}</span> )</div>
       </div>
 
+      <confirm :show.sync="confirmModal.show" :title="confirmModal.title"  :content="confirmModal.content" :on-ok="confirmModal.action"  okText="Yes"></confirm>
       <Coupon :showCoupon.sync="isShowCoupon" :coupons="cartsData.coupon || []"></Coupon>
     </template>
   </div>
@@ -76,7 +77,8 @@ export default {
       isUsePoint: false, // 是否使用积分
       addSt: null, // 添加数据节流st
       reduceSt: null, // 减少数据节流st
-      totalPrice: 0
+      totalPrice: 0,
+      confirmModal: {}
     };
   },
   computed: {},
@@ -119,14 +121,6 @@ export default {
       }
       this.totalPrice -= +this.cartsData.specialoffer;
     },
-    // 增加 - 登录前
-    addNoLogin () {
-      // TODO STH
-    },
-    // 减少 - 登录前
-    reduceNoLogin () {
-      // TODO STH
-    },
     // 增加 - 登录后
     add (item) {
       let self = this;
@@ -152,15 +146,44 @@ export default {
     // 减少 - 登录后
     reduce (item) {
       let self = this;
+      if (item.num <= 0) {
+        return;
+      }
+      // item.num--;
+      // this.totalPrice = this.totalPrice - (+item.price);
+      clearTimeout(self.reduceSt);
       if (item.num <= 1) {
-        return false;
+        self.confirmModal = {
+          show: true,
+          title: 'Confirmed to delete?',
+          onText: 'Yes',
+          content: `Delete the product!`,
+          action: function () {
+            self.confirmModal.show = false;
+            self.reduceSt = setTimeout(function() {
+              self.request('CartsAdd', {
+                good_id: item.id,
+                sku_id: item.sku_id,
+                num: item.num
+              }).then((res) => {
+                if (res.status === 200) {
+                  self.cartsData.goods = res.content.goods;
+                  item.num--;
+                  self.totalPrice = self.totalPrice - (+item.price);
+                }
+              }, err => {
+                self.$Toast(err);
+              });
+            }, 1000);
+          }
+        }
+        return;
       }
       item.num--;
-      this.totalPrice = this.totalPrice - (+item.price);
-      clearTimeout(self.reduceSt);
+      self.totalPrice = self.totalPrice - (+item.price);
       // 函数节流
       self.reduceSt = setTimeout(function() {
-        self.request('CartsReduce', {
+        self.request('CartsAdd', {
           good_id: item.id,
           sku_id: item.sku_id,
           num: item.num
@@ -184,7 +207,6 @@ export default {
         return;
       }
       this.request('OrdersCheckout', {
-        token: localStorage.userToken || '',
         type: 2,	// 是	Number	单订来源(1：PC端，2：H5，4：APP)
         coupon_id: this.couponId,	// 是	String或者null	优惠券id 没有则为空
         integral: this.isUsePoint,	// 是	Boolean	积分是否选择 ture或者false
