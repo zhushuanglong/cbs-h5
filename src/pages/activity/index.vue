@@ -15,8 +15,8 @@
         <span class="close" @click="couponClose"><i class="iconfont">&#xe63f;</i></span>
         <ul class="cooupon-ul">
           <li v-for="item in coupons" :key="item.id" class="coupon-item">
-            <p class="price">${{item.price}} OFF</p>
-            <p class="desc">For a purchase over ${{item.use_price}}</p>
+            <p class="price">{{item.price}} OFF</p>
+            <p class="desc">For a purchase over {{item.use_price}}</p>
             <p class="time">{{item.startdate}} - {{item.enddate}}</p>
           </li>
         </ul>

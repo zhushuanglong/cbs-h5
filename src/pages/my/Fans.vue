@@ -17,7 +17,7 @@
           </div>
         </div>
         <div class="d-2 fl">{{item.sub_fans}}</div>
-        <div class="d-3 fl">${{item.benefit}}</div>
+        <div class="d-3 fl">{{item.benefit}}</div>
       </li>
     </ul>
   </div>

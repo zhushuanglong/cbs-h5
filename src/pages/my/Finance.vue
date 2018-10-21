@@ -4,7 +4,7 @@
     <div class="finance">
       <div class="finance-count">
         <div class="icon"><i class="iconfont">&#xe694;</i></div>
-        <div class="number">${{money}}</div>
+        <div class="number">{{money}}</div>
       </div>
       <div class="finance-detail">
         <div class="title">The detail</div>
