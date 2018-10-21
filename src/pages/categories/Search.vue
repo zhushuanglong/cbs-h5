@@ -2,27 +2,25 @@
   <div class="search-main">
     <div class="global-topbar">
       <div class="global-center search-bar">
-        <router-link :to="{path: '/categories'}">
+        <a href="javascript:;" @click="$router.go(-1)">
           <i class="iconfont fl back-url">&#xe62f;</i>
-        </router-link>
+        </a>
         <form action="" class="input fl">
           <i class="iconfont">&#xe66e;</i>
-          <input ref="inputSearchRef" class="w660 t3s J_searchInput" type="text" name="search" placeholder="What are you looking for?" @focus="inputFocus" @blur="inputBlur">
+          <input ref="inputSearchRef" class="w660 t3s J_searchInput" v-model="serachTitle" type="text" name="search" placeholder="What are you looking for?" @focus="inputFocus" @blur="inputBlur">
         </form>
         <div class="btn-search" @click="clickSearchResult">Search</div>
       </div>
     </div>
-    <div class="search-history" v-show="isShowSearchHistory">
+    <div class="search-history" v-show="dataSearch.length === 0">
       <div v-show="historyArr.length" class="label gray2">History</div>
       <ul v-show="historyArr.length">
-        <li v-for="item in historyArr" @click="getProductsList({title: item, page: 1})">
-          <router-link :to="{path: '/categories/search/' + item}">{{item}}</router-link>
-        </li>
+        <li v-for="item in historyArr" @click="getProductsList({title: item, page: 1})"><a href="javascript:;">{{item}}</a></li>
       </ul>
       <div class="label gray2">Hot Search</div>
       <ul>
-        <li v-for="item in hotArr" :class="{'hot': item.hot}" @click="getProductsList({title: item.name, page: 1})">
-          <router-link :to="{path: '/categories/search/' + item.name}">{{item.name}}</router-link>
+        <li v-for="item in hotArr" :class="{'hot': item.hot}" @click="getProductsList({cate: item.cate, page: 1})">
+          <a href="javascript:;">{{item.name}}</a>
         </li>
       </ul>
     </div>
@@ -35,7 +33,7 @@
           <!-- sort内容 -->
           <ul class="sort-con a-fadeinTX">
             <li v-for="(item, index) in sortArr" :class="{'cur': clickSortIndex === index}" @click="clickSort(index, item)">
-              <router-link :to="{path: '/categories/search/' + item.name}">
+              <router-link :to="{path: '/categories/search?name' + item.name}">
                 <p>{{item.name}}</p>
                 <i class="iconfont">&#xe625;</i>
               </router-link>
@@ -95,7 +93,7 @@
     <div class="search-con" v-show="dataSearch.length">
       <ul>
         <li v-for="item in dataSearch">
-          <router-link :to="{path: '/detail?id=' + item.id + '&from=' + encodeURIComponent('categories/search/' + $route.params.name)}">
+          <router-link :to="{path: '/detail?id=' + item.id + '&from=' + encodeURIComponent('categories/search?name=' + $route.params.name)}">
             <img v-lazy="item.img">
             <p class="p1">{{item.name}}</p>
             <p class="p2">${{item.price}}</p>
@@ -122,6 +120,7 @@ export default {
   },
   data () {
     return {
+      serachTitle: '', // 关键词
       dataSearch: [], // 搜索内容
       filterParams: {}, // 过滤条件
       historyArr: localStorage.getItem('cbs_history') && localStorage.getItem('cbs_history').split(',') || [],
@@ -180,7 +179,7 @@ export default {
   },
   computed: {},
   created() {
-    let name = this.$route.params.name;
+    let name = this.$route.query.name;
     if (name !== 'fromcate' && name !== null && name !== '') { // 'fromcate'是从分类页面刚进来的name
       let cate = name.split('slcate_')[1];
       let obj = {
@@ -198,7 +197,7 @@ export default {
     }
   },
   mounted () {
-    if (this.$route.params.name === 'fromcate') {
+    if (this.$route.query.name === 'fromcate') {
       this.$refs.inputSearchRef.focus();
       this.isShowSearchMask = true;
     }
@@ -216,6 +215,7 @@ export default {
       }
       // 搜索条件
       this.searchParams = option;
+      this.serachTitle = this.searchParams.title;
       // 发送请求
       this.request('ProductsList', {
         cate: option.cate || '',
@@ -302,7 +302,7 @@ export default {
       // 获取商品列表信息
       this.getProductsList({
         page: 1,
-        title: inputSearchRef.value.trim()
+        title: this.serachTitle
       });
     },
     // 点击sort

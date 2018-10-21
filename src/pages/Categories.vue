@@ -1,7 +1,7 @@
 <template>
   <div class="categories-main">
     <div class="global-topbar">
-      <router-link :to="{path: '/categories/search/fromcate'}" class="global-center search-bar">
+      <router-link :to="{path: '/categories/search?cateId='}" class="global-center search-bar">
         <div class="input fl">
           <i class="iconfont">&#xe66e;</i>
           <input type="text" placeholder="What are you looking for?">
@@ -22,7 +22,7 @@
         </div>
         <ul>
           <li v-for="item in categoriesArr">
-            <router-link :to="{path: '/categories/search/cate_' + item.name}">
+            <router-link :to="{path: '/categories/search', query: { cateId:  + item.cate }}">
               <img src="https://gw3.alicdn.com/bao/uploaded/i1/1825922675/TB1l4q4wYwrBKNjSZPcXXXpapXa_!!0-item_pic.jpg_.webp">
               <p>T-shirts</p>
             </router-link>
