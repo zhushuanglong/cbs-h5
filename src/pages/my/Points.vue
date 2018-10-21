@@ -1,6 +1,6 @@
 <template>
   <div>
-    <topbar title="My Points" :backUrl="backUrl"></topbar>
+    <topbar title="My Points"></topbar>
     <div class="my-points">
       <div class="point-null">
         <i class="iconfont points-icon">&#xe64a;</i>
@@ -35,18 +35,12 @@ export default {
     return  {
       personal_integral: 0,
       integral: [], // 历史纪录
-      backUrl: 'my', // 返回地址
       params: {
         page: 1
       }
     }
   },
-  created() {
-    // 来自详情页
-    if (this.$route.query.detail) {
-      this.backUrl = 'detail/' + this.$route.query.detail;
-    }
-  },
+  created() {},
   mounted() {
     this.getPoints();
   },

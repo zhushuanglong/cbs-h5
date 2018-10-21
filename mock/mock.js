@@ -102,9 +102,14 @@ var setOnline = [
     url: '/personal/self'
   },
   {
-    name: 'paymentConfirmPayment',
+    name: 'paymentPalExec',
     type: 'post',
-    url: '/payment/confirmPayment'
+    url: '/payment/palExec'
+  },
+  {
+    name: 'paymentStatus',
+    type: 'post',
+    url: ' /payment/status'
   },
   {
     name: 'pinPinList',

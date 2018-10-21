@@ -1,6 +1,6 @@
 <template>
   <div>
-    <topbar title="My Coupons" :backUrl="backUrl"></topbar>
+    <topbar title="My Coupons"></topbar>
     <div class="my-coupon">
       <div class="c-search">
         <input type="text" v-model="redeemCode" class="s-input" placeholder="Enter promo code here"/>
@@ -25,16 +25,10 @@ export default {
     return {
       searchContent: '',
       couponList: [],
-      redeemCode: '',
-      backUrl: 'my' // 返回地址
+      redeemCode: ''
     }
   },
-  created() {
-    // 来自详情页
-    if (this.$route.query.detail) {
-      this.backUrl = 'detail/' + this.$route.query.detail;
-    }
-  },
+  created() {},
   mounted() {
     this.getCouponList();
   },

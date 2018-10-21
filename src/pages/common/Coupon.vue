@@ -7,11 +7,13 @@
         <input type="text" v-model="redeemCode" class="s-input" placeholder="Enter promo code here"/>
         <div class="search-btn" @click="getCouponList">Applay</div>
       </div>
+      <!-- 优惠券状态 1-可用 2-未开始 3-已过期未使用 4-已使用 -->
       <ul>
-        <li v-for="item in coupons" :key="item.id" class="coupon-item">
+        <li v-for="item in (couponsResult.length && couponsResult || coupons)" :class="{'able': item.datestatus === 1, 'disable': item.datestatus === 2 || item.datestatus === 3 || item.datestatus === 4}" class="coupon-item" @click="clickCoupon(item)">
           <p class="price">{{item.price}} OFF</p>
           <p class="desc">For a purchase over {{item.use_price}}</p>
           <p class="time">{{item.startdate}} - {{item.enddate}}</p>
+          <div class="use-flag-img" :class="{'expired': item.datestatus === 3, 'used': item.datestatus === 4 || clickId === item.id}"></div>
         </li>
       </ul>
     </div>
@@ -28,31 +30,54 @@ export default {
     coupons: {
       type: Array,
       default: []
+    },
+    isClick: {
+      type: Boolean,
+      default: false
+    },
+    clickCallback: {
+      type: Function,
+      default: () => {}
     }
   },
   data () {
     return {
-      redeemCode: ''
+      redeemCode: '',
+      couponsResult: [],
+      clickId: ''
     }
   },
   created () {},
   mounted () {},
+  watch: {
+    'showCoupon': function(value) {
+      document.documentElement.style.overflow = value ? 'hidden' : 'auto';
+    }
+  },
   methods: {
     clickCouponClose () {
       this.$emit('update:showCoupon', false);
+    },
+    clickCoupon (item) {
+      if (this.isClick) {
+        this.clickId = item.id;
+        this.clickCallback(item);
+      }
     },
     getCouponList () {
       this.request('CouponList', {
         redeemCode: this.redeemCode
       }).then((res) => {
-        if(res.status === 200 && res.content) {
-          this.coupons = res.content.coupons || [];
+        if (res.status === 200 && res.content) {
+          this.couponsResult = res.content.coupons || [];
+          // if (!this.couponsResult.length) {
+          //   this.$Toast('no matching');
+          // }
         }
       }, err => {
         this.$Toast(err);
       });
     }
-
   }
 };
 </script>
@@ -102,10 +127,14 @@ export default {
     height: 897/@rem;
     text-align: left;
     ul {
+      display: block;
       padding: 0 20/@rem;
       margin-top: 20/@rem;
+      overflow-y: scroll;
+      height: 700/@rem;
     }
     .coupon-item {
+      position: relative;
       background-color: #fff;
       height: 240/@rem;
       padding: 30/@rem 40/@rem;
@@ -138,6 +167,7 @@ export default {
       color: #939399;
       font-size: 24/@rem;
     }
+
     .close{
       position: absolute;
       right: 23/@rem;
@@ -146,6 +176,26 @@ export default {
         color: #939399;
         font-size: 32/@rem;
       }
+    }
+    .coupon-item.disable {
+      .price, .des, .tiem {
+        color: #939399 !important;
+      }
+    }
+    .use-flag-img{
+      position: absolute;
+      right: 0;
+      width: 147/@rem;
+      height: 129/@rem;
+      bottom: -10/@rem;
+    }
+    .used{
+      background: url('~img/my/coupon_used.png') no-repeat center center;
+      background-size: cover;
+    }
+    .expired{
+      background: url('~img/my/coupon_expired.png') no-repeat center center;
+      background-size: cover;
     }
   }
 }

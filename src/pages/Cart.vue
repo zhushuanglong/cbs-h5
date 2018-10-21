@@ -1,6 +1,6 @@
 <template>
   <div class="cart-main">
-    <topbar title="Shopping Cart" :backUrl="'detail?id=' + $route.query.id"></topbar>
+    <topbar title="Shopping Cart"></topbar>
     <!-- 空 -->
     <template v-if="0">
       <div class="cart-empty">
@@ -39,11 +39,11 @@
         </div>
         <div class="cart-coupon cart-rel" @click="clickShowCoupon">
           <div class="cart-label">
-            Coupon
-            <span v-if="cartsData.coupon && cartsData.coupon.length">( {{cartsData.coupon.length}} )</span>
+            Coupon<span v-if="cartsData.coupon">（Rewards {{cartsData.coupon.length}})</span>
             <span v-else class="gray2">( no coupons )</span>
           </div>
           <div class="cart-pos">
+            <span>{{this.couponPrice}}</span>
             <i class="iconfont gray2">&#xe62e;</i>
           </div>
         </div>
@@ -57,7 +57,7 @@
       </div>
 
       <confirm :show.sync="confirmModal.show" :title="confirmModal.title"  :content="confirmModal.content" :on-ok="confirmModal.action"  okText="Yes"></confirm>
-      <Coupon :showCoupon.sync="isShowCoupon" :coupons="cartsData.coupon || []"></Coupon>
+      <Coupon :showCoupon.sync="isShowCoupon" :coupons="cartsData.coupon || []" :isClick="true" :clickCallback="clickCoupon"></Coupon>
     </template>
   </div>
 </template>
@@ -78,7 +78,8 @@ export default {
       addSt: null, // 添加数据节流st
       reduceSt: null, // 减少数据节流st
       totalPrice: 0,
-      confirmModal: {}
+      confirmModal: {},
+      couponPrice: '$0' // 券价
     };
   },
   computed: {},
@@ -120,6 +121,8 @@ export default {
         this.totalPrice += goods[i].num * goods[i].price;
       }
       this.totalPrice -= +this.cartsData.specialoffer;
+      // 处理券价格
+      this.totalPrice = this.totalPrice - this.couponPrice.substring(1, this.couponPrice.length);
     },
     // 增加 - 登录后
     add (item) {
@@ -197,6 +200,13 @@ export default {
     // 弹出券
     clickShowCoupon () {
       this.isShowCoupon = true;
+    },
+    // 点击购物券
+    clickCoupon (item) {
+      this.couponPrice = item.price;
+      this.isShowCoupon = false;
+      // 计算券
+      this.totalPrice = this.totalPrice - this.couponPrice.substring(1, this.couponPrice.length);
     },
     // 提交购物车
     submitCart () {
@@ -344,7 +354,13 @@ export default {
       position: absolute;
       top: 0;
       right: 20/@rem;
+      .height(88);
       .clearfix();
+      span {
+        display: inline-block;
+        text-align: right;
+        vertical-align: top;
+      }
       .mint-switch {
         float: right;
         margin-top: 20/@rem;

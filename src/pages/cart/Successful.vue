@@ -6,10 +6,10 @@
         <i class="iconfont">&#xe602;</i>
         Successful Payment
       </div>
-      <p class="f32">Order amount: $888</p>
+      <p class="f32">Order amount: {{data.price}}</p>
       <p>Thank you for your order, we will deliver the goods soon</p>
     </div>
-    <router-link :to="{path: '/my/orderDetail?orderid=' + $route.query.orderId}" class="btn-order">VIEW THE ORDER</router-link>
+    <router-link :to="{path: '/my/orderDetail?orderid=' + data.order_id}" class="btn-order">VIEW THE ORDER</router-link>
     <router-link :to="{path: '/home'}" class="btn-shopping">GO SHOPPING</router-link>
   </div>
 </template>
@@ -17,12 +17,39 @@
 <script>
 export default {
   data () {
-    return {}
+    return {
+      data: {}
+    }
   },
   computed: {},
-  created () {},
+  created () {
+    //  /cart/successful?payType=2&paymentId=12344&payerId=232233
+    let payParams = {};
+    let url = '';
+    if (this.$route.query.payType === '2') {
+      // paypal支付
+      payParams = {
+        payment_id: this.$route.query.paymentId || '', // paypal返回payment_id
+        payer_id: this.$route.query.payerId || '' // paypal返回payer_id
+      };
+      url = 'PaymentPalExec';
+    } else {
+      // 银行卡支付
+      payParams = {
+        payment_id: this.$route.query.paymentId || '', // paypal返回payment_id
+        payer_id: this.$route.query.payerId || '' // paypal返回payer_id
+      };
+      url = 'paymentStatus';
+    }
+    this.request(url, payParams).then((res) => {
+      if (res.status === 200 && res.content) {
+        this.data = res.content;
+      }
+    }, err => {
+      this.$Toast(err);
+    });
+  },
   mounted () {},
-  watch: {},
   methods: {},
   beforeDestroy () {}
 };

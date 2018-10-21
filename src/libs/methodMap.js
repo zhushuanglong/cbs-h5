@@ -28,6 +28,10 @@ const methodMap = {
     OrdersPayment: {url: '/orders/payment', method: 'post'},
     /** 去支付 **/
     OrdersPay: {url: '/orders/pay', method: 'post'},
+    /** 支付paypal **/
+    PaymentPalExec: {url: '/payment/palExec', method: 'post'},
+    /** 支付银行卡 **/
+    PaymentStatus: {url: '/payment/status', method: 'post'},
     /** 地址信息 **/
     AddressInfo: {url: '/address/info', method: 'post'},
     /** 地址列表 **/
@@ -74,6 +78,7 @@ const methodMap = {
     OrdersLogDetail: {url: '/orders/logDetail', method: 'post'},
     /** 物流信息 **/
     PersonalInfo: {url: '/personal/info', method: 'post'},
+
 };
 
 export default methodMap;

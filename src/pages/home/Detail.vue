@@ -190,7 +190,11 @@ export default {
     }
     self.isShowFloatMenu = t >= h * 1.5;
   },
-  watch: {},
+  watch: {
+    'isPopupSkuShow': function(value) {
+      document.documentElement.style.overflow = value ? 'hidden' : 'auto';
+    }
+  },
   methods: {
     // 获取详情页基础数据
     getDetailData () {

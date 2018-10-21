@@ -204,7 +204,7 @@ export default {
           if (self.payType === 2 && res.content) {
             self.$Toast({
               message: 'Payment Processing',
-              duration: 5000
+              duration: 3000
             });
             // 如果是PayPal去支付页面
             setTimeout(function() {
@@ -212,23 +212,22 @@ export default {
             }, 1000);
           }
           if (self.payType === 3) {
-
             self.$Toast({
-              message: 'Payment Success',
+              message: 'Payment Processing',
               duration: 1200
             });
-            setTimeout(function() {
-              self.$router.push({path: '/cart/successful?orderId=' + self.$route.query.orderId});
-            }, 1000);
+            // setTimeout(function() {
+            //   self.$router.push({path: '/cart/successful?orderId=' + self.$route.query.orderId});
+            // }, 1000);
           }
         } else {
           self.$Toast({
             message: res.msg || 'Payment Failure',
             duration: 1200
           });
-          setTimeout(function() {
-            self.$router.push({path: '/cart/failure?orderId=' + self.$route.query.orderId});
-          }, 1000);
+          // setTimeout(function() {
+          //   self.$router.push({path: '/cart/failure?orderId=' + self.$route.query.orderId});
+          // }, 1000);
         }
       }, err => {
         this.$Toast(err);
