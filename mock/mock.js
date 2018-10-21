@@ -327,6 +327,11 @@ var setOnline = [
     name: 'hotword',
     type: 'post',
     url: '/search/hotword'
+  },
+  {
+    name: 'couponsRecive',
+    type: 'post',
+    url: '/coupons/receive'
   }
 
 ];

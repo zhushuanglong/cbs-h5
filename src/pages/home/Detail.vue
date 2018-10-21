@@ -133,8 +133,7 @@
         <i class="iconfont sku-close" @click="skuCloseClick">&#xe63f;</i>
       </div>
     </div>
-
-    <Coupon :showCoupon.sync="isShowCoupon" :coupons="data.coupon || []"></Coupon>
+    <Coupon :show.sync="isShowCoupon" :coupons="data.coupon"></Coupon>
     <Point :showPoint.sync="isShowPoint"></Point>
   </div>
 </template>

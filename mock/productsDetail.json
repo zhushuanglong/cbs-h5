@@ -21,7 +21,15 @@
         "use_price": "$100",
         "startdate": "2018-09-12 16:05:16",
         "enddate": "2018-09-12 16:05:16",
-        "datestatus": 4
+        "datestatus": 2
+      },
+      {
+        "id": 20,
+        "price": "$10",
+        "use_price": "$100",
+        "startdate": "2018-09-12 16:05:16",
+        "enddate": "2018-09-12 16:05:16",
+        "datestatus": 3
       }
     ],
     "promotion": {

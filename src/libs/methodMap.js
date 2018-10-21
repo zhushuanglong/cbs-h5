@@ -81,7 +81,9 @@ const methodMap = {
     /** 类目 */
     Category: {url: '/cates', method: 'post'},
     /** 热门关键词 */
-    SearchHotword: {url: '/search/hotword', method: 'post'}
+    SearchHotword: {url: '/search/hotword', method: 'post'},
+    /** 优惠券领取 */
+    CouponReceive: {url: '/coupons/receive', method: 'post'}
 };
 
 export default methodMap;
