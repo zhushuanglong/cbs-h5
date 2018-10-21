@@ -17,7 +17,7 @@ export default {
     return {
       tabs: [{
         name: 'Home',
-        url: '/home',
+        url: '/index',
         icon: '&#xe618;',
         aicon: '&#xe617;'
       },
