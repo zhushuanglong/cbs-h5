@@ -221,7 +221,7 @@ export default {
     clickCoupon (item) {
       this.couponPrice = item.price + '';
       this.isShowCoupon = false;
-
+      this.couponId = item.id;
       // 计算券
       this.totalPrice = this.totalPrice - this.couponPrice.replace(/[^0-9]/ig, '');
       if (this.totalPrice < 0) {

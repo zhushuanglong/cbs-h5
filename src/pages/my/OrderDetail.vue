@@ -85,7 +85,7 @@ export default {
     // 支付
     pay() {
       this.$router.push({
-        path: '/cart/secure/' + this.orderid
+        path: '/cart/secure?orderId=' + this.orderid
       })
     },
     // 剩余时间倒计时
