@@ -12,16 +12,19 @@
     <div class="categories-con">
       <div class="left" :style="{'min-height': winHeight}">
         <ul>
-          <li v-for="(item, index) in category" :class="{'cur': categoriesCur === index}" @click="clickCategories(index, item)">{{item.name}}</li>
+          <li class="cate-item" v-for="(item, index) in category" :class="{'cur': categoriesCur === index}" @click="clickCategories(index, item)">
+            <i class="iconfont" v-html="item.icon"></i>
+            <p>{{item.name}}</p>
+          </li>
         </ul>
       </div>
-      <div class="detail" v-for="cate in secondCate">
-        <div class="title">
+      <div class="detail">
+        <!-- <div class="title">
           <div class="label">{{cate.name}}</div>
           <div class="pos">All<i class="iconfont">&#xe62e;</i></div>
-        </div>
+        </div> -->
         <ul>
-          <li v-for="ele in cate.sub">
+          <li v-for="ele in secondCate">
             <router-link :to="{path: '/categories/search', query: { cate:  + ele.id }}">
               <img :src="ele.img">
               <p>{{ele.name}}</p>
@@ -128,15 +131,21 @@ export default {
       background-color: #F2F2F2;
       ul {
         display: block;
-        li {
+        .cate-item {
           padding: 25/@rem;
-          padding-left: 19/@rem;
-          line-height: 35/@rem;
+          font-size: 20/@rem;
+          // line-height: 35/@rem;
           border-left: 6/@rem solid #F2F2F2;
+          text-align: center;
+          i{
+            display: block;
+            margin-bottom: 13/@rem;
+          }
 
           &.cur {
             background-color: #fff;
             border-left: 6/@rem solid @red;
+            color: #FF473C
           }
         }
       }
