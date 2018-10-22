@@ -5,7 +5,7 @@
       <span class="close" @click="clickCouponClose"><i class="iconfont">&#xe63f;</i></span>
       <div class="c-search" v-show="isCart">
         <input type="text" v-model="redeemCode" class="s-input" placeholder="Enter promo code here"/>
-        <div class="search-btn" @click="getCouponList">Applay</div>
+        <div class="search-btn" @click="getCouponApply">Applay</div>
       </div>
       <!-- 优惠券状态个人中心 1-可用 2-未开始 3-已过期未使用 4-已使用  商品详情页 优惠券状态 1-可领取 2-已领取 3-已领完-->
       <ul>
@@ -85,12 +85,15 @@ export default {
       }
       this.clickCallback(item);
     },
-    getCouponList() {
-      this.request('CouponList', {
+    getCouponApply() {
+      this.request('CouponsApply', {
         redeemCode: this.redeemCode
       }).then((res) => {
-        if(res.status === 200 && res.content) {
+        if (res.status === 200 && res.content) {
           this.couponList = res.content.coupons || [];
+        } else {
+          this.couponList = [];
+          this.$Toast('Wrong promo code');
         }
       }, err => {
         this.$Toast(err);

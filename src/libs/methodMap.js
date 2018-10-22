@@ -83,7 +83,9 @@ const methodMap = {
     /** 热门关键词 */
     SearchHotword: {url: '/search/hotword', method: 'post'},
     /** 优惠券领取 */
-    CouponReceive: {url: '/coupons/receive', method: 'post'}
+    CouponReceive: {url: '/coupons/receive', method: 'post'},
+    /** 优惠券apply */
+    CouponsApply: {url: '/coupons/apply', method: 'post'},
 };
 
 export default methodMap;

@@ -164,6 +164,12 @@ var setOnline = [
     url: '/personal/coupons'
   },
   {
+    // 优惠券
+    name: 'couponsApply',
+    type: 'post',
+    url: '/coupons/apply'
+  },
+  {
     name: 'couponExchange',
     type: 'post',
     url: '/coupon/exchange'
