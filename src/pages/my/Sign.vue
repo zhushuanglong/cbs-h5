@@ -3,7 +3,7 @@
     <topbar title="Sign In" :close="true"></topbar>
     <div class="sign">
       <input type="text" class="input-control email" v-model="params.email" placeholder="Email">
-      <input type="text" class="input-control" v-model="params.password"  placeholder="Password">
+      <input type="password" class="input-control" v-model="params.password"  placeholder="Password">
       <div class="forget">
         <router-link  v-if="type === 'sign'" :to="{name: 'forgetpwd'}">Forgot password</router-link>
       </div>
