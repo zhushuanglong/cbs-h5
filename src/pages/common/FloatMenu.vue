@@ -42,7 +42,7 @@ export default {
     // 点击黑点底层
     changeMaskClick () {
       this.isMaskShow = !this.isMaskShow;
-      document.body.style.overflow = this.isMaskShow ? 'hidden' : '';
+      document.documentElement.style.overflow = this.isMaskShow ? 'hidden' : '';
       this.isBackMenuShow = false;
     }
   }

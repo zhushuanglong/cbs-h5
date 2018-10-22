@@ -11,7 +11,7 @@
       <bottombar></bottombar>
     </template>
     <!-- 有 -->
-    <template v-if="cartsData && cartsData.goods">
+    <template v-if="cartsData && cartsData.goods && cartsData.goods.length">
       <div class="cart-have">
         <router-link :to="{path: '/activity?activity_id=' + cartsData.promotion_id}" class="cart-enjoy">
           <span class="img"></span>
@@ -57,7 +57,7 @@
       </div>
 
       <confirm :show.sync="confirmModal.show" :title="confirmModal.title"  :content="confirmModal.content" :on-ok="confirmModal.action"  okText="Yes"></confirm>
-      <Coupon :show.sync="isShowCoupon" :coupons="cartsData.coupon || []" :isClick="true" :clickCallback="clickCoupon"></Coupon>
+      <Coupon :show.sync="isShowCoupon" :coupons="cartsData.coupon || []" :isClick="true" :clickCallback="clickCoupon" :isCart="true"></Coupon>
     </template>
   </div>
 </template>
@@ -105,15 +105,15 @@ export default {
           this.cartsData = res.content;
           if (!localStorage.userToken) {
             // 认定是游客访问
-            localStorage.setItem('userToken', res.content.token); 
+            localStorage.setItem('userToken', res.content.token);
           }
-          if (res.content) {
+          if (this.cartsData && this.cartsData.goods && this.cartsData.goods.length) {
             this.cartEmpty = false;
             this.computeTotalPrice();
           } else {
             this.cartEmpty = true;
           }
-        } else if (res.status === 402 || res.status === 403) {
+        } else {
           this.cartEmpty = true;
           // this.$router.push({name: 'sign'})
         }
@@ -130,7 +130,11 @@ export default {
       }
       this.totalPrice -= +this.cartsData.specialoffer;
       // 处理券价格
-      this.totalPrice = this.totalPrice - this.couponPrice.substring(1, this.couponPrice.length);
+      // this.totalPrice = this.totalPrice - this.couponPrice.substring(1, this.couponPrice.length);
+      this.totalPrice = this.totalPrice - this.couponPrice.replace(/[^0-9]/ig, '');
+      if (this.totalPrice < 0) {
+        this.totalPrice = 0;
+      }
     },
     // 增加 - 登录后
     add (item) {
@@ -148,7 +152,6 @@ export default {
           sku_id: item.sku_id,
           num: item.num
         }).then((res) => {
-          console.log(rest)
           if (res.status === 200) {
             this.$Toast('add success')
           } else {
@@ -216,10 +219,14 @@ export default {
     },
     // 点击购物券
     clickCoupon (item) {
-      this.couponPrice = item.price;
+      this.couponPrice = item.price + '';
       this.isShowCoupon = false;
+
       // 计算券
-      this.totalPrice = this.totalPrice - this.couponPrice.substring(1, this.couponPrice.length);
+      this.totalPrice = this.totalPrice - this.couponPrice.replace(/[^0-9]/ig, '');
+      if (this.totalPrice < 0) {
+        this.totalPrice = 0;
+      }
     },
     // 提交购物车
     submitCart () {

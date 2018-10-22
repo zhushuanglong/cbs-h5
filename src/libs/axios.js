@@ -9,7 +9,7 @@ const config = {
     withCredentials: true,
     headers: {'Content-Type': 'application/x-www-form-urlencoded', 'X-Requested-With': 'XMLHttpRequest'},
     transformRequest: [function (data) {
-        console.log(data)
+        // console.log(data)
         // 这里可以在发送请求之前对请求数据做处理，比如form-data格式化等，这里可以使用开头引入的Qs（这个模块在安装axios的时候就已经安装了，不需要另外安装）
         if (window.localStorage.getItem('userToken') && data) {
             data['token'] = window.localStorage.getItem('userToken') ||　'';
@@ -41,7 +41,7 @@ AxiosInst.interceptors.response.use(response => {
     // if (response.content === null) {
     //     return Promise.reject(response);
     // }
-    //检查是否有权限
+    // 检查是否有权限
     if (code === 1001) {
         return Promise.reject(response);
     }
@@ -57,7 +57,7 @@ AxiosInst.interceptors.response.use(response => {
     // }
     return response;
 }, (error) => {
-    console.log(error)
+    // console.log(error)
     // 下面是接口回调的status ,因为我做了一些错误页面,所以都会指向对应的报错页面
     if (error.response && error.response.status === 404) {
         // router.push({

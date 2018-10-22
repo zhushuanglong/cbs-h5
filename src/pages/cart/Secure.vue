@@ -1,6 +1,6 @@
 <template>
   <div class="secure-main">
-    <topbar title="Secure Checkout" backUrl="cart"></topbar>
+    <topbar title="Secure Checkout"></topbar>
     <div class="secure-shipping">
       <div class="title"><i class="iconfont">&#xe61e;</i>Shipping Address</div>
       <div class="line"></div>

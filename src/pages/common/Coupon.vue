@@ -1,16 +1,24 @@
 <template>
   <div class="coupon-modal" v-if="show">
     <div class="coupon-info a-fadeinT">
-      <p class="detail">Receive Coupons</p>
+      <p class="detail">{{name}}Coupons</p>
       <span class="close" @click="clickCouponClose"><i class="iconfont">&#xe63f;</i></span>
+      <div class="c-search">
+        <input type="text" v-model="redeemCode" class="s-input" placeholder="Enter promo code here"/>
+        <div class="search-btn" @click="getCouponList">Applay</div>
+      </div>
       <!-- 优惠券状态个人中心 1-可用 2-未开始 3-已过期未使用 4-已使用  商品详情页 优惠券状态 1-可领取 2-已领取 3-已领完-->
       <ul>
-        <li v-for="item in coupons" :class="{'disable': item.datestatus === 2 || item.datestatus === 3}" class="coupon-item" @click="clickCoupon(item)">
+        <li v-for="item in (couponList.length && couponList || coupons)" :class="{'disable': item.datestatus === 2 || item.datestatus === 3}" class="coupon-item" @click="clickCoupon(item)">
           <p class="price">{{item.price}} OFF</p>
           <p class="desc">For a purchase over {{item.use_price}}</p>
           <p class="time">{{item.startdate}} - {{item.enddate}}</p>
-          <p class="coupon-status" :class="{'use-able': item.datestatus === 1}">
+          <p v-if="!isCart" class="coupon-status" :class="{'use-able': item.datestatus === 1}">
             {{item.datestatus === 1 ? 'Get it': item.datestatus === 2 ? 'Received' : 'Run out'}}
+          </p>
+          <p class="coupon-radio" v-else>
+            <input type="radio" name="coupon" v-if="checkedId === item.id" checked>
+            <input type="radio" name="coupon" v-else>
           </p>
         </li>
       </ul>
@@ -34,21 +42,35 @@ export default {
     clickCallback: {
       type: Function,
       default: () => {}
+    },
+    name: {
+      type: String,
+      default: ''
+    },
+    isCart: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
     return {
-      redeemCode: ''
+      redeemCode: '',
+      couponList: [],
+      checkedId: ''
     }
   },
   mounted () {},
   methods: {
     clickCouponClose () {
       this.$emit('update:show', false);
+      document.documentElement.style.overflow = 'auto';
     },
     clickCoupon (item) {
+      document.documentElement.style.overflow = 'hidden';
+      this.checkedId = item.id;
+
       // 未使用 领取优惠券
-      if (item.datestatus === 1) {
+      if (item.datestatus === 1 && !isCart) {
         this.request('CouponReceive', {
           id: item.id
         }).then((res) => {
@@ -61,7 +83,18 @@ export default {
           }
         })
       }
-      this.clickCallback(item)
+      this.clickCallback(item);
+    },
+    getCouponList() {
+      this.request('CouponList', {
+        redeemCode: this.redeemCode
+      }).then((res) => {
+        if(res.status === 200 && res.content) {
+          this.couponList = res.content.coupons || [];
+        }
+      }, err => {
+        this.$Toast(err);
+      })
     }
   }
 };
@@ -133,21 +166,21 @@ export default {
         }
       }
     }
-    .coupon-status{
-      width: 156/@rem;
-      height: 55/@rem;
-      line-height: 55/@rem;
-      position: absolute;
-      top: 52/@rem;
-      right: 38/@rem;
-      text-align: center;
-      border:1px solid rgba(147,147,153,1);
-      border-radius: 12/@rem;
-      &.use-able{
-        color: #FF473C;
-        border:1px solid rgba(255,71,60,1);
+      .coupon-status{
+        width: 156/@rem;
+        height: 55/@rem;
+        line-height: 55/@rem;
+        position: absolute;
+        top: 52/@rem;
+        right: 38/@rem;
+        text-align: center;
+        border:1px solid rgba(147,147,153,1);
+        border-radius: 12/@rem;
+        &.use-able{
+          color: #FF473C;
+          border:1px solid rgba(255,71,60,1);
+        }
       }
-    }
     .detail{
       color: #020100;
       font-size: 30/@rem;
@@ -195,13 +228,11 @@ export default {
       height: 129/@rem;
       bottom: -10/@rem;
     }
-    .used{
-      background: url('~img/my/coupon_used.png') no-repeat center center;
-      background-size: cover;
-    }
-    .expired{
-      background: url('~img/my/coupon_expired.png') no-repeat center center;
-      background-size: cover;
+
+    .coupon-radio {
+      position: absolute;
+      top: 70/@rem;
+      right: 38/@rem;
     }
   }
 }

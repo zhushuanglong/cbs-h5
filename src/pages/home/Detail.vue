@@ -133,7 +133,7 @@
         <i class="iconfont sku-close" @click="skuCloseClick">&#xe63f;</i>
       </div>
     </div>
-    <Coupon :show.sync="isShowCoupon" :coupons="data.coupon"></Coupon>
+    <Coupon :show.sync="isShowCoupon" :coupons="data.coupon" name="Receive "></Coupon>
     <Point :showPoint.sync="isShowPoint"></Point>
   </div>
 </template>
@@ -188,6 +188,8 @@ export default {
       self.isShowFloatMenu = t >= h * 1.5;
     }
     self.isShowFloatMenu = t >= h * 1.5;
+    // overflow重置
+    document.documentElement.style.overflow = 'auto';
   },
   watch: {
     'isPopupSkuShow': function(value) {
@@ -411,7 +413,7 @@ export default {
     // 点击黑点底层
     changeMaskClick () {
       this.isMaskShow = !this.isMaskShow;
-      document.body.style.overflow = this.isMaskShow ? 'hidden' : '';
+      document.documentElement.style.overflow = this.isMaskShow ? 'hidden' : '';
       this.isPopupSkuShow = false;
       this.isBackMenuShow = false;
     },
@@ -455,6 +457,7 @@ export default {
           // 跳转到购物车
           setTimeout(function() {
             document.body.scrollTop = document.documentElement.scrollTop = 0; // 滚动到顶部
+            document.documentElement.style.overflow = 'auto';
             self.submitLocked = false; // 解锁
             self.isMaskShow = false;
             self.isPopupSkuShow = false;
@@ -464,6 +467,7 @@ export default {
           }, 1000);
         } else {
           this.submitLocked = false; // 解锁
+          this.$Toast(res.msg);
         }
       }, err => {
         this.$Toast(err);

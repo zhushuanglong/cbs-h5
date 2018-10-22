@@ -2,11 +2,11 @@
   <div class="global-topbar">
     <div class="global-center">
       <template v-if="close">
-        <a  class="back" href="javascript:;"  @click="pageBack"><i class="iconfont">&#xe63f;</i></a>
+        <a class="back" href="javascript:;" @click="pageBack"><i class="iconfont">&#xe63f;</i></a>
       </template>
       <template v-else>
         <router-link class="back" v-if="backUrl" :to="{path: '/' + backUrl}"><i class="iconfont" >&#xe62f;</i></router-link>
-        <a class="back" href="javascript:;" v-else  @click="pageBack"><i class="iconfont" >&#xe62f;</i></a>
+        <a class="back" href="javascript:;" v-else @click="pageBack"><i class="iconfont" >&#xe62f;</i></a>
       </template>
       <div class="title">{{title}}</div>
       <router-link :to="{path: '/cart?id=' + detailId}" v-if="$route.name === 'detail'">
@@ -41,7 +41,7 @@ export default {
   },
   methods: {
     pageBack() {
-      this.$router.go(-1)
+      this.$router.go(-1);
     }
   }
 };

@@ -99,10 +99,11 @@ export default {
   watch: {},
   methods: {
     getUserInfo() {
+      // 表单校验
       this.request('PersonalInfo').then((res) => {
-        if(res.status === 200 && res.content) {
+        if (res.status === 200 && res.content) {
           this.params = res.content;
-          if(this.params.birth) {
+          if (this.params.birth) {
             this.params.birth = formatToHMS(this.params.birth);
           }
         }
@@ -122,7 +123,7 @@ export default {
     },
     birthConfirm(value) {
       this.params.birth = formatToHMS(value);
-      console.log(formatToHMS(value))
+      // console.log(formatToHMS(value))
     },
     pickerCancle() {
       this.$refs.birthPicker.close();
@@ -151,10 +152,12 @@ export default {
     // 修改资料
     personalEdit() {
       this.request('PersonalEdit', this.params).then((res) => {
-        if(res.status === 200 && res.content) {
+        if (res.status === 200 && res.content) {
           this.$router.push({
             name: 'my'
           })
+        } else {
+          this.$Toast(res.msg);
         }
       }, err => {
         this.$Toast(err);

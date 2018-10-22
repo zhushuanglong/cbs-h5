@@ -151,7 +151,7 @@ export default {
           this.shipping = res.content.shipping;
           this.name = res.content.name;
           this.telephone = res.content.telephone;
-          this.address = res.content.address; 
+          this.address = res.content.address;
           this.getOrderDesc();
         }
       }, err => {
@@ -261,7 +261,7 @@ export default {
         display: inline-block
       }
       .name{
-        margin-right: 30/@rem; 
+        margin-right: 30/@rem;
       }
     }
     .adddress-detail{
@@ -329,14 +329,14 @@ export default {
       float: right;
       .whl(162, 60);
       border-radius: 50/@rem;
-      border: 1px solid @gray2;
+      border: 1px solid #e0e0e0;
       color: @gray2;
       text-align: center;
     }
     .operate-two {
       color: #FF473C
     }
-  }  
+  }
 }
 </style>
 
