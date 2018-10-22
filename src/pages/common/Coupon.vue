@@ -3,7 +3,7 @@
     <div class="coupon-info a-fadeinT">
       <p class="detail">{{name}}Coupons</p>
       <span class="close" @click="clickCouponClose"><i class="iconfont">&#xe63f;</i></span>
-      <div class="c-search">
+      <div class="c-search" v-show="isCart">
         <input type="text" v-model="redeemCode" class="s-input" placeholder="Enter promo code here"/>
         <div class="search-btn" @click="getCouponList">Applay</div>
       </div>

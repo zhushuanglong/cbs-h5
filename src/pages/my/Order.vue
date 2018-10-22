@@ -25,7 +25,9 @@
       <div class="operate clearfix">
         <!-- 订单状态(订单状态 1-待付款 3-待发货 4-待收货 5-交易完成 6-交易取消 ) -->
         <!-- TODO 代付款  按钮是红色   其他时候都是正常颜色 -->
-        <div class="operate-item operate-two" v-if="orderHandle.pay">Pay now{{this.finalTime}}</div>
+        <div class="operate-item operate-two" v-if="orderHandle.pay">
+          <router-link :to="{path: '/cart/secure?orderId=' + data.orderid}">Pay now {{this.finalTime}}</router-link>
+        </div>
         <div class="operate-item operate-two" @click="handleCollect" v-if="orderHandle.collect">I get it</div>
         <div class="operate-item" @click="getLogistics" v-if="orderHandle.logistic">Logistics Info</div>
         <div class="operate-item" v-if="orderHandle.delete" @click="handleDelete">Delete</div>
@@ -49,7 +51,7 @@ export default {
     handleCb: {
       // 操作回调
       type: Function,
-      default: () => {} 
+      default: () => {}
     }
   },
   data() {
@@ -281,10 +283,10 @@ export default {
     & > div {
       float: right;
       margin-right: 20/@rem;
-      .whl(162, 60);
-      line-height: 50/@rem;
+      .height(60);
+      padding: 0 30/@rem;
       border-radius: 50/@rem;
-      border: 1px solid @gray2;
+      border: 1px solid #e0e0e0;
       color: @gray2;
       text-align: center;
     }
@@ -293,7 +295,10 @@ export default {
     }
     .operate-two {
       right: 20/@rem;
-      color: #FF473C
+      color: #FF473C;
+      a {
+        color: #FF473C;
+      }
     }
   }
 

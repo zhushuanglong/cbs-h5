@@ -21,14 +21,14 @@
     </div>
 
     <ul class="detail-something">
-      <li class="detail-coupon" @click="clickShowCouponModal">
+      <li class="detail-coupon" @click="clickShowCouponModal" v-show="data.coupon && data.coupon.length">
         <img src="~img/detail/s1.png">
         <span class="gray2">（Rewards {{data.coupon && data.coupon.length}}）</span>
         <span class="span1">Recive</span>
         <i class="iconfont">&#xe62e;</i>
       </li>
-      <li class="detail-sale">
-        <router-link :to="{path: '/activity'}">
+      <li class="detail-sale" v-if="data.promotion && data.promotion.id">
+        <router-link :to="{path: '/activity?activite_id=' + data.promotion.id}">
           <img src="~img/detail/s2.png">
           {{data.promotion && data.promotion.role}}
           <span class="span2">More</span>
