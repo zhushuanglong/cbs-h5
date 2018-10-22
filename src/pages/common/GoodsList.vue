@@ -2,7 +2,7 @@
   <div class="c-goods-list">
     <ul v-if="list.length">
       <li v-for="item in list" class="goods-item" :key="item.id">
-       <a :href="item.stock > 0 ? 'detail/' + item.id : 'javascript:;'">
+       <a :href="item.stock > 0 ? 'detail?id=' + item.id : 'javascript:;'">
          <img :src="item.img" alt="" class="img">
          <p class="title">{{item.name}}</p>
          <p class="price">${{item.price}}<span class="prom-price">${{item.prom_price}}</span></p>

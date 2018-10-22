@@ -28,7 +28,7 @@
         <i class="iconfont">&#xe62e;</i>
       </li>
       <li class="detail-sale" v-if="data.promotion && data.promotion.id">
-        <router-link :to="{path: '/activity?activite_id=' + data.promotion.id}">
+        <router-link :to="{path: '/activity?activity_id=' + data.promotion.id}">
           <img src="~img/detail/s2.png">
           {{data.promotion && data.promotion.role}}
           <span class="span2">More</span>
