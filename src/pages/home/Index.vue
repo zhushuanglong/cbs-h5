@@ -6,7 +6,7 @@
       <i class="share iconfont fr">&#xe628;</i>
     </div>
     <Banner :list="banners"></Banner>
-    <Navs :list="navList"></Navs>
+    <Navs :list="navList"  v-if="navList && navList.length"></Navs>
     <div class="belt" v-html="diypage" v-if="diypage">
     </div>
     <div class="home-recommend">
@@ -17,7 +17,7 @@
             <img :src="item.img" class="goods-img" alt="">
             <p class="goods-title">{{item.name}}</p>
             <p class="goods-price">
-              <span class="price-now">$102</span>
+              <span class="price-now">{{item.price}}</span>
               <!-- <span class="price-origin">$102</span> -->
               <!-- <span class="price-rebate">$102</span> -->
             </p>

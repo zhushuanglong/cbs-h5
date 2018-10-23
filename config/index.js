@@ -75,6 +75,11 @@ module.exports = {
         target: 'http://api.cucoe.net',
         changeOrigin: true,
         secure: false
+      },
+      '/cards/*': {
+        target: 'http://api.cucoe.net',
+        changeOrigin: true,
+        secure: false
       }
     },
     cssSourceMap: false,
