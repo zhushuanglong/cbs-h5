@@ -10,8 +10,8 @@
       <!-- 优惠券状态个人中心 1-可用 2-未开始 3-已过期未使用 4-已使用  商品详情页 优惠券状态 1-可领取 2-已领取 3-已领完-->
       <ul>
         <li v-for="item in (couponList.length && couponList || coupons)" :class="{'disable': item.datestatus === 2 || item.datestatus === 3}" class="coupon-item" @click="clickCoupon(item)">
-          <p class="price">{{item.price}} OFF</p>
-          <p class="desc">For a purchase over {{item.use_price}}</p>
+          <p class="price">${{item.price}} OFF</p>
+          <p class="desc">For a purchase over ${{item.use_price}}</p>
           <p class="time">{{item.startdate}} - {{item.enddate}}</p>
           <p v-if="!isCart" class="coupon-status" :class="{'use-able': item.datestatus === 1}">
             {{item.datestatus === 1 ? 'Get it': item.datestatus === 2 ? 'Received' : 'Run out'}}

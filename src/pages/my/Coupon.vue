@@ -9,8 +9,8 @@
       <div class="coupon-list" v-if="couponList && couponList.length > 0">
         <!-- 优惠券状态 1-可用 2-未开始 3-已过期未使用 4-已使用 -->
         <div class="coupon-item" :class="item.datestatus === 1 ? 'able': 'disable'" v-for="item in couponList" :key="item.id">
-          <p class="title">{{item.price}} OFF</p>
-          <p class="desc">For a purchase over {{item.use_price}}</p>
+          <p class="title">${{item.price}} OFF</p>
+          <p class="desc">For a purchase over ${{item.use_price}}</p>
           <p class="use-time">{{item.startdate}} - {{item.enddate}}</p>
           <div class="use-flag-img" :class="{'expired': item.datestatus === 3, 'used': item.datestatus === 4}"></div>
         </div>
