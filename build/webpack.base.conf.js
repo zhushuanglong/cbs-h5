@@ -23,7 +23,7 @@ module.exports = {
   entry: {
     // loader: ['components/loader/fastclick'], // 第三方js延迟加载
     // common: ['vue-lazyload', 'components/common/checkwebp'], // 公用代码抽离
-    // vendor: ['vue'],
+    vendor: ['vue'],
     cbs: './src/main.js'
   },
   output: {
@@ -79,11 +79,11 @@ module.exports = {
   },
   plugins: [
     // 为了把第三方库拆分出来（用<script>标签单独加载），我们还需要用webpack的CommonsChunkPlugin插件来把它提取一下
-    // new webpack.optimize.CommonsChunkPlugin({
-    //   // names: ['common', 'vendor'],
-    //   names: ['vendor'],
-    //   minChunks: Infinity
-    // }),
+    new webpack.optimize.CommonsChunkPlugin({
+      // names: ['common', 'vendor'],
+      names: ['vendor'],
+      minChunks: Infinity
+    }),
     // new HappyPack({
     //   id: 'happyvue',
     //   loaders: [ 'vue-loader' ],
