@@ -60,7 +60,7 @@
         </div> -->
         <div class="card-detail" v-for="item in cards">
           <div class="card-number">
-            <router-link class="fl" :to="{path: '/cart/addCard', query: {orderId: $route.query.orderId, cardId: item.id}}">
+            <router-link class="fl" :to="{path: '/cart/addCard', query: {orderId: this.$route.query.orderId || '', cardId: item.id}}">
               <span>Card No. :</span>
               <span class="gray2">{{item.number}}</span>
               <i class="iconfont gray2">&#xe62e;</i>
@@ -174,7 +174,7 @@ export default {
         this.$Toast('Please add a shipping address');
       } else {
         this.$router.push({path: '/cart/addCard', query: {
-          orderId: 'this.$route.query.orderId',
+          orderId: this.$route.query.orderId,
           addressId: +this.addressId,
           balance: this.isBalance,
           payType: this.payType

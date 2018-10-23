@@ -136,31 +136,31 @@ export default {
       };
 
       // 如果是编辑 - 需要传用户的地址信息
-      if (isEdit) {
-        Object.assign(payData, {
-          order_id: this.$route.query.orderId,
-          address_id:this.$route.query.addressId,
-          balance: this.$route.query.balance,
-          pay_type: this.$route.query.payType,
-        });
-      }
-
+      // if (this.isEdit) {
+      //   Object.assign(payData, {
+      //     order_id: this.$route.query.orderId,
+      //     address_id:this.$route.query.addressId,
+      //     balance: this.$route.query.balance,
+      //     pay_type: this.$route.query.payType,
+      //   });
+      // }
+      Object.assign(payData, {
+        order_id: this.$route.query.orderId,
+        address_id:this.$route.query.addressId,
+        balance: this.$route.query.balance,
+        pay_type: this.$route.query.payType,
+      });
       if (!payData.number) {
-        this.$Toast('Card Number must be more than 2 letters');
+        this.$Toast('Card Number can not be empty');
         return;
       }
 
-      if (!payData.moth) {
-        this.$Toast('Expire Moth must be more than 2 letters');
-        return;
-      }
-
-      if (!payData.year) {
+      if (!payData.exp) {
         this.$Toast('Expire Year must be more than 2 letters');
         return;
       }
-      if (!payData.cvv) {
-        this.$Toast('Cvv must be more than 2 letters');
+      if (!payData.cvc) {
+        this.$Toast('CVC can not be empty');
         return;
       }
       this.request('OrdersPay', payData).then((res) => {
