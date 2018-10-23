@@ -27,7 +27,7 @@
       </router-link>
     </div>
     <div class="index-order">
-      <Order :handle-cb="this.getPersonalIndex" v-for="item in orders" :key="item.id" :data="item" v-if="orders && orders.length"></Order>
+      <Order :handle-cb="getPersonalIndex" v-for="item in orders" :key="item.id" :data="item" v-if="orders && orders.length"></Order>
       <pageempty icon="&#xe693;" :margin-top="50" desc="You have no orders yet!" v-if="orders.length === 0"></pageempty>
     </div>
     <BottomBar></BottomBar>
