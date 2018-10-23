@@ -1,5 +1,6 @@
 <template>
   <div class="my-main">
+    <router-link :to="{path: '/my/sign'}" v-if="!isLogin" class="isNotLogin"></router-link>
     <div class="my-top">
       <div class="my-top-info"  @click="userLogin">
         <a class="img fl" href="javascript:;">
@@ -85,7 +86,7 @@ export default {
   },
   methods: {
     userLogin() {
-      if(!this.isLogin) {
+      if (!this.isLogin) {
         this.$router.push({
           path: '/my/sign',
         })
@@ -126,15 +127,21 @@ export default {
       })
     }
   },
-
-  beforeDestroy () {
-  }
+  beforeDestroy () {}
 };
 </script>
 
 <style lang="less">
 @import '~less/tool.less';
 .my-main {
+  position: relative;
+  .isNotLogin {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top:0;
+  }
   .my-top {
     width: 100%;
     // height: 400/@rem;

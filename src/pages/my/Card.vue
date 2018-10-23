@@ -14,21 +14,21 @@
     <div class="card-line"></div>
     <ul class="card-info">
       <li>
-        <router-link :to="{path: '/my/income?type=1'}">
+        <router-link :to="{path: '/my/income?type=1'}" class="card-other">
           <i class="iconfont">&#xe695;</i>
           <div class="value">{{data.income}}</div>
           <p>Accumulated Income</p>
         </router-link>
       </li>
       <li>
-         <router-link :to="{path: '/my/income?type=2'}">
+         <router-link :to="{path: '/my/income?type=2'}" class="card-other">
           <i class="iconfont">&#xe694;</i>
           <div class="value">{{data.wait_account}}</div>
           <p>Wait for an account</p>
         </router-link>
       </li>
       <li>
-         <router-link :to="{path: '/my/fans'}">
+         <router-link :to="{path: '/my/fans'}" class="card-other">
           <i class="iconfont">&#xe697;</i>
           <div class="value">{{data.funs}}</div>
           <p>My fans</p>
@@ -140,7 +140,7 @@ export default {
     li {
       float: left;
       width: 33.3%;
-      a {
+      .card-other {
         display: block;
         text-align: center;
         margin-top: 25/@rem;
