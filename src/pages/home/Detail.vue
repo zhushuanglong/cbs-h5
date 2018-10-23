@@ -531,11 +531,12 @@ export default {
       .des {
         margin-top: 20/@rem;
         p {
-          width: 100%;
+          padding: 0 30/@rem;
           height: 40/@rem;
           line-height: 40/@rem;
           text-align: center;
           font-size: 26/@rem;
+          .line1();
         }
       }
     }
@@ -563,7 +564,7 @@ export default {
         position: absolute;
         top: 0;
         right: 60/@rem;
-        font-size: 10/@rem;
+        // font-size: 10/@rem;
         transform: scale(.85);
         color: #1EBDFD;
       }

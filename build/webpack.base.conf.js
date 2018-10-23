@@ -1,6 +1,7 @@
 var path = require('path')
 var utils = require('./utils')
 var config = require('../config')
+var webpack = require('webpack')
 var vueLoaderConfig = require('./vue-loader.conf')
 var os = require('os')
 var HappyPack = require('happypack')
@@ -14,15 +15,16 @@ var publicPath = '';
 
 if (process.env.NODE_ENV === 'production') {
   publicPath = config.build.assetsPublicPath;
-} else if (process.env.NODE_ENV === 'debug') {
-  publicPath = config.build.assetsPublicPathDebug;
 } else {
   publicPath = config.dev.assetsPublicPath;
 }
 
 module.exports = {
   entry: {
-    app: './src/main.js'
+    // loader: ['components/loader/fastclick'], // 第三方js延迟加载
+    // common: ['vue-lazyload', 'components/common/checkwebp'], // 公用代码抽离
+    // vendor: ['vue'],
+    cbs: './src/main.js'
   },
   output: {
     path: config.build.assetsRoot,
@@ -76,6 +78,12 @@ module.exports = {
     ]
   },
   plugins: [
+    // 为了把第三方库拆分出来（用<script>标签单独加载），我们还需要用webpack的CommonsChunkPlugin插件来把它提取一下
+    // new webpack.optimize.CommonsChunkPlugin({
+    //   // names: ['common', 'vendor'],
+    //   names: ['vendor'],
+    //   minChunks: Infinity
+    // }),
     // new HappyPack({
     //   id: 'happyvue',
     //   loaders: [ 'vue-loader' ],

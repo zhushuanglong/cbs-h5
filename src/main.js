@@ -1,10 +1,8 @@
 import Vue from 'vue';
 import App from './App';
 import router from './router';
-import VueCookie from 'vue-cookie';
 import initComponents from './initComponents';
 import Http from './libs/http';
-Vue.use(VueCookie);
 initComponents(Vue);
 Vue.use(Http);
 // rem 换算

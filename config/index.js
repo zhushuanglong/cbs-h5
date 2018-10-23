@@ -6,7 +6,7 @@ module.exports = {
     env: require('./prod.env'),
     index: path.resolve(__dirname, '../dist/index.html'),
     assetsRoot: path.resolve(__dirname, '../dist'),
-    assetsSubDirectory: 'qiho-h5/cbs',
+    assetsSubDirectory: 'cbs',
     // assetsPublicPath: '//yun.duiba.com.cn/',
     assetsPublicPath: '//yun.dui88.com/',
     productionSourceMap: false, // 设为true生成map可以作调试
