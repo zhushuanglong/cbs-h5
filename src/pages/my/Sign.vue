@@ -53,7 +53,7 @@ export default {
             this.$Toast(res.msg)
           }
         }, err => {
-          this.$Messagebox.alert(err);
+          this.$Toast(err)
         })
       }
     },

@@ -8,7 +8,7 @@
 
 <style lang="less">
 @import "~less/base";
+@import "~less/mint";
 @import "~less/animate";
 @import "~less/font";
-@import "~less/mint/index";
 </style>

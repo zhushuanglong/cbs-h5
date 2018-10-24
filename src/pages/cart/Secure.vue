@@ -114,9 +114,9 @@ export default {
   watch: {
     'isBalance': function (value) {
       if (value) {
-        this.totalPrice = window.returnFloat(+this.data.price - +this.data.money);
+        this.totalPrice = this.returnFloat(+this.data.price - +this.data.money);
       } else {
-        this.totalPrice = window.returnFloat(+this.data.price);
+        this.totalPrice = this.returnFloat(+this.data.price);
       }
     }
   },
@@ -128,7 +128,7 @@ export default {
       }).then((res) => {
         if (res.status === 200 && res.content) {
           this.data = res.content;
-          this.totalPrice = window.returnFloat(+this.data.price - +this.data.money);
+          this.totalPrice = this.returnFloat(+this.data.price - +this.data.money);
           // addressId
           let userAddress = this.data.user_address;
           let len = userAddress.length;
@@ -273,6 +273,21 @@ export default {
             self.$Toast(err);
           });
         }
+      }
+    },
+    // 自动补0
+    returnFloat (value) {
+      value = Math.round(parseFloat(value) * 100) / 100;
+      let xsd = value.toString().split('.');
+      if (xsd.length === 1) {
+        value = value.toString() + '.00';
+        return value;
+      }
+      if (xsd.length > 1 ) {
+        if (xsd[1].length < 2) {
+          value = value.toString() + '0';
+        }
+        return value;
       }
     }
   },

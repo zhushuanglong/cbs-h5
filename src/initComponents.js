@@ -1,3 +1,4 @@
+// 公用
 import TopBar from 'common/TopBar.vue';
 import BottomBar from 'common/BottomBar.vue';
 import PageEmpty from 'common/PageEmpty.vue';
