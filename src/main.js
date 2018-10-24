@@ -9,6 +9,9 @@ Vue.use(Http);
 import { remChange } from './components/basic/remChange';
 remChange();
 
+// checkwebp
+import './components/basic/checkwebp';
+
 import { Switch, Toast, Indicator, Lazyload } from 'mint-ui';
 Vue.component(Switch.name, Switch);
 Vue.use(Lazyload);

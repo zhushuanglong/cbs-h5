@@ -10,7 +10,7 @@
     <ul class="c-body">
       <li v-for="item in fans" class="clearfix">
         <div class="detail clearfix fl">
-          <img :src="item.image" alt="" class="avator fl">
+          <img v-lazy="item.image && item.image.ossimg()" class="avator fl">
           <div class="content fl">
             <p class="name">{{item.name}}</p>
             <p class="time">{{item.date}}</p>

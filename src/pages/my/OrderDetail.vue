@@ -17,7 +17,7 @@
         </div>
         <div class="detail" v-for="item in ordergoods">
           <div class="img fl">
-            <img :src="item.img">
+            <img v-lazy="item.img && item.img.ossimg()">
           </div>
           <div class="info fl">
             <div class="title">{{item.name}}</div>
@@ -77,7 +77,7 @@ export default {
     this.orderstatus = this.$route.query && this.$route.query.order_status || '';
     console.log(this.orderstatus)
     this.getOrderDetail();
-    
+
   },
   computed: {},
   methods: {

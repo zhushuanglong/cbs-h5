@@ -13,7 +13,7 @@
       </div>
       <router-link class="detail" v-for="item in data.ordergoods" :to="{ name: 'orderDetail', query: {orderid: data.orderid, order_status: data.orderstatus}}">
         <div class="img fl">
-          <img :src="item.img">
+          <img v-lazy="item.img && item.img.ossimg()">
         </div>
         <div class="info fl">
           <div class="title">{{item.name}}</div>

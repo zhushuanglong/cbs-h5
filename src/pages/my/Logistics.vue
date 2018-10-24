@@ -3,7 +3,7 @@
     <topbar title="Logistics Details"></topbar>
     <div class="logistics">
       <div class="order-info clearfix">
-        <img :src="goodsImg" alt="" class="img fl">
+        <img v-lazy="goodsImg.ossimg()" class="img fl">
         <div class="content fl">
           <p class="title">Logistics status: {{logisStatus}}</p>
           <p>Type of logistics：{{express}}</p>

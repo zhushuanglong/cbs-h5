@@ -5,7 +5,7 @@
       <div class="title">Detail</div>
       <ul class="income-list">
         <li v-for="item in incomes" class="income">
-          <img :src="item.image" alt="" class="avator">
+          <img v-lazy="item.image && item.image.ossimg()" alt="" class="avator">
           <div class="content fl">
             <p class="name ">{{item.type}}</p>
             <p class="detail ">{{item.description}}</p>
