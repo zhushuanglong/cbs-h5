@@ -591,7 +591,7 @@
     bottom: 0.45rem;
     text-align: center;
     left: 50%;
-    width: 100%;
+    width: 750/@rem;
     margin-left: -50%;
   }
   .mint-swipe-indicator {
