@@ -4,7 +4,7 @@
     <div class="detail-swipe">
       <Swipe class="my-swipe big-img-swipe" ref="bigImgSwipeRef" :nextCallback="nextCallback">
         <SwipeItem v-for="img in imgSwipe">
-          <img :src="img">
+          <img v-lazy="img && img.ossimg()">
         </SwipeItem>
       </Swipe>
       <div class="small-img-list" ref="smallImgListRef">
@@ -67,7 +67,8 @@
         <i class="iconfont">&#xe624;</i>
       </div>
     </div>
-    <div class="detail-float-menu" v-show="isShowFloatMenu">
+
+    <!-- <div class="detail-float-menu" v-show="isShowFloatMenu">
       <div class="btn-menu" :class="{'cur': isBackMenuShow}" @click="backMenuClick">{{isBackMenuShow ? 'BACK' : 'MENU'}}</div>
       <ul class="a-fadeinB" :class="{'show': isBackMenuShow}">
         <li>
@@ -87,13 +88,14 @@
           <router-link :to="{path: '/share'}"><i class="iconfont">&#xe684;</i></router-link>
         </li>
       </ul>
-    </div>
+    </div> -->
+    <FloatMenu :show="isShowFloatMenu"></FloatMenu>
     <div class="bg-mask" :class="{'show': isMaskShow}" @click="changeMaskClick"></div>
     <!-- 弹出SKU -->
     <div class="detail-popup-sku" :class="{'a-fadeinT': isPopupSkuShow}" v-show="isPopupSkuShow">
       <div class="popup-sku">
         <div class="sku-info">
-          <img class="fl" :src="goodsData.img">
+          <img class="fl" v-lazy="goodsData.img && goodsData.img.ossimg()">
           <div class="des fl">
             <div class="price">${{goodsData.price}}</div>
             <div class="stock">Stock：> {{goodsData.stock}} Pieces</div>
@@ -141,6 +143,7 @@
 <script>
 import { Swipe, SwipeItem } from 'components/swipe';
 import Coupon from 'common/Coupon.vue';
+import FloatMenu from 'common/FloatMenu';
 import Point from './Point.vue';
 export default {
   props: {},
@@ -148,7 +151,8 @@ export default {
     Swipe,
     SwipeItem,
     Coupon,
-    Point
+    Point,
+    FloatMenu
   },
   data () {
     return {
@@ -660,75 +664,6 @@ export default {
         top: 20/@rem;
         right: 20/@rem;
         font-size: 50/@rem;
-      }
-    }
-  }
-
-  .detail-float-menu {
-    position: fixed;
-    z-index: 101;
-    right: 30/@rem;
-    bottom: 200/@rem;
-    width: 88/@rem;
-    height: 88/@rem;
-
-    .btn-menu {
-      // opacity: 0;
-      display: inline-block;
-      width: 88/@rem;
-      height: 88/@rem;
-      // line-height: 88/@rem;
-      line-height: 0.85rem;
-      border: 1px solid @gray3;
-      border-radius: 50%;
-      background-color: #FFF;
-      text-align: center;
-      box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.1);
-      &.cur {
-        background-color: @red;
-        color: #fff;
-        border: 1px solid @red;
-      }
-    }
-    ul {
-      display: none;
-      position: absolute;
-      right: 0;
-      bottom: 90/@rem;
-      &.show {
-        display: block;
-      }
-      li {
-        position: relative;
-        width: 200/@rem;
-        height: 80/@rem;
-        margin-bottom: 30/@rem;
-        .name {
-          width: 110/@rem;
-          height: 80/@rem;
-          padding-top: 25/@rem;
-          text-align: right;
-          color: #fff;
-        }
-        a {
-          position: absolute;
-          top: 0;
-          right: 0;
-          display: inline-block;
-          width: 80/@rem;
-          height: 80/@rem;
-          line-height: 80/@rem;
-          border-radius: 50%;
-          background-color: #FFF;
-          text-align: center;
-          i {
-            display: inline-block;
-          }
-        }
-        &:nth-child(3) a > i {
-          margin-top: .03rem;
-          margin-left: -.01rem;
-        }
       }
     }
   }

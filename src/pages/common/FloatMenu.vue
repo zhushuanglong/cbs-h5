@@ -1,7 +1,7 @@
 <template>
-  <div class="global-float-menu">
+  <div class="global-float-menu" v-show="show">
     <div class="float-menu">
-      <div class="btn-menu" :class="{'cur': isBackMenuShow}" @click="backMenuClick">{{isBackMenuShow ? 'BACK' : 'MENU'}}</div>
+      <div class="btn-menu" :class="{'cur': isBackMenuShow}" @click="clickBackMenu">{{isBackMenuShow ? 'BACK' : 'MENU'}}</div>
       <ul class="a-fadeinB" :class="{'show': isBackMenuShow}">
         <li>
           <div class="name">HOME</div>
@@ -21,12 +21,18 @@
         </li>
       </ul>
     </div>
-    <div class="bg-mask" :class="{'show': isMaskShow}" @click="changeMaskClick"></div>
+    <div class="bg-mask" :class="{'show': isMaskShow}" @click="clickChangeMask"></div>
   </div>
 </template>
 
 <script>
 export default {
+   props: {
+    show: {
+      type: Boolean,
+      default: true
+    }
+  },
   data () {
     return {
       isBackMenuShow: false, // back菜单按钮
@@ -35,14 +41,15 @@ export default {
   },
   methods: {
     // 返回菜单
-    backMenuClick () {
+    clickBackMenu () {
       this.isMaskShow = !this.isMaskShow;
       this.isBackMenuShow = !this.isBackMenuShow;
+      document.documentElement.style.overflow = this.isMaskShow ? 'hidden' : 'auto';
     },
     // 点击黑点底层
-    changeMaskClick () {
+    clickChangeMask() {
       this.isMaskShow = !this.isMaskShow;
-      document.documentElement.style.overflow = this.isMaskShow ? 'hidden' : '';
+      document.documentElement.style.overflow = 'auto';
       this.isBackMenuShow = false;
     }
   }
