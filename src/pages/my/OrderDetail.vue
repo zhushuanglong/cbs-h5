@@ -15,11 +15,9 @@
           <p class="order-id">Order: {{orderid}}</p>
           <p class="order-time">Date: {{ordertime}}</p>
         </div>
-        <div class="detail" v-for="item in ordergoods">
+        <router-link :to="{path: '/detail?id=' + item.id}" class="detail" v-for="item in ordergoods">
           <div class="img fl">
-            <router-link :to="{path: '/detail?id=' + item.id}">
-              <img v-lazy="item.img && item.img.ossimg()">
-            </router-link>
+            <img v-lazy="item.img && item.img.ossimg()">
           </div>
           <div class="info fl">
             <div class="title">{{item.name}}</div>
@@ -27,7 +25,7 @@
             <div class="price">${{item.price}}</div>
             <div class="num">x {{item.num}}</div>
           </div>
-        </div>
+        </router-link>
       </div>
       <div>
         <p class="o-price"><span class="fl">Subtotal:</span><span class="fr">${{parseFloat(finalAmount - shipping).toFixed(2)}}</span></p>
@@ -37,7 +35,7 @@
       <div class="operate clearfix">
         <!-- 订单状态(订单状态 1-待付款 3-待发货 4-待收货 5-交易完成 6-交易取消 ) -->
         <!-- TODO 代付款  按钮是红色   其他时候都是正常颜色 -->
-        <div class="operate-item operate-two" v-if="orderHandle.pay" @click="payMoney">Pay now{{this.finalTime}}</div>
+        <div class="operate-item operate-two" v-if="orderHandle.pay" @click="payMoney">Pay now {{this.finalTime}}</div>
         <div class="operate-item operate-two" @click="handleCollect" v-if="orderHandle.collect">I get it</div>
         <div class="operate-item" @click="getLogistics" v-if="orderHandle.logistic">Logistics Info</div>
         <div class="operate-item" v-if="orderHandle.delete" @click="handleDelete">Delete</div>
@@ -331,7 +329,8 @@ export default {
     }
     & > div {
       float: right;
-      .whl(162, 60);
+      padding: 0 30/@rem;
+      .height(60);
       border-radius: 50/@rem;
       border: 1px solid #e0e0e0;
       color: @gray2;
