@@ -3,7 +3,7 @@
     <swipe class="index_banner my-swipe" :auto="3000" v-if="list.length" :loop="true">
       <swipe-item v-for="(item, index) in list" class="slide" :class="'slide' + index">
         <a :href="item.url || 'javascript:;'">
-          <img v-lazy="item.img && item.img.ossimg()">
+          <img :src="item.img && item.img.ossimg()">
         </a>
       </swipe-item>
     </swipe>
