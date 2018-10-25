@@ -4,13 +4,13 @@
     <div class="detail-swipe">
       <Swipe class="my-swipe big-img-swipe" ref="bigImgSwipeRef" :nextCallback="nextCallback">
         <SwipeItem v-for="img in imgSwipe">
-          <img v-lazy="img && img.ossimg()">
+          <img :src="img && img.ossimg()">
         </SwipeItem>
       </Swipe>
       <div class="small-img-list" ref="smallImgListRef">
         <Swipe class="my-swipe small-img-swipe" ref="smallImgSwipeRef" :showIndicators="false" :operator="true">
           <SwipeItem v-for="(smallImgs, index) in smallImgSwipe">
-            <img v-for="(simg, sindex) in smallImgs" v-lazy="simg && simg.ossimg()" @click="smallImgClick(index * 4 + sindex)" :class="{'cur': index * 4 + sindex === 0}">
+            <img v-for="(simg, sindex) in smallImgs" :src="simg && simg.ossimg()" @click="smallImgClick(index * 4 + sindex)" :class="{'cur': index * 4 + sindex === 0}">
           </SwipeItem>
         </Swipe>
         <div class="des">
