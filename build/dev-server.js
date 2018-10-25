@@ -39,7 +39,7 @@ compiler.plugin('compilation', function (compilation) {
 });
 
 // proxy api requests代理API请求
-var proxyTable = config.dev.proxyTable;
+var proxyTable = config.dev.proxyTable || {};
 var proxyMiddleware = require('http-proxy-middleware');
 
 Object.keys(proxyTable).forEach(function (context) {
@@ -73,7 +73,7 @@ app.use(staticPath, express.static('./static'));
 
 var utils = require('./utils');
 // var uri = `http://${utils.getIPAdress()}:${port}/home`;
-var uri = `http://localhost:${port}/home`;
+var uri = `http://localhost:${port}/index`;
 
 devMiddleware.waitUntilValid(function () {
   console.log('> Listening at ' + uri + '\n')

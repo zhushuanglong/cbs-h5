@@ -1,7 +1,7 @@
 import axios from 'axios';
 import Qs from 'qs';
 import router from 'src/router';
-import projectConfig from '../../config'
+import domain from './api';
 const config = {
     //baseURL: '',
     timeout: 200000, //
@@ -26,6 +26,9 @@ AxiosInst.interceptors.request.use((config) => {
     // if (window.localStorage.getItem('userToken')) {
     //     config.headers.Authorization = 'Bearer ' + `${window.localStorage.getItem('userToken')}`;
     // }
+    config.url = domain + config.url;
+    console.log(domain)
+    console.log(config.url)
     if(config.method=='get'){
        config.params.token = window.localStorage.getItem('userToken') || '';
     }

@@ -1,6 +1,5 @@
 // see http://vuejs-templates.github.io/webpack for documentation.
 var path = require('path')
-
 module.exports = {
   build: {
     env: require('./prod.env'),
@@ -15,11 +14,11 @@ module.exports = {
     bundleAnalyzerReport: process.env.npm_config_report
   },
   dev: {
-    // env: require('./dev.env'),
-    // port: 8881,
-    // autoOpenBrowser: true, // 自动打开浏览器
-    // assetsSubDirectory: 'static',
-    // assetsPublicPath: '/',
+    env: require('./dev.env'),
+    port: 8881,
+    autoOpenBrowser: true, // 自动打开浏览器
+    assetsSubDirectory: 'static',
+    assetsPublicPath: '/',
     // proxyTable: {
     //   '/personal/*': {
     //     target: 'http://api.cucoe.net',
@@ -82,7 +81,7 @@ module.exports = {
     //     secure: false
     //   }
     // },
-    // cssSourceMap: false,
+    cssSourceMap: false,
   }
 };
 
