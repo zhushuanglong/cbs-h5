@@ -60,7 +60,7 @@
         </div> -->
         <div class="card-detail" v-for="item in cards">
           <div class="card-number">
-            <router-link class="fl" :to="{path: '/cart/addCard', query: {orderId: this.$route.query.orderId || '', cardId: item.id}}">
+            <router-link class="fl" :to="{path: '/cart/addCard', query: {orderId: $route.query.orderId || '', cardId: item.id}}">
               <span>Card No. :</span>
               <span class="gray2">{{item.number}}</span>
               <i class="iconfont gray2">&#xe62e;</i>
@@ -193,8 +193,8 @@ export default {
       }
       // 若有卡或者使用Paypal支付，并选择了Credit／Debit card
       this.request('OrdersPay', {
-        order_id: +this.$route.query.orderId, // 订单号
-        address_id:	+this.addressId, // 地址id
+        order_id: this.$route.query.orderId, // 订单号
+        address_id:	this.addressId, // 地址id
         balance: this.isBalance, // 是否使用余额
         pay_type: this.payType, //	是	Number	支付方式 2-paypal 3-stripe
         source: this.cardNumber

@@ -25,20 +25,11 @@ export default {
     //  /cart/failure?payType=2&paymentId=12344&payerId=232233
     let payParams = {};
     let url = '';
-    if (this.$route.query.payType === '2') {
-      // paypal支付
-      payParams = {
-        payment_id: this.$route.query.paymentId || '', // paypal返回payment_id
-        payer_id: this.$route.query.PayerID || '' // paypal返回payer_id
-      };
-      url = 'PaymentPalExec';
-    } else {
-      // 银行卡支付
-      payParams = {
-        order_id: this.$route.query.orderId || '' // paypal返回payment_id
-      };
-      url = 'PaymentStatus';
-    }
+    // 银行卡支付
+    payParams = {
+      order_id: this.$route.query.orderId || '' // paypal返回payment_id
+    };
+    url = 'PaymentStatus';
     this.request(url, payParams).then((res) => {
       if (res.status === 200 && res.content) {
         this.data = res.content;
