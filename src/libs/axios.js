@@ -27,8 +27,6 @@ AxiosInst.interceptors.request.use((config) => {
     //     config.headers.Authorization = 'Bearer ' + `${window.localStorage.getItem('userToken')}`;
     // }
     config.url = domain + config.url;
-    console.log(domain)
-    console.log(config.url)
     if(config.method=='get'){
        config.params.token = window.localStorage.getItem('userToken') || '';
     }
