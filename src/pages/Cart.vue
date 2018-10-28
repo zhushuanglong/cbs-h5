@@ -27,7 +27,7 @@
               <div class="title">{{item.name}}</div>
               <div class="sku" v-for="(prop, key, index) in item.props" :class="{'mt': index === 1}">{{prop}}</div>
               <div class="num">{{item.num}} x ${{item.price}}</div>
-              <div class="price">${{item.num * item.price}}.00</div>
+              <div class="price">${{item.num * (item.price * 100) / 100}}</div>
               <div class="reduce" @click="reduce(item)"><i class="iconfont">&#xe62a;</i></div>
               <div class="add" @click="add(item)"><i class="iconfont">&#xe66f;</i></div>
             </div>
@@ -91,9 +91,9 @@ export default {
     'isUsePoint': function (value) {
       // 积分的使用
       if (value) {
-        this.totalPrice -= this.cartsData.integral / 100;
+        this.totalPrice = (this.totalPrice * 100 - this.cartsData.integral) / 100;
       } else {
-        this.totalPrice += this.cartsData.integral / 100;
+        this.totalPrice = (this.totalPrice * 100 + this.cartsData.integral) / 100;
       }
     }
   },
@@ -126,12 +126,12 @@ export default {
       let goods = this.cartsData.goods;
       let len = goods.length;
       for (let i = 0; i < len; i++) {
-        this.totalPrice += goods[i].num * goods[i].price;
+        this.totalPrice += goods[i].num * (goods[i].price * 100) / 100;
       }
-      this.totalPrice -= +this.cartsData.specialoffer;
+      this.totalPrice = (this.totalPrice * 100 - +this.cartsData.specialoffer * 100) / 100;
       // 处理券价格
       // this.totalPrice = this.totalPrice - this.couponPrice.substring(1, this.couponPrice.length);
-      this.totalPrice = this.totalPrice - this.couponPrice.replace(/[^0-9]/ig, '');
+      this.totalPrice = (this.totalPrice * 100 - this.couponPrice.replace(/[^0-9]/ig, '') * 100) / 100;
       if (this.totalPrice < 0) {
         this.totalPrice = 0;
       }
@@ -153,9 +153,9 @@ export default {
           num: item.num
         }).then((res) => {
           if (res.status === 200) {
-            this.$Toast('add success')
+            // this.$Toast('add success')
           } else {
-            this.$Toast(res.msg)
+            self.$Toast(res.msg)
           }
         }, err => {
           self.$Toast(err);
@@ -223,7 +223,7 @@ export default {
       this.isShowCoupon = false;
       this.couponId = item.id;
       // 计算券
-      this.totalPrice = this.totalPrice - this.couponPrice.replace(/[^0-9]/ig, '');
+      this.totalPrice = (this.totalPrice * 100 - this.couponPrice.replace(/[^0-9]/ig, '') * 100) / 100;
       if (this.totalPrice < 0) {
         this.totalPrice = 0;
       }
