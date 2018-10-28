@@ -43,7 +43,7 @@
             <span v-else class="gray2">( no coupons )</span>
           </div>
           <div class="cart-pos">
-            <span>{{this.couponPrice}}</span>
+            <span>-${{this.couponPrice}}</span>
             <i class="iconfont gray2">&#xe62e;</i>
           </div>
         </div>
@@ -80,7 +80,7 @@ export default {
       totalPrice: 0,
       confirmModal: {},
       cartEmpty: false,
-      couponPrice: '$0' // 券价
+      couponPrice: 0 // 券价
     };
   },
   computed: {},
@@ -123,6 +123,9 @@ export default {
     },
     // 计算总价格
     computeTotalPrice () {
+      // 初始化
+      this.totalPrice = 0;
+
       let goods = this.cartsData.goods;
       let len = goods.length;
       for (let i = 0; i < len; i++) {
@@ -130,8 +133,7 @@ export default {
       }
       this.totalPrice = (this.totalPrice * 100 - +this.cartsData.specialoffer * 100) / 100;
       // 处理券价格
-      // this.totalPrice = this.totalPrice - this.couponPrice.substring(1, this.couponPrice.length);
-      this.totalPrice = (this.totalPrice * 100 - this.couponPrice.replace(/[^0-9]/ig, '') * 100) / 100;
+      this.totalPrice = (this.totalPrice * 100 - +(this.couponPrice + '').replace(/[^0-9]/ig, '') * 100) / 100;
       if (this.totalPrice < 0) {
         this.totalPrice = 0;
       }
@@ -143,7 +145,7 @@ export default {
         return false;
       }
       item.num++;
-      this.totalPrice = this.totalPrice + (+item.price);
+      this.totalPrice = (this.totalPrice * 100 + +item.price * 100) / 100;
       clearTimeout(self.addSt);
       // 函数节流
       self.addSt = setTimeout(function() {
@@ -183,12 +185,11 @@ export default {
               self.request('CartsAdd', {
                 good_id: item.id,
                 sku_id: item.sku_id,
-                num: item.num
+                num: 0
               }).then((res) => {
                 if (res.status === 200) {
-                  self.cartsData.goods = res.content.goods;
-                  item.num--;
-                  self.totalPrice = self.totalPrice - (+item.price);
+                  self.cartsData = res.content;
+                  self.totalPrice = (self.totalPrice * 100 - +item.price * 100) / 100;
                 }
               }, err => {
                 self.$Toast(err);
@@ -199,7 +200,7 @@ export default {
         return;
       }
       item.num--;
-      self.totalPrice = self.totalPrice - (+item.price);
+      self.totalPrice = (self.totalPrice * 100 - +item.price * 100) / 100;
       // 函数节流
       self.reduceSt = setTimeout(function() {
         self.request('CartsAdd', {
@@ -207,7 +208,9 @@ export default {
           sku_id: item.sku_id,
           num: item.num
         }).then((res) => {
-          if (res.status === 200) {}
+          if (res.status === 200) {
+            self.cartsData = res.content;
+          }
         }, err => {
           self.$Toast(err);
         });
@@ -219,14 +222,11 @@ export default {
     },
     // 点击购物券
     clickCoupon (item) {
-      this.couponPrice = item.price + '';
+      this.couponPrice = item.price;
       this.isShowCoupon = false;
       this.couponId = item.id;
       // 计算券
-      this.totalPrice = (this.totalPrice * 100 - this.couponPrice.replace(/[^0-9]/ig, '') * 100) / 100;
-      if (this.totalPrice < 0) {
-        this.totalPrice = 0;
-      }
+      this.computeTotalPrice();
     },
     // 提交购物车
     submitCart () {
