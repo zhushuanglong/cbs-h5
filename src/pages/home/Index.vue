@@ -5,7 +5,7 @@
       <img src="../../images/home/logo.png" class="logo" alt="">
       <i class="share iconfont fr">&#xe628;</i>
     </div>
-    <Banner :list="banners"></Banner>
+    <Banner :list="banners" v-if="banners && banners.length"></Banner>
     <Navs :list="navList"  v-if="navList && navList.length"></Navs>
     <div class="belt" v-html="diypage" v-if="diypage">
     </div>
@@ -30,6 +30,7 @@
 <script>
 import Banner from './Banner';
 import Navs from './Navs'
+import { setTimeout } from 'timers';
 export default {
   data() {
     return {
@@ -52,6 +53,7 @@ export default {
         if (res.status === 200 && res.content) {
           this.navList = res.content.icons;
           this.banners = res.content.banners;
+          console.log("banners",this.banners)     
           this.recommends = res.content.goods;
           this.diypage = res.content.diypage;
         }

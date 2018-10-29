@@ -43,7 +43,7 @@
     </ul>
 
     <div class="detail-sku" @click="footCartClick">
-      <div class="sku-label fl">Select {{goodsData.oneValue || `Color`}}&nbsp;,&nbsp;{{goodsData.twoValue ||`Size`}}&nbsp;&&nbsp;{{goodsData.twoValue && goodsData.saleNum || `Quantiy`}}</div>
+      <div class="sku-label fl">Select {{goodsData.oneValue || `Color`}}&nbsp;,&nbsp;{{goodsData.twoValue ||`Size`}}&nbsp;&nbsp;{{goodsData.twoValue && goodsData.saleNum || `Quantiy`}}</div>
       <i class="iconfont">&#xe62e;</i>
     </div>
 
@@ -159,7 +159,7 @@ export default {
       data: {},
       isShowFloatMenu: false, // 浮动menu
       isShowCoupon: false, // 是否显示coupon弹层
-      isShowPoint: false,
+      isShowPoint: false, //是否显示point信息
       goodsData: {
         saleNum: 1
       }, // 选中的商品信息
@@ -194,6 +194,7 @@ export default {
     self.isShowFloatMenu = t >= h * 1.5;
     // overflow重置
     document.documentElement.style.overflow = 'auto';
+    // console.log(this.imgSwipe)
   },
   watch: {
     'isPopupSkuShow': function(value) {

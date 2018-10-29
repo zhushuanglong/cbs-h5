@@ -26,7 +26,7 @@
         <ul>
           <li v-for="ele in secondCate">
             <router-link :to="{path: '/categories/search', query: { cate:  + ele.id }}">
-              <img v-lazy="ele.img && ele.img.ossimg()">
+              <img v-lazy="ele.img && ele.img.ossimg()" :key="ele.img && ele.img.ossimg()">
               <p>{{ele.name}}</p>
             </router-link>
           </li>
@@ -54,6 +54,7 @@ export default {
     const barHeight = document.getElementById('category-topbar');
     this.winHeight = (document.documentElement.clientHeight - barHeight.offsetHeight) + 'px'
     this.getCategory();
+    
   },
   watch: {},
   methods: {
@@ -72,6 +73,7 @@ export default {
     clickCategories (index, item) {
       this.categoriesCur = index;
       this.secondCate = item.sub;
+      console.log(this.secondCate)
     }
   },
   beforeDestroy () {}
