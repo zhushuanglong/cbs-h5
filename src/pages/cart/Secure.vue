@@ -30,22 +30,22 @@
       </li>
       <li>
         <div class="label">Products Price</div>
-        <div class="pos-abs">${{data.price}}</div>
+        <div class="pos-abs">${{returnFloat(data.price)}}</div>
       </li>
       <li>
         <div class="label">Express Delivery</div>
-        <div class="pos-abs">{{+data.delivery || 'Free'}}</div>
+        <div class="pos-abs">{{+data.shipping > 0 ? ('$' + returnFloat(data.shipping)) : 'Free'}}</div>
       </li>
       <li>
         <div class="label">Available Balance</div>
         <div class="pos-abs red">
-          {{data.money}}
-          <mt-switch v-model="isBalance"></mt-switch>
+          ${{returnFloat(data.money)}}
+          <mt-switch v-model="isBalance" @change="changeBalance"></mt-switch>
         </div>
       </li>
       <li>
         <div class="label">Order Subtotal</div>
-        <div class="pos-abs red">{{totalPrice}}</div>
+        <div class="pos-abs red">${{returnFloat(totalPrice)}}</div>
       </li>
     </ul>
 
@@ -84,7 +84,7 @@
     </ul>
 
     <div class="global-fixed-btn">
-      <div class="fixed-btn" @click="orderPay">PLACE ORDER ( {{totalPrice}} )</div>
+      <div class="fixed-btn" @click="orderPay">PLACE ORDER ( ${{returnFloat(totalPrice)}} )</div>
     </div>
 
     <confirm :show.sync="confirmModal.show" :title="confirmModal.title"  :content="confirmModal.content" :on-ok="confirmModal.action"  okText="Yes"></confirm>
@@ -95,7 +95,7 @@
 export default {
   data () {
     return {
-      isBalance: true, // 余额
+      isBalance: false, // 余额
       totalPrice: 0, // 总价
       data: [],
       cards: [], // 银行卡列表
@@ -111,15 +111,7 @@ export default {
     this.getCardsData();
   },
   mounted () {},
-  watch: {
-    'isBalance': function (value) {
-      if (value) {
-        this.totalPrice = this.returnFloat(+this.data.price - +this.data.money);
-      } else {
-        this.totalPrice = this.returnFloat(+this.data.price);
-      }
-    }
-  },
+  watch: {},
   methods: {
     // 获取订单信息
     getOrdersData () {
@@ -128,7 +120,8 @@ export default {
       }).then((res) => {
         if (res.status === 200 && res.content) {
           this.data = res.content;
-          this.totalPrice = this.returnFloat(+this.data.price - +this.data.money);
+          // 计算总价
+          this.computePice();
           // addressId
           let userAddress = this.data.user_address;
           let len = userAddress.length;
@@ -145,6 +138,16 @@ export default {
         this.errJump ();
       });
     },
+    // 计算价格
+    computePice () {
+      this.totalPrice = 0;
+      // 邮费
+      this.totalPrice = (+this.data.price * 100 + +this.data.shipping * 100) / 100;
+      // 余额
+      if (this.isBalance) {
+        this.totalPrice = (this.totalPrice * 100 - +this.data.money * 100) / 100;
+      }
+    },
     // 获取银行卡信息
     getCardsData () {
       this.request('CardsList', {
@@ -156,6 +159,11 @@ export default {
       }, err => {
         this.$Toast(err);
       });
+    },
+    // 改变balance
+    changeBalance () {
+      // this.isBalance = !this.isBalance;
+      this.computePice();
     },
     // 错误ID跳转
     errJump () {
