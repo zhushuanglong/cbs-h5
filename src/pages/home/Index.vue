@@ -25,6 +25,7 @@
         </li>
       </ul>
     </div>
+    <div class="loading" v-show="!loadingEmpty"><span>{{loadingContent}}</span></div>
   </div>
 </template>
 <script>
@@ -37,7 +38,12 @@ export default {
       banners: [],
       recommends: [],
       navList: [],
-      diypage: ''
+      diypage:'',
+      totalPage:1,
+      loadingContent:'',
+      isFinishedLoading: false,
+      loadingEmpty: false,
+      page:1
     }
   },
   components: {
@@ -45,7 +51,9 @@ export default {
     Navs
   },
   mounted() {
-    this.getHomeData();
+    this.getHomeData();//获取页面数据
+    this.getRecommend(this.page);//获取推荐数据
+    this.loadMore()
   },
   methods: {
     getHomeData () {
@@ -53,13 +61,51 @@ export default {
         if (res.status === 200 && res.content) {
           this.navList = res.content.icons;
           this.banners = res.content.banners;
-          console.log("banners",this.banners)     
-          this.recommends = res.content.goods;
-          this.diypage = res.content.diypage;
+          this.totalPage = res.content.total_page
         }
       }, err => {
         this.$Toast(err);
       });
+    },
+    getRecommend(page) {
+      this.loadingContent = 'loading...'
+      this.isFinishedLoading = false;
+      this.loadingEmpty = false;
+      this.request('Home',page).then((res)=>{
+        if (res.status === 200 && res.content) {
+          this.loadingContent = '';
+          if(self.page < this.totalPage) {
+            this.loadingEmpty = false
+          }else{
+            this.loadingEmpty = true
+          }
+          this.recommends = this.recommends.concat(res.content.goods)
+          console.log(this.recommends.length)
+        }else{
+            this.loadingContent = 'no more'
+            this.loadingEmpty = true
+        }
+
+        this.isFinishedLoading = true
+
+      },err => {
+        this.$Toast(err)
+        this.isFinishedLoading = true;
+      })
+    },
+    // 上拉刷新
+    loadMore() {
+      let self = this;
+      window.onscroll = function() {
+        var distanceY = document.documentElement.scrollTop || document.body.scrollTop;
+        var viewHeight = document.documentElement.clientHeight || document.body.clientHeight;
+        var offset = document.documentElement.scrollHeight || document.body.scrollHeight;
+        if (distanceY + viewHeight >=  offset - 220  && self.isFinishedLoading) {
+          let page = self.page + 1;
+          console.log("page",page)
+          self.getRecommend(page);
+        }
+      }
     },
     // 去搜索
     goToSearch () {
@@ -150,6 +196,12 @@ export default {
         margin-left: 20/@rem;
       }
     }
+  }
+  .loading {
+    width: 100%;
+    padding: 24/@rem;
+    line-height: 24/@rem;
+    text-align: center;
   }
 }
 </style>

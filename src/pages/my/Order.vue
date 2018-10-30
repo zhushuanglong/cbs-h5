@@ -26,7 +26,12 @@
         <!-- 订单状态(订单状态 1-待付款 3-待发货 4-待收货 5-交易完成 6-交易取消 ) -->
         <!-- TODO 代付款  按钮是红色   其他时候都是正常颜色 -->
         <div class="operate-item operate-two" v-if="orderHandle.pay">
-          <router-link :to="{path: '/cart/secure?orderId=' + data.orderid}">Pay now {{this.finalTime}}</router-link>
+
+
+          <router-link :to="{path: '/cart/secure?orderId=' + data.orderid}">Pay now {{this.finalTime}}
+          </router-link>
+
+
         </div>
         <div class="operate-item operate-two" @click="handleCollect" v-if="orderHandle.collect">I get it</div>
         <div class="operate-item" @click="getLogistics" v-if="orderHandle.logistic">Logistics Info</div>
@@ -68,7 +73,7 @@ export default {
       confirmModal: {},
       orderHandle: [],
       finalAmount: 0,
-      finalTime: 0,
+      finalTime: 0
     }
   },
   mounted() {
@@ -81,22 +86,47 @@ export default {
   },
   methods: {
     getCountDown() {
-      let orderTime = new Date(this.data.ordertime).getTime();
-      const self = this;
-      let timer = setInterval(function() {
-        let now = new Date().getTime();
-        let t = now - orderTime;
-        let min = Math.floor((t / 60000) % 60);
-        let sec = Math.floor((t / 1000) % 60);
-        if (t > 0) {
+      var self = this
+      let orderTime = new Date(this.data.ordertime).getTime()
+      var paytime = this.data.paytime
+      // console.log("orderTime",orderTime)
+      console.log("paytime",paytime)
+      if (paytime > 0) {
+        let timer = setInterval(function() {
+          console.log(self.paytime,"paytime")
+        let min = Math.floor((self.paytime / 60));
+      console.log(min)
+        let sec = Math.floor(self.paytime - min*60);
+        if(self.paytime > 0) {
           min = min < 10 ? '0' + min : min;
           sec = sec < 10 ? '0' + sec : sec;
-        } else {
-          clearInterval(timer);
+        }else {
+          clearInterval(timer)
         }
         self.finalTime = min + ':' + sec;
-      }, 1000);
+        self.paytime -= 1
+        }, 1000)
+      }
+      
+    
+      // let orderTime = new Date(this.data.ordertime).getTime();
+      // const self = this;
+      // let timer = setInterval(function() {
+      //   let now = new Date().getTime();
+      //   let t = now - orderTime;
+      //   let min = Math.floor((t / 60000) % 60);
+      //   let sec = Math.floor((t / 1000) % 60);
+      //   if (t > 0) {
+      //     min = min < 10 ? '0' + min : min;
+      //     sec = sec < 10 ? '0' + sec : sec;
+      //   } else {
+      //     clearInterval(timer);
+      //   }
+      //   self.finalTime = min + ':' + sec;
+      // }, 1000);
+      
     },
+   
     getOrderDesc() {
       let handle = {};
       if(+this.orderstatus === 1) {

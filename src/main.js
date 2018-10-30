@@ -3,8 +3,10 @@ import App from './App';
 import router from './router';
 import initComponents from './initComponents';
 import Http from './libs/http';
+import Mint from 'mint-ui'
 initComponents(Vue);
 Vue.use(Http);
+Vue.use(Mint)
 // rem 换算
 import { remChange } from './components/basic/remChange';
 remChange();

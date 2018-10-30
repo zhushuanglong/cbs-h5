@@ -77,6 +77,7 @@ export default {
   computed: {},
   mounted () {
     this.getPersonalIndex();
+    
   },
   watch: {
     // 'isLogin': function () {

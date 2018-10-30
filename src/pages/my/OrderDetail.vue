@@ -54,6 +54,7 @@ export default {
       ordergoods: [],
       orderid: '',
       ordertime: '',
+      paytime: 0,
       finalAmount: 0,
       shipping: '',
       name: '',
@@ -75,7 +76,7 @@ export default {
   mounted() {
     this.orderid = this.$route.query.orderid;
     this.orderstatus = this.$route.query && this.$route.query.order_status || '';
-    console.log(this.orderstatus)
+    console.log("orderstatus",this.orderstatus)
     this.getOrderDetail();
 
   },
@@ -90,20 +91,22 @@ export default {
     // 剩余时间倒计时
     getCountDown() {
       let orderTime = new Date(this.ordertime).getTime();
+      let paytime = this.paytime
+      console.log("paytime value", paytime)
       const self = this;
-      let timer = setInterval(function() {
-        let now = new Date().getTime();
-        let t = now - orderTime;
-        let min = Math.floor((t / 60000) % 60);
-        let sec = Math.floor((t / 1000) % 60);
-        if (t > 0) {
-          min = min < 10 ? '0' + min : min;
-          sec = sec < 10 ? '0' + sec : sec;
-        } else {
-          clearInterval(timer);
-        }
-        self.finalTime = min + ':' + sec;
-      }, 1000);
+      // let timer = setInterval(function() {
+      //   let now = new Date().getTime();
+      //   let t = now - orderTime;
+      //   let min = Math.floor((t / 60000) % 60);
+      //   let sec = Math.floor((t / 1000) % 60);
+      //   if (t > 0) {
+      //     min = min < 10 ? '0' + min : min;
+      //     sec = sec < 10 ? '0' + sec : sec;
+      //   } else {
+      //     clearInterval(timer);
+      //   }
+      //   self.finalTime = min + ':' + sec;
+      // }, 1000);
     },
     getOrderDesc() {
       let handle = {};
