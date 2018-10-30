@@ -69,15 +69,14 @@ export default {
       },
       finalTime: '',
       confirmModal: {},
-      orderstatus: 0
+      orderstatus: 0,
+      paytime: 0
     }
   },
   mounted() {
     this.orderid = this.$route.query.orderid;
     this.orderstatus = this.$route.query && this.$route.query.order_status || '';
-    console.log(this.orderstatus)
     this.getOrderDetail();
-
   },
   computed: {},
   methods: {
@@ -89,11 +88,11 @@ export default {
     },
     // 剩余时间倒计时
     getCountDown() {
-      let orderTime = new Date(this.ordertime).getTime();
+      let paytime = new Date().getTime() + this.paytime * 1000;
       const self = this;
       let timer = setInterval(function() {
         let now = new Date().getTime();
-        let t = now - orderTime;
+        let t = paytime - now;
         let min = Math.floor((t / 60000) % 60);
         let sec = Math.floor((t / 1000) % 60);
         if (t > 0) {
@@ -151,8 +150,9 @@ export default {
           this.name = res.content.name;
           this.telephone = res.content.telephone;
           this.address = res.content.address;
+          this.paytime = res.content.paytime;
           this.getOrderDesc();
-          if(this.orderstatus === 1) {
+          if(+this.orderstatus === 1) {
             this.getCountDown();
           }
         }

@@ -75,17 +75,17 @@ export default {
     this.orderstatus = this.data.orderstatus;
     this.orderid = this.data.orderid;
     this.getOrderDesc();
-    if(this.data.orderstatus === 1) {
+    if(+this.data.orderstatus === 1) {
       this.getCountDown();
     }
   },
   methods: {
     getCountDown() {
-      let orderTime = new Date(this.data.ordertime).getTime();
+      let paytime = new Date().getTime() + this.data.paytime * 1000;
       const self = this;
       let timer = setInterval(function() {
         let now = new Date().getTime();
-        let t = now - orderTime;
+        let t = paytime - now;
         let min = Math.floor((t / 60000) % 60);
         let sec = Math.floor((t / 1000) % 60);
         if (t > 0) {

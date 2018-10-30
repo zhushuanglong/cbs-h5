@@ -7,6 +7,7 @@
                 "orderid": "1123959218169260118",
                 "orderstatus": "1",
                 "ordertime": "2018-10-30 18:50:58",
+                "paytime": 1600,
                 "ordergoods": [
                     {
                         "id": "10",
@@ -26,6 +27,7 @@
                 "orderid": "1123958839992630118",
                 "orderstatus": "1",
                 "ordertime": "2017-08-27 16:20:39",
+                "paytime": 1600,
                 "ordergoods": [
                     {
                         "id": "10",

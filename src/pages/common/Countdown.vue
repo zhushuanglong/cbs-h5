@@ -79,7 +79,7 @@ export default {
       let timer = setInterval(function() {
         self.start = true;
         let nowTime = new Date();
-        let endTime = new Date(timestamp);
+        let endTime = new Date(timestamp.replace(/-/g, '/'));
         let t = endTime.getTime() - nowTime.getTime();
         if (t > 0) {
           let day = Math.floor(t / 86400000);
