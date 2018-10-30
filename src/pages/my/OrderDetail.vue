@@ -29,7 +29,7 @@
       </div>
       <div>
         <p class="o-price"><span class="fl">Subtotal:</span><span class="fr">${{parseFloat(finalAmount - shipping).toFixed(2)}}</span></p>
-        <p class="o-price"><span class="fl">Shipping：Free</span><span class="fr">$ {{shipping}}</span></p>
+        <p class="o-price"><span class="fl">Shipping:</span><span class="fr">$ {{shipping}}</span></p>
         <p class="o-price total"><span class="fl">All Total：</span><span class="fr">${{finalAmount}}</span></p>
       </div>
       <div class="operate clearfix">
