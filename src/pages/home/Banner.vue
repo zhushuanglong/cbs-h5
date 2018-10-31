@@ -44,9 +44,11 @@
     height: 100%;
     display: block;
   }
+  .mint-swipe{
+    height: 100%;
+  }
   .mint-swipe-indicators {
     width: 750/@rem;
-    margin: 0 auto;
     position: absolute;
     bottom: 0.45rem;
     text-align: center;
