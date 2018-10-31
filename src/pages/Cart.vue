@@ -129,9 +129,11 @@ export default {
       let goods = this.cartsData.goods;
       let len = goods.length;
       for (let i = 0; i < len; i++) {
-        this.totalPrice += goods[i].num * (goods[i].price * 100) / 100;
+        this.totalPrice += goods[i].num * (goods[i].price * 100);
       }
-      this.totalPrice = (this.totalPrice * 100 - +this.cartsData.specialoffer * 100) / 100;
+      // 浮点数处理
+      this.totalPrice = this.totalPrice / 100; // 除回来
+      this.totalPrice = (this.totalPrice * 100 - +this.cartsData.specialoffer * 100) / 100; // 再处理 我去
       // 处理券价格
       this.totalPrice = (this.totalPrice * 100 - +(this.couponPrice + '').replace(/[^0-9]/ig, '') * 100) / 100;
       if (this.totalPrice < 0) {

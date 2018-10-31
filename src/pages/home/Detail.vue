@@ -1,6 +1,6 @@
 <template>
   <div class="detail-main">
-    <topbar title="Failure Payment" :detailId="$route.query.id"></topbar>
+    <topbar title="Product Details" :detailId="$route.query.id"></topbar>
     <div class="detail-swipe">
       <Swipe class="my-swipe big-img-swipe" ref="bigImgSwipeRef" :nextCallback="nextCallback">
         <SwipeItem v-for="img in imgSwipe">
@@ -285,7 +285,6 @@ export default {
         stock: oneSku.stock,
         saleNum: 1 // 购物数量
       };
-        this.skuId = null; // 第二属性没选
 
       // 第二属性处理
       let subArr = oneSku.sub || [];
@@ -297,6 +296,8 @@ export default {
         //   this.skuId = this.goodsData.id
         // }
 
+      // SKUID 如果有第二属性 则赋值为null
+      this.skuId = subLen ? null : oneSku.id;
       // DOM未渲染所以用异步
       setTimeout(function() {
         // 展示图片

@@ -65,16 +65,15 @@ export default {
       data: { // 提交的数据
         default: false,
       },
-      addressId: null,
+      url: 'AddressAdd'
     };
   },
   computed: {},
   created () {
     // 如果存在addressId就是编辑页面
-    this.addressId = this.$route.query.addressId;
-    if (this.addressId) {
+    if (this.$route.query.addressId) {
       this.request('AddressInfo', {
-        address_id: this.addressId
+        address_id: this.$route.query.addressId
       }).then((res) => {
         if (res.status === 200 && res.content) {
           this.data = res.content;
@@ -82,20 +81,14 @@ export default {
       }, err => {
         this.$Toast(err);
       });
-      // 返回页面控制
-      // this.backUrl = 'cart/shippingAddress/' + this.$route.params.orderId
-    } else if (this.$route.query.from === 'shipping') { // 如果是是shippingAddress页面点击新增过来的
-      // this.backUrl = 'cart/shippingAddress/' + this.$route.params.orderId
     }
-    // else if (this.$route.query.from === 'addCard') {
-    //   this.backUrl = 'cart/addCard/' + this.$route.params.orderId
-    // }
   },
   mounted () {},
   watch: {},
   methods: {
     submitAddress () {
       let data = Object.assign({}, this.data);
+
       if (!data.firstname) {
         this.$Toast('Firstname must be more than 2 letters');
         return;
@@ -128,9 +121,15 @@ export default {
         this.$Toast('Phone Number must be more than 2 letters');
         return;
       }
+
+      if (this.$route.query.addressId) {
+        this.url = 'AddressEdit';
+      } else {
+        this.url = 'AddressAdd';
+      }
       // country	是	string	国家 最大长度50字符 - 目前自行填写
       // state	是	string	州/省/区域 最大长度250字符  - 目前自行填写
-      this.request('AddressAdd', data).then((res) => {
+      this.request(this.url, data).then((res) => {
         if (res.status === 200) {
           let self = this;
           self.$Toast({

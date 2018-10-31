@@ -18,6 +18,8 @@ const methodMap = {
     CardsInfo: {url: '/cards/info', method: 'post'},
     /** 设置默认银行卡 **/
     CardsDefault: {url: '/cards/default', method: 'post'},
+    /** 银行卡新增 **/
+    CardsAdd: {url: '/cards/add', method: 'post'},
     /** 银行卡编辑 **/
     CardsEdit: {url: '/cards/edit', method: 'post'},
     /** 银行卡删除 **/
@@ -36,6 +38,8 @@ const methodMap = {
     AddressInfo: {url: '/address/info', method: 'post'},
     /** 地址列表 **/
     AddressList: {url: '/address/list', method: 'post'},
+    /** 地址编辑 **/
+    AddressEdit: {url: '/address/edit', method: 'post'},
     /** 地址添加 **/
     AddressAdd: {url: '/address/add', method: 'post'},
     /** 地址删除 **/

@@ -77,7 +77,7 @@ export default {
     this.orderid = this.data.orderid;
     // this.paytime= this.data.paytime;
     this.getOrderDesc();
-    if(this.data.orderstatus === 1) {
+    if(+this.data.orderstatus === 1) {
       this.getCountDown();
     }
   },

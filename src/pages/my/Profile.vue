@@ -25,6 +25,8 @@
         <div class="info">
           <input type="text" v-model="params.birth" readonly>
           <datetime-picker
+          :startDate="startDate"
+          :endDate="endDate"
           ref="birthPicker"
           type="date"
           confirmText="ok"
@@ -62,7 +64,7 @@
 <script>
 import { Actionsheet, DatetimePicker } from 'mint-ui';
 import TopBar from 'common/TopBar.vue';
-import { formatToHMS } from 'components/utils/date.js';
+import { formatToHMS, currentDateToDay } from 'components/utils/date.js';
 export default {
   name: 'cart',
   components: {
@@ -76,6 +78,8 @@ export default {
         birth: '',
         gender: 'Man'
       },
+      endDate: new Date(currentDateToDay()),
+      startDate: new Date('1973-01-01'),
       actionsheetShow: false,
       dateTimePickerShow: false,
       genders: [

@@ -157,6 +157,7 @@ export default {
           this.name = res.content.name;
           this.telephone = res.content.telephone;
           this.address = res.content.address;
+          this.paytime = res.content.paytime;
           this.getOrderDesc();
           if(+this.orderstatus === 1) {
             this.getCountDown();
