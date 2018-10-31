@@ -73,7 +73,7 @@ app.use(staticPath, express.static('./static'));
 
 var utils = require('./utils');
 // var uri = `http://${utils.getIPAdress()}:${port}/home`;
-var uri = `http://localhost:${port}/index`;
+var uri = `http://localhost:${port}`;
 
 devMiddleware.waitUntilValid(function () {
   console.log('> Listening at ' + uri + '\n')
