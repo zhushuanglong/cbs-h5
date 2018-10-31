@@ -7,7 +7,7 @@ module.exports = {
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: '',
     // assetsPublicPath: '//yun.duiba.com.cn/',
-    assetsPublicPath: '/',
+    assetsPublicPath: './',
     productionSourceMap: false, // 设为true生成map可以作调试
     // productionGzip: false,
     // productionGzipExtensions: ['js', 'css'],

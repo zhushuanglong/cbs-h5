@@ -1,12 +1,15 @@
 <template>
   <div class="g-banner" v-if="list && list.length">
-    <swipe class="index_banner my-swipe" :auto="3000" v-if="list.length" :loop="true">
+    <swipe class="index_banner my-swipe" :auto="3000" v-if="list.length > 1" :loop="true">
       <swipe-item v-for="(item, index) in list" class="slide" :class="'slide' + index">
         <a :href="item.url || 'javascript:;'">
           <img :src="item.img && item.img.ossimg()">
         </a>
       </swipe-item>
     </swipe>
+    <a :href="list[0].url || 'javascript:;'" v-if="list.length === 1">
+      <img :src="list[0].img && list[0].img.ossimg()">
+    </a>
   </div>
 </template>
 <script>
