@@ -1,6 +1,6 @@
 <template>
   <div class="c-order">
-    <topbar title="Orders List" backUrl="my"></topbar>
+    <topbar title="Orders List" backUrl="my" class="orderlist"></topbar>
     <ul class="order-tabs">
       <li v-for="item in tabs" :key="item.type" @click="tabClick(item)">
         <a href="javascript:;" :class="{'active': item.active}">{{item.name}}</a>
@@ -10,6 +10,8 @@
       <order :handle-cb="getOrderList" v-for="(item, index) in orders" :data="item" :key="index" v-if="orders.length"></order>
       <pageempty icon="&#xe637;" :margin-top="200" desc="You have no related orders yet!" v-if="orders.length === 0" ></pageempty>
     </div>
+    <div class="loading" v-show="orders.length"><span>{{loadingContent}}</span></div>
+
   </div>
 </template>
 <script>
@@ -37,11 +39,15 @@ export default {
       orders: [],
       params: {
         type: ''
-      }
+      },
+      page: 1,
+      loadingContent: '',
+      isFinishedLoading: false      
     }
   },
   mounted() {
-    this.getOrderList();
+    this.getOrderList(this.page);
+    this.loadMore();
   },
   components: { order },
   methods: {
@@ -53,16 +59,50 @@ export default {
       this.params.type = item.type;
       this.getOrderList();
     },
-    getOrderList() {
-      this.request('OrdersList', this.params).then((res) => {
-        if(res.status === 200) {
-          this.orders = res.content.orderData || [];
+    getOrderList(page) {
+     
+      this.loadingContent = 'loading'
+      this.isFinishedLoading = false;
+      this.loadingEmpty = false;
+      if (page === 1) {
+         this.orders = []
+       }
+      this.request('OrdersList', this.params, { page }).then((res) => {
+
+        if(res.status === 200 && res.content) {
+          //  console.log("total_page",res.content.total_page)
+          this.loadingContent = '';
+          this.orders = res.content.orderData;
+        
+          if (page < res.content.total_page){
+            this.loadingEmpty = false;
+          }else {
+            this.loadingContent = 'No More';
+            this.loadingEmpty = true;
+          }
+          
         } else {
-          this.$Toast(res.msg);
+          this.loadingContent = 'No More';
+          this.loadingEmpty = true;
         }
+        this.isFinishedLoading = true
       }, err => {
         this.$Toast(err.data.msg);
+        this.isFinishedLoading = true;
       })
+    },
+    loadMore() {
+      let self = this;
+      window.onscroll = function() {
+        var a = document.documentElement.scrollTop || document.body.scrollTop; // 滚动条y轴上的距离
+        var b = document.documentElement.clientHeight || document.body.clientHeight; // 可视区域的高度
+        var c = document.documentElement.scrollHeight || document.body.scrollHeight; // 可视化的高度与溢出的距离（总高度）
+        // console.log(a,b,c)
+        if (a + b >=  c - 200  && self.isFinishedLoading && !self.loadingEmpty) {   
+          self.page = self.page + 1;
+          self.getOrderList(self.page);
+        }
+      }
     }
   }
 }
@@ -93,6 +133,10 @@ export default {
         border-bottom: 4/@rem solid #FF473C;
       }
     }
+  }
+  .loading {
+   .height(80);
+    text-align: center;
   }
 }
 </style>

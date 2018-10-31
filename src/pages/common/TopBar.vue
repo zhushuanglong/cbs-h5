@@ -6,7 +6,7 @@
       </template>
       <template v-else>
         <router-link class="back" v-if="backUrl" :to="{path: '/' + backUrl}"><i class="iconfont" >&#xe62f;</i></router-link>
-        <a class="back" href="javascript:;" v-else @click="pageBack"><i class="iconfont" >&#xe62f;</i></a>
+        <a class="back" href="javascript:;" v-else @click="pageBack"><i class="iconfont" id="icon-back">&#xe62f;</i></a>
       </template>
       <div class="title">{{title}}</div>
       <router-link :to="{path: '/cart?id=' + detailId}" v-if="$route.name === 'detail'">

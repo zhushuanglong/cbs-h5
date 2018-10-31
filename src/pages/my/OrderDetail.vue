@@ -29,7 +29,7 @@
       </div>
       <div>
         <p class="o-price"><span class="fl">Subtotal:</span><span class="fr">${{parseFloat(finalAmount - shipping).toFixed(2)}}</span></p>
-        <p class="o-price"><span class="fl">Shipping：Free</span><span class="fr">$ {{shipping}}</span></p>
+        <p class="o-price"><span class="fl">Shipping:</span><span class="fr">$ {{shipping}}</span></p>
         <p class="o-price total"><span class="fl">All Total：</span><span class="fr">${{finalAmount}}</span></p>
       </div>
       <div class="operate clearfix">
@@ -54,7 +54,6 @@ export default {
       ordergoods: [],
       orderid: '',
       ordertime: '',
-      paytime: 0,
       finalAmount: 0,
       shipping: '',
       name: '',
@@ -70,15 +69,15 @@ export default {
       },
       finalTime: '',
       confirmModal: {},
-      orderstatus: 0
+      orderstatus: 0,
+      paytime: 0
     }
   },
   mounted() {
     this.orderid = this.$route.query.orderid;
     this.orderstatus = this.$route.query && this.$route.query.order_status || '';
-    console.log("orderstatus",this.orderstatus)
+    this.paytime = this.$route.params.paytime;
     this.getOrderDetail();
-
   },
   computed: {},
   methods: {
@@ -90,23 +89,27 @@ export default {
     },
     // 剩余时间倒计时
     getCountDown() {
-      let orderTime = new Date(this.ordertime).getTime();
-      let paytime = this.paytime
-      console.log("paytime value", paytime)
+      let payData = this.paytime;
+      let paytime = new Date().getTime() + this.paytime * 1000;
       const self = this;
-      // let timer = setInterval(function() {
-      //   let now = new Date().getTime();
-      //   let t = now - orderTime;
-      //   let min = Math.floor((t / 60000) % 60);
-      //   let sec = Math.floor((t / 1000) % 60);
-      //   if (t > 0) {
-      //     min = min < 10 ? '0' + min : min;
-      //     sec = sec < 10 ? '0' + sec : sec;
-      //   } else {
-      //     clearInterval(timer);
-      //   }
-      //   self.finalTime = min + ':' + sec;
-      // }, 1000);
+      if(payData >= 0){
+        let timer = setInterval(function() {
+        let now = new Date().getTime();
+        let t = paytime - now;
+        let min = Math.floor((t / 60000) % 60);
+        let sec = Math.floor((t / 1000) % 60);
+        if (t > 0) {
+          min = min < 10 ? '0' + min : min;
+          sec = sec < 10 ? '0' + sec : sec;
+        } else {
+          clearInterval(timer);
+        }
+        self.finalTime = min + ':' + sec;
+      }, 1000);
+      }else {
+        self.finalTime = ''
+      }
+      
     },
     getOrderDesc() {
       let handle = {};
@@ -155,7 +158,7 @@ export default {
           this.telephone = res.content.telephone;
           this.address = res.content.address;
           this.getOrderDesc();
-          if(this.orderstatus === 1) {
+          if(+this.orderstatus === 1) {
             this.getCountDown();
           }
         }

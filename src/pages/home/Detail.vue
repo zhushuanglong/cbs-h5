@@ -285,17 +285,17 @@ export default {
         stock: oneSku.stock,
         saleNum: 1 // 购物数量
       };
-        // this.skuId = null; // 第二属性没选
+        this.skuId = null; // 第二属性没选
 
       // 第二属性处理
       let subArr = oneSku.sub || [];
       let subLen = subArr.length;
       this.goodsData.subArr = subLen && subArr || [];
-        if (this.subLen) {
-          this.skuId = null
-        } else {
-          this.skuId = this.goodsData.id
-        }
+        // if (this.subLen) {
+        //   this.skuId = null
+        // } else {
+        //   this.skuId = this.goodsData.id
+        // }
 
       // DOM未渲染所以用异步
       setTimeout(function() {
@@ -448,8 +448,7 @@ export default {
       console.log(this.skuId)
       
       if (!this.skuId ) {
-        // this.$Toast('Please select your ' + this.goodsData.subArr[0].name);
-        this.$Toast('please select continue')
+        this.$Toast('Please select your ' + this.goodsData.subArr[0].name);
         return;
       }
       // 提交锁

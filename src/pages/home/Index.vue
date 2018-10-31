@@ -12,7 +12,7 @@
     <div class="home-recommend">
       <p class="home-recommend-title">Recommended</p>
       <ul class="home-recommend-goods clearfix">
-        <li class="recommend-goods" v-for="item in recommends">
+        <li class="recommend-goods" v-for="item in recommends" >
           <router-link :to="{path: '/detail?id=' + item.id}">
             <img v-lazy="item.img && item.img.ossimg()" class="goods-img" alt="">
             <p class="goods-title">{{item.name}}</p>
@@ -25,7 +25,7 @@
         </li>
       </ul>
     </div>
-    <div class="loading" v-show="!loadingEmpty"><span>{{loadingContent}}</span></div>
+    <div class="loading" v-show="recommends.length"><span>{{loadingContent}}</span></div>
   </div>
 </template>
 <script>
@@ -39,11 +39,11 @@ export default {
       recommends: [],
       navList: [],
       diypage:'',
-      totalPage:1,
-      loadingContent:'',
-      isFinishedLoading: false,
-      loadingEmpty: false,
-      page:1
+      loadingContent:'', // 加载提示
+      isFinishedLoading: false, // 是否完成loading
+      requestParams: {
+        page: 1
+      }
     }
   },
   components: {
@@ -52,40 +52,47 @@ export default {
   },
   mounted() {
     this.getHomeData();//获取页面数据
-    this.getRecommend(this.page);//获取推荐数据
+    this.getRecommend(this.requestParams);//获取推荐数据
     this.loadMore()
   },
   methods: {
+    // 获取页面除推荐列表外的数据
     getHomeData () {
       this.request('Home', {}).then((res) => {
         if (res.status === 200 && res.content) {
           this.navList = res.content.icons;
           this.banners = res.content.banners;
-          this.totalPage = res.content.total_page
         }
       }, err => {
         this.$Toast(err);
       });
     },
-    getRecommend(page) {
+    // 获取推荐列表的数据
+    getRecommend(params) {
       this.loadingContent = 'loading...'
       this.isFinishedLoading = false;
       this.loadingEmpty = false;
-      this.request('Home',page).then((res)=>{
+       if (params.page === 1) {
+         this.recommends = []
+       }
+
+      this.request('Home', {
+        page: params.page
+      }).then((res)=>{
         if (res.status === 200 && res.content) {
           this.loadingContent = '';
-          if(self.page < this.totalPage) {
-            this.loadingEmpty = false
+          // 滚动加载
+          if(params.page < res.content.total_page) {
+            this.loadingEmpty = false;
           }else{
-            this.loadingEmpty = true
+            this.loadingContent = 'No More';
+            this.loadingEmpty = true;
           }
           this.recommends = this.recommends.concat(res.content.goods)
-          console.log(this.recommends.length)
         }else{
-            this.loadingContent = 'no more'
-            this.loadingEmpty = true
+            this.loadingContent = 'No More';
+            this.loadingEmpty = true;
         }
-
         this.isFinishedLoading = true
 
       },err => {
@@ -97,13 +104,16 @@ export default {
     loadMore() {
       let self = this;
       window.onscroll = function() {
-        var distanceY = document.documentElement.scrollTop || document.body.scrollTop;
-        var viewHeight = document.documentElement.clientHeight || document.body.clientHeight;
-        var offset = document.documentElement.scrollHeight || document.body.scrollHeight;
-        if (distanceY + viewHeight >=  offset - 220  && self.isFinishedLoading) {
-          let page = self.page + 1;
-          console.log("page",page)
-          self.getRecommend(page);
+        var a = document.documentElement.scrollTop || document.body.scrollTop; // 滚动条y轴上的距离
+        var b = document.documentElement.clientHeight || document.body.clientHeight; // 可视区域的高度
+        var c = document.documentElement.scrollHeight || document.body.scrollHeight; // 可视化的高度与溢出的距离（总高度）
+        if (a + b >=  c - 220  && self.isFinishedLoading && !self.loadingEmpty) {
+          let page = self.requestParams.page + 1;
+          Object.assign(self.requestParams, {
+            page: page
+          })
+          // console.log("page",page)
+          self.getRecommend(self.requestParams);
         }
       }
     },
@@ -198,9 +208,7 @@ export default {
     }
   }
   .loading {
-    width: 100%;
-    padding: 24/@rem;
-    line-height: 24/@rem;
+   .height(80);
     text-align: center;
   }
 }

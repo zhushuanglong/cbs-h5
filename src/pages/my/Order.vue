@@ -11,7 +11,7 @@
         <div class="time">Order ID：{{data.orderid}}</div>
         <div class="status">{{orderStatusDesc}}</div>
       </div>
-      <router-link class="detail" v-for="item in data.ordergoods" :to="{ name: 'orderDetail', query: {orderid: data.orderid, order_status: data.orderstatus}}">
+      <router-link class="detail" v-for="item in data.ordergoods" :to="{ name: 'orderDetail', query: {orderid: data.orderid, order_status: data.orderstatus}, params: { paytime:data.paytime }}">
         <div class="img fl">
           <img v-lazy="item.img && item.img.ossimg()">
         </div>
@@ -26,12 +26,8 @@
         <!-- 订单状态(订单状态 1-待付款 3-待发货 4-待收货 5-交易完成 6-交易取消 ) -->
         <!-- TODO 代付款  按钮是红色   其他时候都是正常颜色 -->
         <div class="operate-item operate-two" v-if="orderHandle.pay">
-
-
           <router-link :to="{path: '/cart/secure?orderId=' + data.orderid}">Pay now {{this.finalTime}}
           </router-link>
-
-
         </div>
         <div class="operate-item operate-two" @click="handleCollect" v-if="orderHandle.collect">I get it</div>
         <div class="operate-item" @click="getLogistics" v-if="orderHandle.logistic">Logistics Info</div>
@@ -79,6 +75,7 @@ export default {
   mounted() {
     this.orderstatus = this.data.orderstatus;
     this.orderid = this.data.orderid;
+    // this.paytime= this.data.paytime;
     this.getOrderDesc();
     if(this.data.orderstatus === 1) {
       this.getCountDown();
@@ -86,45 +83,27 @@ export default {
   },
   methods: {
     getCountDown() {
-      var self = this
-      let orderTime = new Date(this.data.ordertime).getTime()
-      var paytime = this.data.paytime
-      // console.log("orderTime",orderTime)
-      console.log("paytime",paytime)
-      if (paytime > 0) {
+      const self = this
+      let payData = this.data.paytime
+      // console.log("order.vue payData",payData)
+      let paytime = new Date().getTime() + this.data.paytime * 1000
+      if (payData > 0){
         let timer = setInterval(function() {
-          console.log(self.paytime,"paytime")
-        let min = Math.floor((self.paytime / 60));
-      console.log(min)
-        let sec = Math.floor(self.paytime - min*60);
-        if(self.paytime > 0) {
+        let now = new Date().getTime();
+        let t = paytime - now;
+        let min = Math.floor((t / 60000) % 60);
+        let sec = Math.floor((t / 1000) % 60);
+        if(t >= 0) {
           min = min < 10 ? '0' + min : min;
           sec = sec < 10 ? '0' + sec : sec;
         }else {
           clearInterval(timer)
         }
         self.finalTime = min + ':' + sec;
-        self.paytime -= 1
         }, 1000)
+      }else {
+        self.finalTime = ''
       }
-      
-    
-      // let orderTime = new Date(this.data.ordertime).getTime();
-      // const self = this;
-      // let timer = setInterval(function() {
-      //   let now = new Date().getTime();
-      //   let t = now - orderTime;
-      //   let min = Math.floor((t / 60000) % 60);
-      //   let sec = Math.floor((t / 1000) % 60);
-      //   if (t > 0) {
-      //     min = min < 10 ? '0' + min : min;
-      //     sec = sec < 10 ? '0' + sec : sec;
-      //   } else {
-      //     clearInterval(timer);
-      //   }
-      //   self.finalTime = min + ':' + sec;
-      // }, 1000);
-      
     },
    
     getOrderDesc() {
@@ -208,8 +187,10 @@ export default {
       this.$router.push({
         name: 'logistics',
         query: {
-          order_id: this.orderid
-        }
+          order_id: this.orderid,
+          paytime: this.data.paytime
+        },
+        
       })
     },
     // 空对象判断
