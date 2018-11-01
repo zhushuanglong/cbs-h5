@@ -193,7 +193,8 @@ export default {
     const query = this.$route.query;
     let options = {
       cate: query.cate || '',
-      title: query.title || ''
+      title: query.title || '',
+      page: 1
     };
     this.getProductsList(options);
     this.loadMore();
@@ -269,6 +270,7 @@ export default {
         var a = document.documentElement.scrollTop || document.body.scrollTop; // 滚动条y轴上的距离
         var b = document.documentElement.clientHeight || document.body.clientHeight; // 可视区域的高度
         var c = document.documentElement.scrollHeight || document.body.scrollHeight; // 可视化的高度与溢出的距离（总高度）
+        // console.log("self.loadingEmpty",self.loadingEmpty)
         if (a + b >= c - 200 && self.isFinishedLoading && !self.loadingEmpty) {
           let page = self.searchParams.page + 1;
           Object.assign(self.searchParams, {

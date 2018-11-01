@@ -38,15 +38,15 @@ export default {
       ],
       orders: [],
       params: {
-        type: ''
+        type: '',
+        page: 1
       },
-      page: 1,
       loadingContent: '',
       isFinishedLoading: false      
     }
   },
   mounted() {
-    this.getOrderList(this.page);
+    this.getOrderList(this.params);
     this.loadMore();
   },
   components: { order },
@@ -57,30 +57,31 @@ export default {
       });
       item.active = true;
       this.params.type = item.type;
-      this.getOrderList();
+      this.params.page = 1;
+      this.getOrderList(this.params);
     },
-    getOrderList(page) {
-     
+    getOrderList(params) {
       this.loadingContent = 'loading'
       this.isFinishedLoading = false;
       this.loadingEmpty = false;
-      if (page === 1) {
+      if (params.page === 1) {
          this.orders = []
        }
-      this.request('OrdersList', this.params, { page }).then((res) => {
-
+      // console.log("page",params.page)
+     
+      this.request('OrdersList', this.params).then((res) => {
         if(res.status === 200 && res.content) {
-          //  console.log("total_page",res.content.total_page)
-          this.loadingContent = '';
-          this.orders = res.content.orderData;
-        
-          if (page < res.content.total_page){
+          this.loadingContent = '';  
+          // 滚动加载
+          // console.log("res.content.total_page",res.content.total_page)
+          if (params.page < res.content.total_page){
             this.loadingEmpty = false;
           }else {
             this.loadingContent = 'No More';
             this.loadingEmpty = true;
           }
-          
+          //  console.log("this.orders.len",this.orders)
+          this.orders = this.orders.concat(res.content.orderData);
         } else {
           this.loadingContent = 'No More';
           this.loadingEmpty = true;
@@ -97,10 +98,12 @@ export default {
         var a = document.documentElement.scrollTop || document.body.scrollTop; // 滚动条y轴上的距离
         var b = document.documentElement.clientHeight || document.body.clientHeight; // 可视区域的高度
         var c = document.documentElement.scrollHeight || document.body.scrollHeight; // 可视化的高度与溢出的距离（总高度）
-        // console.log(a,b,c)
         if (a + b >=  c - 200  && self.isFinishedLoading && !self.loadingEmpty) {   
-          self.page = self.page + 1;
-          self.getOrderList(self.page);
+           let page = self.params.page + 1;
+           Object.assign(self.params, {
+            page: page
+          })
+          self.getOrderList(self.params);
         }
       }
     }

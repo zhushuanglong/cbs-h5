@@ -28,8 +28,10 @@
     </div>
     <div class="index-order">
       <Order :handle-cb="getPersonalIndex" v-for="item in orders" :key="item.id" :data="item" v-if="orders && orders.length"></Order>
+      <div class="loading" v-show="orders.length">{{loadingContent}}</div>
       <pageempty icon="&#xe693;" :margin-top="50" desc="You have no orders yet!" v-if="orders.length === 0"></pageempty>
     </div>
+    
     <BottomBar></BottomBar>
   </div>
 </template>
@@ -71,13 +73,19 @@ export default {
       },
       orders: [],
       username: username,
-      isLogin: false
+      isLogin: false,
+      loadingContent:'',
+      isFinishedLoading: false,
+      pageParams: {
+        page: 1
+      }
     };
   },
   computed: {},
   mounted () {
-    this.getPersonalIndex();
-    
+    this.getPersonalIndex();//获取主页数据
+    this.getOrderList(this.pageParams); //获取订单列表数据
+    this.loadMore();
   },
   watch: {
     // 'isLogin': function () {
@@ -97,7 +105,7 @@ export default {
         })
       }
     },
-    // 个人主页
+    // 个人主页,获取除orderList之外的数据。
     getPersonalIndex() {
       this.request('PersonalIndex').then((res) => {
         if(res.status === 200 && res.content) {
@@ -108,7 +116,8 @@ export default {
           this.cardData.income = res.content.income; // 收入
           this.cardData.funs = res.content.funs;
           this.username = res.content.username;
-          this.orders = res.content.orders;
+          // this.orders = res.content.orders;
+          // console.log("orders",this.orders.length)
           this.isLogin = true;
         } else{
           this.username = 'Sign In / Register';
@@ -116,16 +125,63 @@ export default {
         }
       })
     },
-    getOrderList() {
-      this.$http.post('/order/orderList').then((res) => {
-        res = res.data;
-        if(res.status === 200 && res.data) {
-          this.orders = res.data.order.orders;
+    // getOrderList(page) {
+    //   this.$http.post('/order/orderList').then((res) => {
+    //     res = res.data;
+    //     if(res.status === 200 && res.data) {
+    //       this.orders = res.data.order.orders;
+    //     }
+    //   }, err => {
+        
+    //   }).catch((err) => {
+    //   })
+    // },
+    getOrderList(pageParams) {
+      this.loadingContent = 'loading'
+      this.isFinishedLoading = false;
+      this.loadingEmpty = false;
+      if (pageParams.page === 1) {
+         this.orders = []
+       }
+       this.request('OrdersList',{ page: pageParams.page }).then((res) => {
+        if(res.status === 200 && res.content) {
+          this.loadingContent = '';
+           // 滚动加载
+          //  console.log("res.content.total_page",res.content.total_page)
+          if(pageParams.page < res.content.total_page) {
+            this.loadingEmpty = false;
+          }else{
+            this.loadingContent = 'No More';
+            this.loadingEmpty = true;
+          }
+          this.orders = this.orders.concat(res.content.orderData);
+          // console.log("orders",this.orders.length)
+        } else{
+            this.loadingContent = 'No More';
+            this.loadingEmpty = true;
         }
-      }, err => {
-
-      }).catch((err) => {
+        this.isFinishedLoading = true
+      },err => {
+        this.$Toast(err)
+        this.isFinishedLoading = true;
       })
+
+    },
+    // 上拉刷新
+    loadMore() {
+      let self = this;
+      window.onscroll = function() {
+        var a = document.documentElement.scrollTop || document.body.scrollTop; // 滚动条y轴上的距离
+        var b = document.documentElement.clientHeight || document.body.clientHeight; // 可视区域的高度
+        var c = document.documentElement.scrollHeight || document.body.scrollHeight; // 可视化的高度与溢出的距离（总高度）
+        if (a + b >=  c - 200  && self.isFinishedLoading && !self.loadingEmpty) {
+          let page = self.pageParams.page + 1;
+          Object.assign(self.pageParams, {
+            page: page
+          })   
+          self.getOrderList(self.pageParams);
+        }
+      }
     }
   },
   beforeDestroy () {}
@@ -233,6 +289,10 @@ export default {
   }
   .index-order{
     margin-bottom: 100/@rem;
+  .loading {
+   .height(80);
+    text-align: center;
+  }
   }
 }
 </style>

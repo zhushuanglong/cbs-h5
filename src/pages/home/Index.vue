@@ -53,7 +53,7 @@ export default {
   mounted() {
     this.getHomeData();//获取页面数据
     this.getRecommend(this.requestParams);//获取推荐数据
-    this.loadMore()
+    this.loadMore();
   },
   methods: {
     // 获取页面除推荐列表外的数据
@@ -94,7 +94,6 @@ export default {
             this.loadingEmpty = true;
         }
         this.isFinishedLoading = true
-
       },err => {
         this.$Toast(err)
         this.isFinishedLoading = true;
