@@ -67,12 +67,28 @@ export default {
     }
    }
   }
-
-  
-
-  
-
-
+  .mint-swipe{
+    height: 100%;
+  }
+  .mint-swipe-indicators {
+    width: 750/@rem;
+    position: absolute;
+    bottom: 0.45rem;
+    text-align: center;
+    left: 50%;
+    right: 0;
+  }
+  .mint-swipe-indicator {
+    width: 20/@rem;
+    height: 20/@rem;
+    display: inline-block;
+    border-radius: 100%;
+    background: #bfbfbf;
+    margin: 0 10/@rem;
+  }
+  .mint-swipe-indicator.is-active {
+    background: #000000
+  }
 }
 
 </style>
