@@ -36,7 +36,13 @@ export default {
       banners: [],
       recommends: [],
       navList: [],
-      diypage: ''
+      diypage: '',
+      loadingContent: '',
+      isFinishedLoading: true,
+      loadingEmpty: false,
+      params: {
+        page: 1
+      }
     }
   },
   components: {
@@ -45,15 +51,31 @@ export default {
   },
   mounted() {
     this.getHomeData();
+    this.loadMore();
   },
   methods: {
     getHomeData () {
-      this.request('Home', {}).then((res) => {
+      this.loadingContent = 'Loading...';
+      this.isFinishedLoading = false;
+      this.loadingEmpty = false;
+      if (this.params.page === 1) {
+        this.recommends = [];
+      }
+      this.request('Home', this.params).then((res) => {
         if (res.status === 200 && res.content) {
-          this.navList = res.content.icons;
-          this.banners = res.content.banners;
-          this.recommends = res.content.goods;
-          this.diypage = res.content.diypage;
+          if(this.params.page === 1) {
+            this.navList = res.content.icons;
+            this.banners = res.content.banners;
+            this.diypage = res.content.diypage;
+          }
+          this.recommends =  this.recommends.concat(res.content.goods);
+          if (this.params.page < res.content.total_page) {
+            this.loadingEmpty = false;
+          } else {
+            this.loadingContent = 'No More';
+            this.loadingEmpty = true;
+          }
+          this.isFinishedLoading = true;
         }
       }, err => {
         this.$Toast(err);
@@ -64,7 +86,20 @@ export default {
       this.$router.push({
         name: 'search'
       })
-    }
+    },
+     // 加载更多
+    loadMore () {
+      let self = this;
+      window.onscroll = function () {
+        var a = document.documentElement.scrollTop || document.body.scrollTop; // 滚动条y轴上的距离
+        var b = document.documentElement.clientHeight || document.body.clientHeight; // 可视区域的高度
+        var c = document.documentElement.scrollHeight || document.body.scrollHeight; // 可视化的高度与溢出的距离（总高度）
+        if (a + b >= c - 200 && self.isFinishedLoading && !self.loadingEmpty) {
+          self.params.page = self.params.page + 1
+          self.getHomeData();
+        }
+      }
+    },
   }
 }
 </script>
