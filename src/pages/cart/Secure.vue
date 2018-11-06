@@ -65,12 +65,12 @@
               <span class="gray2">{{item.number}}</span>
               <i class="iconfont gray2">&#xe62e;</i>
             </router-link>
-            <div class="fr" @click="clickCardDel(item.id, item.number)">
+            <div class="fr" @click="clickCardDel(item.id)">
               <i class="iconfont">&#xe63d;</i>Delete
             </div>
           </div>
           <div class="pos-abs">
-            <input type="radio" name="card" @click="radioClick(item.number)">
+            <input type="radio" name="card" @click="radioClick(item.id)">
           </div>
         </div>
         <div class="card-new" @click="addNewCard">+ Add a new card</div>
@@ -100,7 +100,7 @@ export default {
       data: [],
       cards: [], // 银行卡列表
       addressId: '', // 地址ID
-      cardNumber: '', // 卡号
+      cardId: '',
       payType: 0, // 支付方式  2-paypal 3-stripe
       confirmModal: {}
     };
@@ -200,12 +200,13 @@ export default {
         return;
       }
       // 若有卡或者使用Paypal支付，并选择了Credit／Debit card
+
       this.request('OrdersPay', {
         order_id: this.$route.query.orderId, // 订单号
         address_id:	this.addressId, // 地址id
         balance: this.isBalance, // 是否使用余额
         pay_type: this.payType, //	是	Number	支付方式 2-paypal 3-stripe
-        source: this.cardNumber
+        source: this.cardId
       }).then((res) => {
         let self = this;
         if (res.status === 200) {
@@ -247,15 +248,15 @@ export default {
       // Paypal支付
       if (value === 'PayPal') {
         this.payType = 2;
-        this.cardNumber = '';
+        this.cardId = '';
         return;
       }
       // 银行支付卡号
       this.payType = 3;
-      this.cardNumber = +value;
+      this.cardId = +value;
     },
     // 删除card
-    clickCardDel (cardId, cardNumber) {
+    clickCardDel (cardId) {
       let self = this;
       self.confirmModal = {
         show: true,
@@ -274,8 +275,8 @@ export default {
               });
               self.cards = res.content.cards;
               // 如果是选中的card 被删除
-              if (self.cardNumber === +cardNumber) {
-                self.cardNumber = '';
+              if (self.cardId === +cardId) {
+                self.cardId = '';
               }
             }
           }, err => {
