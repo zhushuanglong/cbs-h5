@@ -233,12 +233,13 @@ export default {
             message: res.msg || 'Payment Failure',
             duration: 1200
           });
-          // setTimeout(function() {
-          //   self.$router.push({path: '/cart/failure?orderId=' + self.$route.query.orderId});
-          // }, 1000);
+          setTimeout(function() {
+            self.$router.push({path: '/cart/failure?orderId=' + self.$route.query.orderId});
+          }, 1000);
         }
       }, err => {
         this.$Toast(err);
+        this.$router.push({path: '/cart/failure?orderId=' + self.$route.query.orderId});
       });
     },
     // radio click
