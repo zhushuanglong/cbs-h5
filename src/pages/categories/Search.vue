@@ -107,7 +107,7 @@
 
     <FloatMenu></FloatMenu>
 
-    <div class="search-empty" v-show="!dataSearch.length">
+    <div class="search-empty" v-show="emptyShow">
       <img src="~img/categories/no_match.png">
       <p class="gray2">No Match Results</p>
     </div>
@@ -122,6 +122,7 @@ export default {
   },
   data () {
     return {
+      emptyShow: false,
       serachTitle: '', // 关键词
       dataSearch: [], // 搜索内容
       filterParams: {}, // 过滤条件
@@ -192,6 +193,7 @@ export default {
     }
     const query = this.$route.query;
     let options = {
+      page: 1,
       cate: query.cate || '',
       title: query.title || ''
     };
@@ -251,6 +253,11 @@ export default {
           }
           // 数据处理
           this.dataSearch = this.dataSearch.concat(res.content.goods);
+          if(option.page === 1 && this.dataSearch.length === 0) {
+            this.emptyShow = true;
+          } else {
+            this.emptyShow = false;
+          }
         } else {
           this.loadingEmpty = true;
           this.loadingContent = 'No More';
