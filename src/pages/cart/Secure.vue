@@ -185,7 +185,7 @@ export default {
           orderId: this.$route.query.orderId,
           addressId: +this.addressId,
           balance: this.isBalance,
-          payType: this.payType
+          payType: this.payType || 3
         }});
       }
     },
