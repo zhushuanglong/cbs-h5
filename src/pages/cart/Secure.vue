@@ -224,9 +224,9 @@ export default {
               message: 'Payment Processing',
               duration: 1200
             });
-            // setTimeout(function() {
-            //   self.$router.push({path: '/cart/successful?orderId=' + self.$route.query.orderId});
-            // }, 1000);
+            setTimeout(function() {
+              self.$router.push({path: '/cart/successful?orderId=' + self.$route.query.orderId});
+            }, 1000);
           }
         } else {
           self.$Toast({
