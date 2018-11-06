@@ -1,6 +1,6 @@
 <template>
   <div class="add-card-main">
-    <topbar :title="topbarTitle" :backUrl="'cart/secure/' + $route.query.orderId"></topbar>
+    <topbar :title="topbarTitle" :backUrl="'cart/secure?orderId=' + $route.query.orderId"></topbar>
     <div class="card-con">
       <div class="card-img"><div class="img"></div></div>
       <div class="card-num">
@@ -36,10 +36,12 @@
       <div class="shipping-con">
         <div class="address-detail">
           <div class="info">
-            <div class="fl">{{address.firstname}}&nbsp;{{address.lastname}}</div>
+            <div class="fl" v-if="!$route.query.cardId">{{address.recipients}}</div>
+            <div class="fl" v-else>{{address.firstname}}&nbsp;{{address.lastname}}</div>
             <div class="fr">+{{address.iphone}}</div>
           </div>
-          <div class="address">{{address.country}}&nbsp;{{address.state}}&nbsp;{{address.city}}&nbsp;{{address.street}}&nbsp;{{address.suburb}}</div>
+          <div class="address" v-if="!$route.query.cardId">{{address.address}}</div>
+          <div class="address" v-else>{{address.country}}&nbsp;{{address.state}}&nbsp;{{address.city}}&nbsp;{{address.street}}&nbsp;{{address.suburb}}</div>
         </div>
       </div>
     </div>
@@ -102,13 +104,13 @@ export default {
       }).then((res) => {
         if (res.status === 200 && res.content) {
           this.data = res.content;
-          // let userAddress = this.data.user_address;
-          // let len = userAddress.length;
-          // for (let i = 0; i < len; i++) {
-          //   if (userAddress[i].is_default === 1) {
-          //     this.addressId = userAddress[i].id;
-          //   }
-          // }
+          let userAddress = this.data.user_address;
+          let len = userAddress.length;
+          for (let i = 0; i < len; i++) {
+            if (userAddress[i].is_default === 1) {
+              this.address = userAddress[i];
+            }
+          }
         }
       }, err => {
         this.$Toast(err);
