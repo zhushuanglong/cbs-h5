@@ -258,7 +258,7 @@ export default {
         this.isFinishedLoading = true;
       }, err => {
         // this.dataSearch = [];
-        this.$Toast(err);
+        // this.$Toast(err);
         this.isFinishedLoading = true;
       });
     },
