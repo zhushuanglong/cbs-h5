@@ -2,7 +2,7 @@
   <div class="shipping-address-main">
     <topbar title="Shipping Address"></topbar>
     <div class="address-con" v-for="item in data">
-      <div class="address-detail">
+      <router-link :to="{path: '/cart/secure', query: {orderId: $route.query.orderId, addressId: item.id}}" class="address-detail">
         <div class="info">
           <div class="fl">{{item.recipients}}</div>
           <div class="fr">{{item.iphone}}</div>
@@ -11,7 +11,7 @@
         <div class="pos">
           <i class="iconfont gray2">&#xe62e;</i>
         </div>
-      </div>
+      </router-link>
       <div class="operate">
         <div class="fl">
           <input type="radio" name="radio" @click="addressDefault(item.id)" v-if="item.is_default === 1" checked>
@@ -29,7 +29,7 @@
       </div>
     </div>
     <div class="global-fixed-btn">
-      <router-link :to="{path: '/cart/addAddress', query: {orderId: this.$route.query.orderId || ''}}" class="fixed-btn">+ ADD NEW ADDRESS</router-link>
+      <router-link :to="{path: '/cart/addAddress', query: {orderId: $route.query.orderId || ''}}" class="fixed-btn">+ ADD NEW ADDRESS</router-link>
     </div>
     <confirm :show.sync="confirmModal.show" :title="confirmModal.title"  :content="confirmModal.content" :on-ok="confirmModal.action"  okText="Yes"></confirm>
   </div>
@@ -40,7 +40,8 @@ export default {
   data () {
     return {
       data: [],
-      confirmModal: {}
+      confirmModal: {},
+      checkedAddressId: ''
     }
   },
   computed: {
@@ -132,6 +133,7 @@ export default {
     background-color: #fff;
   }
   .address-detail {
+    display: block;
     position: relative;
     display: block;
     padding: 20/@rem;

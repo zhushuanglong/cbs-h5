@@ -10,12 +10,12 @@
           <i class="iconfont gray2">&#xe62e;</i>
         </router-link>
         <router-link :to="{path: '/cart/shippingAddress', query: {orderId: $route.query.orderId}}" class="address-detail" v-else>
-          <template v-for="item in data.user_address" v-if="item.is_default === 1">
+          <template v-if="addressData.id">
             <div class="info">
-              <div class="fl">{{item.recipients}}</div>
-              <div class="fr">+{{item.iphone}}</div>
+              <div class="fl">{{addressData.recipients}}</div>
+              <div class="fr">+{{addressData.iphone}}</div>
             </div>
-            <div class="address">{{item.address}}</div>
+            <div class="address">{{addressData.address}}</div>
             <div class="pos">
               <i class="iconfont gray2">&#xe62e;</i>
             </div>
@@ -102,7 +102,8 @@ export default {
       addressId: '', // 地址ID
       cardId: '',
       payType: 0, // 支付方式  2-paypal 3-stripe
-      confirmModal: {}
+      confirmModal: {},
+      addressData: {} // 地址数据
     };
   },
   computed: {},
@@ -126,8 +127,13 @@ export default {
           let userAddress = this.data.user_address;
           let len = userAddress.length;
           for (let i = 0; i < len; i++) {
-            if (userAddress[i].is_default === 1) {
+            if (userAddress[i].id == this.$route.query.addressId) {
               this.addressId = userAddress[i].id;
+              this.addressData = userAddress[i];
+              return false;
+            } else if (userAddress[i].is_default == 1) {
+              this.addressId = userAddress[i].id;
+              this.addressData = userAddress[i];
             }
           }
         } else {
