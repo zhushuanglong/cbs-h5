@@ -58,20 +58,37 @@
         <!-- <div class="pos">
           <i class="iconfont gray2">&#xe62e;</i>
         </div> -->
-        <div class="card-detail" v-for="item in cards">
+        <div class="card-detail" v-for="(item, index) in cards">
           <div class="card-number">
-            <router-link class="fl" :to="{path: '/cart/addCard', query: {orderId: $route.query.orderId || '', cardId: item.id}}">
-              <span>Card No. :</span>
-              <span class="gray2">{{item.number}}</span>
-              <i class="iconfont gray2">&#xe62e;</i>
-            </router-link>
-            <div class="fr" @click="clickCardDel(item.id)">
-              <i class="iconfont">&#xe63d;</i>Delete
+            <div class="card-top">
+              <router-link class="fl" :to="{path: '/cart/addCard', query: {orderId: $route.query.orderId || '', cardId: item.id}}">
+                <span>Card No. :</span>
+                <span class="gray2">{{item.number}}</span>
+              </router-link>
+              <div class="fr" @click="clickCardDel(item.id)">
+                <i class="iconfont">&#xe63d;</i>
+                <i class="iconfont">&#xe611;</i>
+              </div>
+            </div>
+            <div class="card-info" v-show="index == showCardNum">
+             <div class="fl br">
+              <p class="p1">EXPIRE</p>
+              <p class="p2">
+                <input class="gray2" type="text" placeholder="06/23" v-model="exp">
+              </p>
+            </div>
+            <div class="fl pl">
+              <p class="p1">CVC</p>
+              <p class="p2">
+                <input class="gray2" type="text" placeholder="000" v-model="cvc">
+              </p>
+            </div>
             </div>
           </div>
           <div class="pos-abs">
-            <input type="radio" name="card" @click="radioClick(item.id)">
+            <input type="radio" name="card" @click="radioClick(item.id, index)">
           </div>
+
         </div>
         <div class="card-new" @click="addNewCard">+ Add a new card</div>
       </li>
@@ -103,7 +120,10 @@ export default {
       cardId: '',
       payType: 0, // 支付方式  2-paypal 3-stripe
       confirmModal: {},
-      addressData: {} // 地址数据
+      addressData: {}, // 地址数据
+      exp: '', // 卡日期
+      cvc: '', // 卡到期
+      showCardNum: null // 显示卡
     };
   },
   computed: {},
@@ -212,7 +232,9 @@ export default {
         address_id:	this.addressId, // 地址id
         balance: this.isBalance, // 是否使用余额
         pay_type: this.payType, //	是	Number	支付方式 2-paypal 3-stripe
-        source: this.cardId
+        source: this.cardId,
+        exp: this.exp,
+        cvc: this.cvc
       }).then((res) => {
         let self = this;
         if (res.status === 200) {
@@ -250,16 +272,21 @@ export default {
       });
     },
     // radio click
-    radioClick (value) {
+    radioClick (value, index) {
+      this.exp = '';
+      this.cvc = '';
       // Paypal支付
       if (value === 'PayPal') {
         this.payType = 2;
         this.cardId = '';
+        this.showCardNum = null;
         return;
       }
+      this.showCardNum = index;
       // 银行支付卡号
       this.payType = 3;
       this.cardId = +value;
+
     },
     // 删除card
     clickCardDel (cardId) {
@@ -426,24 +453,62 @@ export default {
       }
       .card-number {
         .whl(640, 100);
+        height: auto;
         background: rgba(243,242,242,1);
         border-radius: 10/@rem;
-        padding: 0 20/@rem;
         font-size: 28/@rem;
-        .clearfix();
-        .fl {
-          .height(100);
-          i {
-            vertical-align: middle;
+
+        .card-top {
+          padding: 0 20/@rem;
+          .clearfix();
+          .fl {
+            .height(100);
+            i {
+              vertical-align: middle;
+            }
+          }
+          .fr {
+            font-size: 24/@rem;
+            color: @gray2;
+            i {
+              font-size: 34/@rem;
+              margin-right: 5/@rem;
+              vertical-align: middle;
+            }
           }
         }
-        .fr {
-          font-size: 24/@rem;
-          color: @gray2;
-          i {
-            font-size: 34/@rem;
-            margin-right: 5/@rem;
-            vertical-align: middle;
+        .card-info {
+          border-top: 1px solid @gray4;
+          height: 146/@rem;
+          .clearfix();
+          .fl {
+            width: 50%;
+            height: 145/@rem;
+            text-align: center;
+          }
+          .pl {
+            padding-left: 20/@rem;
+          }
+          .br {
+            border-right: 1px solid @gray4;
+          }
+          p {
+            margin-bottom: 10/@rem;
+            .height(40);
+          }
+          .p1 {
+            margin-top: 20/@rem;
+          }
+          .p2 {
+            input {
+              width: 200/@rem;
+              .height(60);
+              // background-color: #f3f2f0;
+              border-radius: 5/@rem;
+              padding: 0 20/@rem;
+              text-align: center;
+              color: #222;
+            }
           }
         }
       }
