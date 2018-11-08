@@ -9,7 +9,7 @@
         </li>
         <li>
           <div class="name">CATEGORIES</div>
-          <router-link :to="{path: '/categories'}"><i class="iconfont">&#xe620;</i></router-link>
+          <router-link :to="{path: '/categories'}"><i class="iconfont">&#xe69a;</i></router-link>
         </li>
         <li>
           <div class="name">CART</div>

@@ -68,27 +68,6 @@
       </div>
     </div>
 
-    <!-- <div class="detail-float-menu" v-show="isShowFloatMenu">
-      <div class="btn-menu" :class="{'cur': isBackMenuShow}" @click="backMenuClick">{{isBackMenuShow ? 'BACK' : 'MENU'}}</div>
-      <ul class="a-fadeinB" :class="{'show': isBackMenuShow}">
-        <li>
-          <div class="name">HOME</div>
-          <router-link :to="{path: '/home'}"><i class="iconfont">&#xe618;</i></router-link>
-        </li>
-        <li>
-          <div class="name">SEARCH</div>
-          <router-link :to="{path: '/search'}"><i class="iconfont">&#xe620;</i></router-link>
-        </li>
-        <li>
-          <div class="name">CART</div>
-          <router-link :to="{path: '/cart'}"><i class="iconfont">&#xe624;</i></router-link>
-        </li>
-        <li>
-          <div class="name">SHARE</div>
-          <router-link :to="{path: '/share'}"><i class="iconfont">&#xe684;</i></router-link>
-        </li>
-      </ul>
-    </div> -->
     <FloatMenu :show="isShowFloatMenu"></FloatMenu>
     <div class="bg-mask" :class="{'show': isMaskShow}" @click="changeMaskClick"></div>
     <!-- 弹出SKU -->
