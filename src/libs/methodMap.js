@@ -90,6 +90,8 @@ const methodMap = {
     CouponReceive: {url: '/coupons/receive', method: 'post'},
     /** 优惠券apply */
     CouponsApply: {url: '/coupons/apply', method: 'post'},
+    /**获取货币列表 */
+    Currency: {url: '/currency',method: 'post'}
 };
 
 export default methodMap;

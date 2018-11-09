@@ -3,7 +3,8 @@ import App from './App';
 import router from './router';
 import initComponents from './initComponents';
 import Http from './libs/http';
-import Mint from 'mint-ui'
+import Mint from 'mint-ui';
+import store from './store'
 initComponents(Vue);
 Vue.use(Http);
 Vue.use(Mint)
@@ -25,6 +26,7 @@ Vue.prototype.$Indicator = Indicator;
 new Vue({
   el: '#app',
   router,
+  store,
   template: '<App/>',
   components: { App }
 });
