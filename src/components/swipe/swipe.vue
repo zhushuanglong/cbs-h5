@@ -580,7 +580,7 @@
       text-align: center;
       right: 50/@rem;
       background-color: #C7C6CC;
-      padding: 0 25/@rem;
+      padding: 0 20/@rem;
       border-radius: 60/@rem;
       height: 45/@rem;
       line-height: 45/@rem;
