@@ -24,7 +24,7 @@ export default {
       {
         name: 'Categories',
         url: '/categories',
-        icon: '&#xe699;',
+        icon: '&#xe69a;',
         aicon: '&#xe696;'
       },
       {

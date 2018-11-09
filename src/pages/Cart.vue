@@ -28,9 +28,11 @@
               <div class="sku" v-for="(prop, key, index) in item.props" :class="{'mt': index === 1}">{{prop}}</div>
               <div class="num">{{item.num}} x ${{item.price}}</div>
               <div class="price">${{item.num * (item.price * 100) / 100}}</div>
-              <div class="reduce" @click="reduce(item)"><i class="iconfont">&#xe62a;</i></div>
+              <div class="reduce" @click="reduce(item)" :class="{'ban': item.num <= 1}"><i class="iconfont">&#xe62a;</i></div>
               <div class="add" @click="add(item)"><i class="iconfont">&#xe66f;</i></div>
             </div>
+            <!-- delete -->
+            <div class="btn-delete" @click.sync="removeGoods(item)">Remove</div>
           </div>
         </div>
         <div class="cart-discounts cart-rel">
@@ -80,7 +82,8 @@ export default {
       totalPrice: 0,
       confirmModal: {},
       cartEmpty: false,
-      couponPrice: 0 // 券价
+      couponPrice: 0, // 券价
+      touchEvent: {} // touch事件
     };
   },
   computed: {},
@@ -113,6 +116,11 @@ export default {
           } else {
             this.cartEmpty = true;
           }
+          // 绑定remove
+          let self = this;
+          setTimeout(function() {
+            self.removeGoodsHandler();
+          }, 300);
         } else {
           this.cartEmpty = true;
           // this.$router.push({name: 'sign'})
@@ -169,38 +177,10 @@ export default {
     // 减少 - 登录后
     reduce (item) {
       let self = this;
-      if (item.num <= 0) {
-        return;
-      }
-      // item.num--;
-      // this.totalPrice = this.totalPrice - (+item.price);
-      clearTimeout(self.reduceSt);
       if (item.num <= 1) {
-        self.confirmModal = {
-          show: true,
-          title: 'Confirmed to delete?',
-          onText: 'Yes',
-          content: `Delete the product!`,
-          action: function () {
-            self.confirmModal.show = false;
-            self.reduceSt = setTimeout(function() {
-              self.request('CartsAdd', {
-                good_id: item.id,
-                sku_id: item.sku_id,
-                num: 0
-              }).then((res) => {
-                if (res.status === 200) {
-                  self.cartsData = res.content;
-                  self.totalPrice = (self.totalPrice * 100 - +item.price * 100) / 100;
-                }
-              }, err => {
-                self.$Toast(err);
-              });
-            }, 1000);
-          }
-        }
         return;
       }
+      clearTimeout(self.reduceSt);
       item.num--;
       self.totalPrice = (self.totalPrice * 100 - +item.price * 100) / 100;
       // 函数节流
@@ -217,6 +197,127 @@ export default {
           self.$Toast(err);
         });
       }, 1000);
+    },
+    // 删除
+    removeGoods (item) {
+      let self = this;
+      self.confirmModal = {
+        show: true,
+        title: 'Confirmed to delete?',
+        onText: 'Yes',
+        content: `Delete the product!`,
+        // desc: '',
+        action: function () {
+          self.confirmModal.show = false;
+          self.reduceSt = setTimeout(function() {
+            self.request('CartsDelete', {
+              cart_id: item.cart_id
+            }).then((res) => {
+              if (res.status === 200) {
+                if (self.cartsData.goods && self.cartsData.goods.length) {
+                  self.cartsData = res.content;
+                  // 重新计算价格
+                  self.computeTotalPrice();
+                } else {
+                  self.cartEmpty = true;
+                }
+              }
+            }, err => {
+              self.$Messagebox({
+                title: err || 'system error',
+                type: 'error'
+              });
+            });
+          }, 1000);
+        }
+      }
+    },
+    // 删除助手 - 手势
+    removeGoodsHandler () {
+      let self = this;
+      //返回角度
+      function GetSlideAngle(dx, dy) {
+        return (Math.atan2(dy, dx) * 180) / Math.PI;
+      }
+
+      //根据起点和终点返回方向 1：向上，2：向下，3：向左，4：向右,0：未滑动
+      function GetSlideDirection(startX, startY, endX, endY) {
+        var dy = startY - endY;
+        var dx = endX - startX;
+        var result = 0;
+        //如果滑动距离太短
+
+        if (Math.abs(dx) < 2 && Math.abs(dy) < 2) {
+          return result;
+        }
+
+        var angle = GetSlideAngle(dx, dy);
+        if (angle >= -45 && angle < 45) {
+          result = 4;
+        } else if (angle >= 45 && angle < 135) {
+          result = 1;
+        } else if (angle >= -135 && angle < -45) {
+          result = 2;
+        } else if (
+          (angle >= 135 && angle <= 180) ||
+          (angle >= -180 && angle < -135)
+        ) {
+          result = 3;
+        }
+
+        return result;
+      }
+
+      //滑动处理
+      let goodsList = document.getElementsByClassName("detail");
+      let len = goodsList.length;
+      for (let i = 0; i < len; i++) {
+        (function(num){
+          goodsList[num].addEventListener("touchstart", function(ev) {
+            // ev.preventDefault();
+            self.touchEvent.startX = ev.touches[0].pageX;
+            self.touchEvent.startY = ev.touches[0].pageY;
+          }, false);
+
+          goodsList[num].addEventListener("touchmove", function(ev) {
+            // ev.preventDefault();
+            self.touchEvent.endX = ev.changedTouches[0].pageX;
+            self.touchEvent.endY = ev.changedTouches[0].pageY;
+            var direction = GetSlideDirection(self.touchEvent.startX, self.touchEvent.startY, self.touchEvent.endX, self.touchEvent.endY);
+
+            switch (direction) {
+              case 0:
+                // 没滑动
+                break;
+              case 1:
+                // 向上
+                break;
+              case 2:
+                // 向下
+                break;
+              case 3:
+                // 向左
+                if (goodsList[num] && goodsList[num].className.indexOf('a-fadeinMr') === -1) {
+                  goodsList[num].className = 'detail a-fadeinMr';
+                }
+                break;
+              case 4:
+                // 向右
+                // to do sth
+                if (goodsList[num].className.indexOf('a-fadeinMr') !== -1) {
+                  goodsList[num].className = 'detail';
+                }
+                break;
+              default:
+            }
+          }, false);
+
+          goodsList[num].addEventListener("touchend", function(ev) {
+            // ev.preventDefault();
+            self.touchEvent = {};
+          }, false);
+        })(i);
+      }
     },
     // 弹出券
     clickShowCoupon () {
@@ -282,7 +383,7 @@ export default {
       float: left;
       display: inline-block;
       font-size: 24/@rem;
-      color: @red;
+      color: @orange;
     }
     .img {
       .wh(60, 28);
@@ -303,6 +404,7 @@ export default {
   .cart-list {
     margin-bottom:10/@rem;
     .detail {
+      position: relative;
       background-color: #fff;
       padding: 20/@rem;
       // margin-bottom: 18/@rem;
@@ -339,7 +441,7 @@ export default {
           top: 142/@rem;
           right: -80/@rem;
           text-algin: right;
-          color: @red;
+          color: @fred;
         }
         .num {
           position: absolute;
@@ -355,6 +457,11 @@ export default {
           right: -50/@rem;
           .wh(50, 50);
         }
+        .reduce {
+          &.ban {
+            color: #c7c7c7;
+          }
+        }
         .add {
           position: absolute;
           top: -6/@rem;
@@ -365,6 +472,16 @@ export default {
           .wh(50, 50);
         }
       }
+    }
+    .btn-delete {
+      position: absolute;
+      top: 0;
+      right: -150/@rem;
+      .whl(150, 220);
+      text-align: center;
+      color: #fff;
+      font-size: 24/@rem;
+      background-color: @orange;
     }
   }
   .cart-rel {
@@ -425,9 +542,9 @@ export default {
       display: inline-block;
       .whl(540, 80);
       margin-top: 45/@rem;
-      border: 1px solid @red;
+      border: 1px solid @orange;
       border-radius: 10/@rem;
-      color: @red;
+      color: @orange;
     }
   }
 }

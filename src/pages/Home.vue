@@ -2,24 +2,37 @@
   <div class="home-main" ref="indexMain">
     <homeindex></homeindex>
     <bottombar></bottombar>
+    <FloatTop :show="isShowFloatTop"></FloatTop>
   </div>
 </template>
 
 <script>
-import homeindex from './home/Index'
+import homeindex from './home/Index';
+import FloatTop from 'common/FloatTop';
 export default {
   name: 'home',
   components: {
-    homeindex
+    homeindex,
+    FloatTop
   },
   data () {
     return {
-      store_goods: [] // 商品数据
+      store_goods: [], // 商品数据
+      isShowFloatTop: false
     };
   },
   computed: {},
   mounted () {
     this.getHomeData();
+    // 滚动事件
+    let self = this;
+    let t = document.documentElement.scrollTop || document.body.scrollTop;
+    let h = document.documentElement.clientHeight || document.body.clientHeight;
+    window.onscroll = function () {
+      t = document.documentElement.scrollTop || document.body.scrollTop;
+      self.isShowFloatTop = t >= h * 1.5;
+    }
+    self.isShowFloatTop = t >= h * 1.5;
   },
   watch: {},
   methods: {

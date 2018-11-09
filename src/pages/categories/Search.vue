@@ -106,8 +106,9 @@
     <div class="loading" v-show="dataSearch.length">{{loadingContent}}</div>
 
     <FloatMenu></FloatMenu>
+    <FloatTop :show="isShowFloatTop"></FloatTop>
 
-    <div class="search-empty" v-show="!dataSearch.length">
+    <div class="search-empty" v-show="emptyShow">
       <img src="~img/categories/no_match.png">
       <p class="gray2">No Match Results</p>
     </div>
@@ -116,12 +117,15 @@
 
 <script>
 import FloatMenu from 'common/FloatMenu';
+import FloatTop from 'common/FloatTop';
 export default {
   components: {
-    FloatMenu
+    FloatMenu,
+    FloatTop
   },
   data () {
     return {
+      emptyShow: false,
       serachTitle: '', // 关键词
       dataSearch: [], // 搜索内容
       filterParams: {}, // 过滤条件
@@ -134,6 +138,7 @@ export default {
       isShowSortCon: false, // 显示sort内容
       isShowFilterCon: false, // 显示filter内容
       loadingContent: '', // 加载提示
+      isShowFloatTop: false,
       searchParams: { // 搜索的参数
         cate: '',
         title: '', // 搜索内容
@@ -192,6 +197,7 @@ export default {
     }
     const query = this.$route.query;
     let options = {
+      page: 1,
       cate: query.cate || '',
       title: query.title || '',
       page: 1
@@ -199,6 +205,16 @@ export default {
     this.getProductsList(options);
     this.loadMore();
     this.getHotWords();
+
+    // 滚动事件
+    let self = this;
+    let t = document.documentElement.scrollTop || document.body.scrollTop;
+    let h = document.documentElement.clientHeight || document.body.clientHeight;
+    window.onscroll = function () {
+      t = document.documentElement.scrollTop || document.body.scrollTop;
+      self.isShowFloatTop = t >= h * 1.5;
+    }
+    self.isShowFloatTop = t >= h * 1.5;
   },
   methods: {
     // 获取热门搜索词
@@ -252,6 +268,11 @@ export default {
           }
           // 数据处理
           this.dataSearch = this.dataSearch.concat(res.content.goods);
+          if(option.page === 1 && this.dataSearch.length === 0) {
+            this.emptyShow = true;
+          } else {
+            this.emptyShow = false;
+          }
         } else {
           this.loadingEmpty = true;
           this.loadingContent = 'No More';
@@ -259,7 +280,7 @@ export default {
         this.isFinishedLoading = true;
       }, err => {
         // this.dataSearch = [];
-        this.$Toast(err);
+        // this.$Toast(err);
         this.isFinishedLoading = true;
       });
     },

@@ -10,12 +10,12 @@
           <i class="iconfont gray2">&#xe62e;</i>
         </router-link>
         <router-link :to="{path: '/cart/shippingAddress', query: {orderId: $route.query.orderId}}" class="address-detail" v-else>
-          <template v-for="item in data.user_address" v-if="item.is_default === 1">
+          <template v-if="addressData.id">
             <div class="info">
-              <div class="fl">{{item.recipients}}</div>
-              <div class="fr">+{{item.iphone}}</div>
+              <div class="fl">{{addressData.recipients}}</div>
+              <div class="fr">+{{addressData.iphone}}</div>
             </div>
-            <div class="address">{{item.address}}</div>
+            <div class="address">{{addressData.address}}</div>
             <div class="pos">
               <i class="iconfont gray2">&#xe62e;</i>
             </div>
@@ -58,20 +58,37 @@
         <!-- <div class="pos">
           <i class="iconfont gray2">&#xe62e;</i>
         </div> -->
-        <div class="card-detail" v-for="item in cards">
+        <div class="card-detail" v-for="(item, index) in cards">
           <div class="card-number">
-            <router-link class="fl" :to="{path: '/cart/addCard', query: {orderId: $route.query.orderId || '', cardId: item.id}}">
-              <span>Card No. :</span>
-              <span class="gray2">{{item.number}}</span>
-              <i class="iconfont gray2">&#xe62e;</i>
-            </router-link>
-            <div class="fr" @click="clickCardDel(item.id, item.number)">
-              <i class="iconfont">&#xe63d;</i>Delete
+            <div class="card-top">
+              <router-link class="fl" :to="{path: '/cart/addCard', query: {orderId: $route.query.orderId || '', cardId: item.id}}">
+                <span>Card No. :</span>
+                <span class="gray2">{{item.number}}</span>
+              </router-link>
+              <div class="fr" @click="clickCardDel(item.id)">
+                <i class="iconfont">&#xe63d;</i>
+                <i class="iconfont">&#xe611;</i>
+              </div>
+            </div>
+            <div class="card-info" v-show="index == showCardNum">
+             <div class="fl br">
+              <p class="p1">EXPIRE</p>
+              <p class="p2">
+                <input class="gray2" type="text" placeholder="06/23" v-model="exp">
+              </p>
+            </div>
+            <div class="fl pl">
+              <p class="p1">CVC</p>
+              <p class="p2">
+                <input class="gray2" type="text" placeholder="000" v-model="cvc">
+              </p>
+            </div>
             </div>
           </div>
           <div class="pos-abs">
-            <input type="radio" name="card" @click="radioClick(item.number)">
+            <input type="radio" name="card" @click="radioClick(item.id, index)">
           </div>
+
         </div>
         <div class="card-new" @click="addNewCard">+ Add a new card</div>
       </li>
@@ -100,9 +117,13 @@ export default {
       data: [],
       cards: [], // 银行卡列表
       addressId: '', // 地址ID
-      cardNumber: '', // 卡号
+      cardId: '',
       payType: 0, // 支付方式  2-paypal 3-stripe
-      confirmModal: {}
+      confirmModal: {},
+      addressData: {}, // 地址数据
+      exp: '', // 卡日期
+      cvc: '', // 卡到期
+      showCardNum: null // 显示卡
     };
   },
   computed: {},
@@ -126,8 +147,13 @@ export default {
           let userAddress = this.data.user_address;
           let len = userAddress.length;
           for (let i = 0; i < len; i++) {
-            if (userAddress[i].is_default === 1) {
+            if (userAddress[i].id == this.$route.query.addressId) {
               this.addressId = userAddress[i].id;
+              this.addressData = userAddress[i];
+              return false;
+            } else if (userAddress[i].is_default == 1) {
+              this.addressId = userAddress[i].id;
+              this.addressData = userAddress[i];
             }
           }
         } else {
@@ -185,7 +211,7 @@ export default {
           orderId: this.$route.query.orderId,
           addressId: +this.addressId,
           balance: this.isBalance,
-          payType: this.payType
+          payType: this.payType || 3
         }});
       }
     },
@@ -199,13 +225,28 @@ export default {
         this.$Toast('Please select payment method');
         return;
       }
+
+      // 如果是卡支付
+      if (this.payType === 3) {
+        if (!this.exp) {
+          this.$Toast('Please fill in exp');
+          return;
+        }
+        if (!this.cvc) {
+          this.$Toast('Please fill in cvc');
+          return;
+        }
+      }
       // 若有卡或者使用Paypal支付，并选择了Credit／Debit card
+
       this.request('OrdersPay', {
         order_id: this.$route.query.orderId, // 订单号
         address_id:	this.addressId, // 地址id
         balance: this.isBalance, // 是否使用余额
         pay_type: this.payType, //	是	Number	支付方式 2-paypal 3-stripe
-        source: this.cardNumber
+        source: this.cardId,
+        exp: this.exp,
+        cvc: this.cvc
       }).then((res) => {
         let self = this;
         if (res.status === 200) {
@@ -224,37 +265,43 @@ export default {
               message: 'Payment Processing',
               duration: 1200
             });
-            // setTimeout(function() {
-            //   self.$router.push({path: '/cart/successful?orderId=' + self.$route.query.orderId});
-            // }, 1000);
+            setTimeout(function() {
+              self.$router.push({path: '/cart/successful?orderId=' + self.$route.query.orderId});
+            }, 1000);
           }
         } else {
           self.$Toast({
             message: res.msg || 'Payment Failure',
             duration: 1200
           });
-          // setTimeout(function() {
-          //   self.$router.push({path: '/cart/failure?orderId=' + self.$route.query.orderId});
-          // }, 1000);
+          setTimeout(function() {
+            self.$router.push({path: '/cart/failure?orderId=' + self.$route.query.orderId});
+          }, 1000);
         }
       }, err => {
         this.$Toast(err);
+        this.$router.push({path: '/cart/failure?orderId=' + self.$route.query.orderId});
       });
     },
     // radio click
-    radioClick (value) {
+    radioClick (value, index) {
+      this.exp = '';
+      this.cvc = '';
       // Paypal支付
       if (value === 'PayPal') {
         this.payType = 2;
-        this.cardNumber = '';
+        this.cardId = '';
+        this.showCardNum = null;
         return;
       }
+      this.showCardNum = index;
       // 银行支付卡号
       this.payType = 3;
-      this.cardNumber = +value;
+      this.cardId = +value;
+
     },
     // 删除card
-    clickCardDel (cardId, cardNumber) {
+    clickCardDel (cardId) {
       let self = this;
       self.confirmModal = {
         show: true,
@@ -273,8 +320,8 @@ export default {
               });
               self.cards = res.content.cards;
               // 如果是选中的card 被删除
-              if (self.cardNumber === +cardNumber) {
-                self.cardNumber = '';
+              if (self.cardId === +cardId) {
+                self.cardId = '';
               }
             }
           }, err => {
@@ -418,24 +465,62 @@ export default {
       }
       .card-number {
         .whl(640, 100);
+        height: auto;
         background: rgba(243,242,242,1);
         border-radius: 10/@rem;
-        padding: 0 20/@rem;
         font-size: 28/@rem;
-        .clearfix();
-        .fl {
-          .height(100);
-          i {
-            vertical-align: middle;
+
+        .card-top {
+          padding: 0 20/@rem;
+          .clearfix();
+          .fl {
+            .height(100);
+            i {
+              vertical-align: middle;
+            }
+          }
+          .fr {
+            font-size: 24/@rem;
+            color: @gray2;
+            i {
+              font-size: 34/@rem;
+              margin-right: 5/@rem;
+              vertical-align: middle;
+            }
           }
         }
-        .fr {
-          font-size: 24/@rem;
-          color: @gray2;
-          i {
-            font-size: 34/@rem;
-            margin-right: 5/@rem;
-            vertical-align: middle;
+        .card-info {
+          border-top: 1px solid @gray4;
+          height: 146/@rem;
+          .clearfix();
+          .fl {
+            width: 50%;
+            height: 145/@rem;
+            text-align: center;
+          }
+          .pl {
+            padding-left: 20/@rem;
+          }
+          .br {
+            border-right: 1px solid @gray4;
+          }
+          p {
+            margin-bottom: 10/@rem;
+            .height(40);
+          }
+          .p1 {
+            margin-top: 20/@rem;
+          }
+          .p2 {
+            input {
+              width: 200/@rem;
+              .height(60);
+              // background-color: #f3f2f0;
+              border-radius: 5/@rem;
+              padding: 0 20/@rem;
+              text-align: center;
+              color: #222;
+            }
           }
         }
       }

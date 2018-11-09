@@ -1,6 +1,6 @@
 let domain = '';
 if(process.env.NODE_ENV === 'production') {
-  domain = 'http://api.cucoe.net'
+  domain = 'https://api.waiwaimall.com'
 } else {
   domain = 'http://api.cucoe.net'
 }

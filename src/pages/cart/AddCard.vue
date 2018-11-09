@@ -1,6 +1,6 @@
 <template>
   <div class="add-card-main">
-    <topbar :title="topbarTitle" :backUrl="'cart/secure/' + $route.query.orderId"></topbar>
+    <topbar :title="topbarTitle" :backUrl="'cart/secure?orderId=' + $route.query.orderId"></topbar>
     <div class="card-con">
       <div class="card-img"><div class="img"></div></div>
       <div class="card-num">
@@ -36,10 +36,12 @@
       <div class="shipping-con">
         <div class="address-detail">
           <div class="info">
-            <div class="fl">{{address.firstname}}&nbsp;{{address.lastname}}</div>
+            <div class="fl" v-if="!$route.query.cardId">{{address.recipients}}</div>
+            <div class="fl" v-else>{{address.firstname}}&nbsp;{{address.lastname}}</div>
             <div class="fr">+{{address.iphone}}</div>
           </div>
-          <div class="address">{{address.country}}&nbsp;{{address.state}}&nbsp;{{address.city}}&nbsp;{{address.street}}&nbsp;{{address.suburb}}</div>
+          <div class="address" v-if="!$route.query.cardId">{{address.address}}</div>
+          <div class="address" v-else>{{address.country}}&nbsp;{{address.state}}&nbsp;{{address.city}}&nbsp;{{address.street}}&nbsp;{{address.suburb}}</div>
         </div>
       </div>
     </div>
@@ -102,13 +104,13 @@ export default {
       }).then((res) => {
         if (res.status === 200 && res.content) {
           this.data = res.content;
-          // let userAddress = this.data.user_address;
-          // let len = userAddress.length;
-          // for (let i = 0; i < len; i++) {
-          //   if (userAddress[i].is_default === 1) {
-          //     this.addressId = userAddress[i].id;
-          //   }
-          // }
+          let userAddress = this.data.user_address;
+          let len = userAddress.length;
+          for (let i = 0; i < len; i++) {
+            if (userAddress[i].is_default === 1) {
+              this.address = userAddress[i];
+            }
+          }
         }
       }, err => {
         this.$Toast(err);
@@ -166,25 +168,13 @@ export default {
       this.request('OrdersPay', payData).then((res) => {
         let self = this;
         if (res.status === 200) {
-          if (self.payType === 2 && res.content) {
-            self.$Toast({
-              message: 'Payment Processing',
-              duration: 5000
-            });
-            // 如果是PayPal去支付页面
-            setTimeout(function() {
-              window.location.href = res.content.payUrl;
-            }, 1000);
-          }
-          if (self.payType === 3) {
-            self.$Toast({
-              message: 'Payment Success',
-              duration: 1200
-            });
-            setTimeout(function() {
-              self.$router.push({path: '/cart/successful?orderId=' + self.$route.query.orderId});
-            }, 1000);
-          }
+          self.$Toast({
+            message: 'Payment Success',
+            duration: 1200
+          });
+          setTimeout(function() {
+            self.$router.push({path: '/cart/successful?orderId=' + self.$route.query.orderId});
+          }, 1000);
         } else {
           self.$Toast({
             message: res.msg || 'Payment Failure',

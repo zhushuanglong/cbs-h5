@@ -9,7 +9,7 @@
         </li>
         <li>
           <div class="name">CATEGORIES</div>
-          <router-link :to="{path: '/categories'}"><i class="iconfont">&#xe620;</i></router-link>
+          <router-link :to="{path: '/categories'}"><i class="iconfont">&#xe69a;</i></router-link>
         </li>
         <li>
           <div class="name">CART</div>
@@ -63,7 +63,7 @@ export default {
     position: fixed;
     z-index: 101;
     right: 30/@rem;
-    bottom: 200/@rem;
+    bottom: 320/@rem;
     width: 88/@rem;
     height: 88/@rem;
 
