@@ -22,13 +22,15 @@
         </ul>
       </div>
     </div>
-    <float-menu></float-menu>
+    <FloatMenu></FloatMenu>
+    <FloatTop :show="isShowFloatTop"></FloatTop>
   </div>
 </template>
 <script>
 import Countdown from 'common/Countdown';
 import GoodsList from 'common/GoodsList';
-import FloatMenu from 'common/FloatMenu'
+import FloatMenu from 'common/FloatMenu';
+import FloatTop from 'common/FloatTop';
 export default {
   data() {
     return {
@@ -45,16 +47,30 @@ export default {
       couponShow: false,
       coupons: [],
       activityId: 0,
+      // isShowFloatMenu: false,
+      isShowFloatTop: false
     }
   },
   components: {
     Countdown,
     GoodsList,
-    FloatMenu
+    FloatMenu,
+    FloatTop
   },
   mounted() {
     this.activityId = this.$route.query.activity_id || 0
     this.getPromotion();
+    // 滚动事件
+    let self = this;
+    let t = document.documentElement.scrollTop || document.body.scrollTop;
+    let h = document.documentElement.clientHeight || document.body.clientHeight;
+    window.onscroll = function () {
+      t = document.documentElement.scrollTop || document.body.scrollTop;
+      // self.isShowFloatMenu = t >= h * 1.5;
+      self.isShowFloatTop = t >= h * 1.5;
+    }
+    // self.isShowFloatMenu = t >= h * 1.5;
+    self.isShowFloatTop = t >= h * 1.5;
   },
   conputed: {
     title: function() {
@@ -66,15 +82,15 @@ export default {
       } else if (activityType === 'return') {
         // 满返
       } else if(activityType === 'discount') {
-        // 多件多折 
+        // 多件多折
       } else if(activityType === 'wholesale') {
-        // X元n件 
+        // X元n件
       } else if(activityType === 'limit') {
-        // 限时特价 
+        // 限时特价
       } else if(activityType === 'quantity') {
-        // 限量秒杀 
+        // 限量秒杀
       } else if(activityType === 'give') {
-        // 买n免1 
+        // 买n免1
       }
     }
   },
@@ -85,8 +101,8 @@ export default {
     },
     promotionsInfo() {
       const nowTime = new Date().getTime();
-      const pTime = new Date(this.promotions.promotion_start).getTime(); 
-      let eTime = new Date(this.promotions.promotion_end).getTime(); 
+      const pTime = new Date(this.promotions.promotion_start).getTime();
+      let eTime = new Date(this.promotions.promotion_end).getTime();
       // 开始时间大于现在时间 未开始
       if(pTime > nowTime) {
         this.startEndDesc = 'Start at';
@@ -208,7 +224,7 @@ export default {
       }
     }
   }
- 
+
 }
 </style>
 

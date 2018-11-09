@@ -106,6 +106,7 @@
     <div class="loading" v-show="dataSearch.length">{{loadingContent}}</div>
 
     <FloatMenu></FloatMenu>
+    <FloatTop :show="isShowFloatTop"></FloatTop>
 
     <div class="search-empty" v-show="emptyShow">
       <img src="~img/categories/no_match.png">
@@ -116,9 +117,11 @@
 
 <script>
 import FloatMenu from 'common/FloatMenu';
+import FloatTop from 'common/FloatTop';
 export default {
   components: {
-    FloatMenu
+    FloatMenu,
+    FloatTop
   },
   data () {
     return {
@@ -135,6 +138,7 @@ export default {
       isShowSortCon: false, // 显示sort内容
       isShowFilterCon: false, // 显示filter内容
       loadingContent: '', // 加载提示
+      isShowFloatTop: false,
       searchParams: { // 搜索的参数
         cate: '',
         title: '', // 搜索内容
@@ -200,6 +204,16 @@ export default {
     this.getProductsList(options);
     this.loadMore();
     this.getHotWords();
+
+    // 滚动事件
+    let self = this;
+    let t = document.documentElement.scrollTop || document.body.scrollTop;
+    let h = document.documentElement.clientHeight || document.body.clientHeight;
+    window.onscroll = function () {
+      t = document.documentElement.scrollTop || document.body.scrollTop;
+      self.isShowFloatTop = t >= h * 1.5;
+    }
+    self.isShowFloatTop = t >= h * 1.5;
   },
   methods: {
     // 获取热门搜索词

@@ -69,6 +69,7 @@
     </div>
 
     <FloatMenu :show="isShowFloatMenu"></FloatMenu>
+    <FloatTop :show="isShowFloatTop"></FloatTop>
     <div class="bg-mask" :class="{'show': isMaskShow}" @click="changeMaskClick"></div>
     <!-- 弹出SKU -->
     <div class="detail-popup-sku" :class="{'a-fadeinT': isPopupSkuShow}" v-show="isPopupSkuShow">
@@ -123,6 +124,7 @@
 import { Swipe, SwipeItem } from 'components/swipe';
 import Coupon from 'common/Coupon.vue';
 import FloatMenu from 'common/FloatMenu';
+import FloatTop from 'common/FloatTop';
 import Point from './Point.vue';
 export default {
   props: {},
@@ -131,12 +133,14 @@ export default {
     SwipeItem,
     Coupon,
     Point,
-    FloatMenu
+    FloatMenu,
+    FloatTop
   },
   data () {
     return {
       data: {},
-      isShowFloatMenu: false, // 浮动menu
+      isShowFloatMenu: false, // 浮动menu]
+      isShowFloatTop: false, // 显示返回按钮
       isShowCoupon: false, // 是否显示coupon弹层
       isShowPoint: false,
       goodsData: {
@@ -169,8 +173,10 @@ export default {
     window.onscroll = function () {
       t = document.documentElement.scrollTop || document.body.scrollTop;
       self.isShowFloatMenu = t >= h * 1.5;
+      self.isShowFloatTop = t >= h * 1.5;
     }
     self.isShowFloatMenu = t >= h * 1.5;
+    self.isShowFloatTop = t >= h * 1.5;
     // overflow重置
     document.documentElement.style.overflow = 'auto';
   },

@@ -225,6 +225,18 @@ export default {
         this.$Toast('Please select payment method');
         return;
       }
+
+      // 如果是卡支付
+      if (this.payType === 3) {
+        if (!this.exp) {
+          this.$Toast('Please fill in exp');
+          return;
+        }
+        if (!this.cvc) {
+          this.$Toast('Please fill in cvc');
+          return;
+        }
+      }
       // 若有卡或者使用Paypal支付，并选择了Credit／Debit card
 
       this.request('OrdersPay', {

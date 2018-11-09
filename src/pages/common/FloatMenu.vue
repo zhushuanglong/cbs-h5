@@ -63,7 +63,7 @@ export default {
     position: fixed;
     z-index: 101;
     right: 30/@rem;
-    bottom: 200/@rem;
+    bottom: 320/@rem;
     width: 88/@rem;
     height: 88/@rem;
 
