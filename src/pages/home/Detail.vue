@@ -2,7 +2,7 @@
   <div class="detail-main">
     <topbar title="Product Details" :detailId="$route.query.id"></topbar>
     <div class="detail-swipe">
-      <Swipe class="my-swipe big-img-swipe" ref="bigImgSwipeRef" :nextCallback="nextCallback">
+      <Swipe class="my-swipe big-img-swipe" ref="bigImgSwipeRef" :nextCallback="nextCallback" :showIndicators="false" :showNum="true">
         <SwipeItem v-for="img in imgSwipe">
           <img :src="img && img.ossimg()">
         </SwipeItem>

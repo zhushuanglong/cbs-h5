@@ -4,6 +4,9 @@
     <div class="mint-swipe-items-wrap">
       <slot></slot>
     </div>
+    <div class="mint-number" v-show="showNum">
+      <span>{{index + 1}}</span>/{{pages.length}}
+    </div>
     <div class="mint-swipe-indicators" v-show="showIndicators">
       <div class="mint-swipe-indicator"
            v-for="(page, $index) in pages"
@@ -80,6 +83,11 @@
       showIndicators: {
         type: Boolean,
         default: true
+      },
+
+      showNum: {
+        type: Boolean,
+        default: false
       },
 
       noDragWhenSingle: {
@@ -565,6 +573,27 @@
     i.right {
       right: -90/@rem;
     }
+
+    .mint-number {
+      position: absolute;
+      bottom: 50/@rem;
+      text-align: center;
+      right: 50/@rem;
+      background-color: #C7C6CC;
+      padding: 0 25/@rem;
+      border-radius: 60/@rem;
+      height: 45/@rem;
+      line-height: 45/@rem;
+      color: #fff;
+      font-weight: bold;
+      font-family:DINAlternate-Bold;
+      font-size: 28/@rem;
+      span {
+        font-weight: bold;
+        font-size: 32/@rem;
+        margin-right: 1px;
+      }
+    }
   }
   .mint-swipe-items-wrap {
     position: relative;
@@ -605,4 +634,5 @@
   .mint-swipe-indicator.is-active {
     background: #ff473c;
   }
+
 </style>
