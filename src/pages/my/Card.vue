@@ -6,7 +6,7 @@
       </div>
       <div class="info fl">
         <div class="label fl">Balance: </div>
-        <div class="price fl">${{data.money}}</div>
+        <div class="price fl">${{returnFloat(data.money || 0)}}</div>
       </div>
       <div class="btn">DETAILS</div>
       <i class="iconfont iright">&#xe62e;</i>
@@ -16,14 +16,14 @@
       <li>
         <router-link :to="{path: '/my/income?type=1'}" class="card-other">
           <i class="iconfont">&#xe695;</i>
-          <div class="value">${{data.income}}</div>
+          <div class="value">${{returnFloat(data.income || 0)}}</div>
           <p>Accumulated Income</p>
         </router-link>
       </li>
       <li>
          <router-link :to="{path: '/my/income?type=2'}" class="card-other">
           <i class="iconfont">&#xe694;</i>
-          <div class="value">${{data.wait_account}}</div>
+          <div class="value">${{returnFloat(data.wait_account || 0)}}</div>
           <p>Wait for an account</p>
         </router-link>
       </li>
@@ -85,7 +85,7 @@ export default {
       height: 85/@rem;
       text-align: center;
       border-radius: 50%;
-      background-color: #ff473c;
+      background-color: @orange;
       i {
         display: inline-block;
         color: #fff;
@@ -107,7 +107,7 @@ export default {
       .price {
         margin-top: 9/@rem;
         margin-left: 15/@rem;
-        color: @red;
+        color: @orange;
         font-size: 40/@rem;
       }
     }
@@ -147,11 +147,11 @@ export default {
       }
       i {
         display: inline-block;
-        color: #ff696d;
+        color: @orange;
         font-size: 42/@rem;
       }
       .value {
-        color: @red;
+        color: @orange;
         font-size: 30/@rem;
       }
       p {

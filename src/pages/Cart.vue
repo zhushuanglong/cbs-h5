@@ -27,7 +27,7 @@
               <div class="title">{{item.name}}</div>
               <div class="sku" v-for="(prop, key, index) in item.props" :class="{'mt': index === 1}">{{prop}}</div>
               <div class="num">{{item.num}} x ${{item.price}}</div>
-              <div class="price">${{item.num * (item.price * 100) / 100}}</div>
+              <div class="price">${{returnFloat(accDiv(item.num, item.price) || 0)}}</div>
               <div class="reduce" @click="reduce(item)" :class="{'ban': item.num <= 1}"><i class="iconfont">&#xe62a;</i></div>
               <div class="add" @click="add(item)"><i class="iconfont">&#xe66f;</i></div>
             </div>
@@ -45,7 +45,7 @@
             <span v-else class="gray2">( no coupons )</span>
           </div>
           <div class="cart-pos">
-            <span>-${{this.couponPrice}}</span>
+            <span>-{{this.couponPrice}}</span>
             <i class="iconfont gray2">&#xe62e;</i>
           </div>
         </div>
@@ -55,7 +55,7 @@
         </div>
       </div>
       <div class="global-fixed-btn">
-        <div @click="submitCart()" class="fixed-btn">CONTINUE CHECKOUT ( <span>${{totalPrice}}</span> )</div>
+        <div @click="submitCart()" class="fixed-btn">CONTINUE CHECKOUT ( <span>${{returnFloat(totalPrice)}}</span> )</div>
       </div>
 
       <confirm :show.sync="confirmModal.show" :title="confirmModal.title"  :content="confirmModal.content" :on-ok="confirmModal.action"  okText="Yes"></confirm>
@@ -77,13 +77,12 @@ export default {
       isShowCoupon: false, // 显示优惠券
       couponId: '', // 优惠券ID
       isUsePoint: false, // 是否使用积分
-      addSt: null, // 添加数据节流st
-      reduceSt: null, // 减少数据节流st
       totalPrice: 0,
       confirmModal: {},
       cartEmpty: false,
       couponPrice: 0, // 券价
-      touchEvent: {} // touch事件
+      touchEvent: {}, // touch事件
+      addReduceSt: null // 函数节流
     };
   },
   computed: {},
@@ -94,9 +93,9 @@ export default {
     'isUsePoint': function (value) {
       // 积分的使用
       if (value) {
-        this.totalPrice = (this.totalPrice * 100 - this.cartsData.integral) / 100;
+        this.totalPrice = this.accSub(this.totalPrice, this.cartsData.integral / 100); // 减
       } else {
-        this.totalPrice = (this.totalPrice * 100 + this.cartsData.integral) / 100;
+        this.totalPrice = this.accAdd(this.totalPrice, this.cartsData.integral / 100); // 加
       }
     }
   },
@@ -137,13 +136,13 @@ export default {
       let goods = this.cartsData.goods;
       let len = goods.length;
       for (let i = 0; i < len; i++) {
-        this.totalPrice += goods[i].num * (goods[i].price * 100);
+        this.totalPrice += this.accDiv(goods[i].num, goods[i].price);
+        console.log(goods[i].num, goods[i].price, this.totalPrice);
       }
       // 浮点数处理
-      this.totalPrice = this.totalPrice / 100; // 除回来
-      this.totalPrice = (this.totalPrice * 100 - +this.cartsData.specialoffer * 100) / 100; // 再处理 我去
+      this.totalPrice = this.accSub(this.totalPrice, this.cartsData.specialoffer); // 减
       // 处理券价格
-      this.totalPrice = (this.totalPrice * 100 - +(this.couponPrice + '').replace(/[^0-9]/ig, '') * 100) / 100;
+      this.totalPrice = this.accSub(this.totalPrice, (this.couponPrice + '').replace(/[^0-9]/ig, '')); // 减
       if (this.totalPrice < 0) {
         this.totalPrice = 0;
       }
@@ -155,24 +154,10 @@ export default {
         return false;
       }
       item.num++;
-      this.totalPrice = (this.totalPrice * 100 + +item.price * 100) / 100;
-      clearTimeout(self.addSt);
+      this.totalPrice = this.accAdd(this.totalPrice, item.price); // 加
+
       // 函数节流
-      self.addSt = setTimeout(function() {
-        self.request('CartsAdd', {
-          good_id: item.id,
-          sku_id: item.sku_id,
-          num: item.num
-        }).then((res) => {
-          if (res.status === 200) {
-            // this.$Toast('add success')
-          } else {
-            self.$Toast(res.msg)
-          }
-        }, err => {
-          self.$Toast(err);
-        });
-      }, 1000);
+      self.addReduceCompute(item);
     },
     // 减少 - 登录后
     reduce (item) {
@@ -180,11 +165,17 @@ export default {
       if (item.num <= 1) {
         return;
       }
-      clearTimeout(self.reduceSt);
       item.num--;
-      self.totalPrice = (self.totalPrice * 100 - +item.price * 100) / 100;
+      self.totalPrice = this.accSub(self.totalPrice, item.price); // 减
+
       // 函数节流
-      self.reduceSt = setTimeout(function() {
+      self.addReduceCompute(item);
+    },
+    // 加减 计算
+    addReduceCompute (item) {
+      let self = this;
+      clearTimeout(self.addReduceSt);
+      self.addReduceSt = setTimeout(function() {
         self.request('CartsAdd', {
           good_id: item.id,
           sku_id: item.sku_id,
@@ -192,6 +183,7 @@ export default {
         }).then((res) => {
           if (res.status === 200) {
             self.cartsData = res.content;
+            self.computeTotalPrice();
           }
         }, err => {
           self.$Toast(err);
