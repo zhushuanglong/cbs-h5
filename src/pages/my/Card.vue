@@ -6,7 +6,7 @@
       </div>
       <div class="info fl">
         <div class="label fl">Balance: </div>
-        <div class="price fl">${{returnFloat(data.money || 0)}}</div>
+        <div class="price fl">{{returnFloat(data.money || 0)|price}}</div>
       </div>
       <div class="btn">DETAILS</div>
       <i class="iconfont iright">&#xe62e;</i>
@@ -16,14 +16,14 @@
       <li>
         <router-link :to="{path: '/my/income?type=1'}" class="card-other">
           <i class="iconfont">&#xe695;</i>
-          <div class="value">${{returnFloat(data.income || 0)}}</div>
+          <div class="value">{{returnFloat(data.income || 0) | price}}</div>
           <p>Accumulated Income</p>
         </router-link>
       </li>
       <li>
          <router-link :to="{path: '/my/income?type=2'}" class="card-other">
           <i class="iconfont">&#xe694;</i>
-          <div class="value">${{returnFloat(data.wait_account || 0)}}</div>
+          <div class="value">{{returnFloat(data.wait_account || 0) | price}}</div>
           <p>Wait for an account</p>
         </router-link>
       </li>

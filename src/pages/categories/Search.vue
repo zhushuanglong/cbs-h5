@@ -98,7 +98,7 @@
           <router-link :to="{path: '/detail?id=' + item.id + '&from=' + encodeURIComponent('categories/search?name=' + $route.params.name)}">
             <img v-lazy="item.img && item.img.ossimg()">
             <p class="p1">{{item.name}}</p>
-            <p class="p2 red">${{returnFloat(item.price)}}</p>
+            <p class="p2 red">{{returnFloat(item.price) | price}}</p>
           </router-link>
         </li>
       </ul>
