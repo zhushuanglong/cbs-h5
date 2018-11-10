@@ -18,7 +18,7 @@
         <div class="info fl">
           <div class="title">{{item.name}}</div>
           <div class="sku" v-for="(ele, index) in item.sku_value">{{ele}}</div>
-          <div class="price">${{item.price}}</div>
+          <div class="price">{{item.price | price(data.currency_symbol)}}</div>
           <div class="num">x {{item.num}}</div>
         </div>
       </router-link>

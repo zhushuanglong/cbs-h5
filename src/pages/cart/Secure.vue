@@ -101,7 +101,7 @@
     </ul>
 
     <div class="global-fixed-btn">
-      <div class="fixed-btn" @click="orderPay">PLACE ORDER ( ${{returnFloat(totalPrice)}} )</div>
+      <div class="fixed-btn" @click="orderPay">PLACE ORDER ( {{returnFloat(totalPrice) | price}} )</div>
     </div>
 
     <confirm :show.sync="confirmModal.show" :title="confirmModal.title"  :content="confirmModal.content" :on-ok="confirmModal.action"  okText="Yes"></confirm>

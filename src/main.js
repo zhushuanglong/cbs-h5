@@ -4,8 +4,11 @@ import router from "./router";
 import initComponents from "./initComponents";
 import Http from "./libs/http";
 // import store from './store'
-Vue.filter('price', function(value) {
-  const currencySymbol = localStorage.currencySymbol;
+Vue.filter('price', function(value, reset) {
+  let currencySymbol = localStorage.currencySymbol;
+  if (reset) {
+    currencySymbol = reset
+  }
   return currencySymbol + value;
 });
 initComponents(Vue);
