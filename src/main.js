@@ -3,7 +3,11 @@ import App from "./App";
 import router from "./router";
 import initComponents from "./initComponents";
 import Http from "./libs/http";
-import store from './store'
+// import store from './store'
+Vue.filter('price', function(value) {
+  const currencySymbol = localStorage.currencySymbol;
+  return currencySymbol + value;
+});
 initComponents(Vue);
 Vue.use(Http);
 // rem 换算
@@ -35,7 +39,7 @@ Vue.prototype.$Indicator = Indicator;
 new Vue({
   el: "#app",
   router,
-  store,
+  // store,
   template: "<App/>",
   components: { App }
 });

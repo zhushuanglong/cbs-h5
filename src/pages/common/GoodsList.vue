@@ -5,7 +5,7 @@
        <router-link :to="{'path': item.stock > 0 ? '/detail?id=' + item.id : ''}">
          <img v-lazy="item.img && item.img.ossimg()" class="img">
          <p class="title">{{item.name}}</p>
-         <p class="price">${{item.price}}<span class="prom-price">${{item.origin_price}}</span></p>
+         <p class="price">{{item.price | price}}<span class="prom-price">{{item.origin_price | price}}</span></p>
        </router-link>
        <div class="solt-out" v-if="item.stock === 0">
          <img src="../../images/my/soltout.png" alt="">

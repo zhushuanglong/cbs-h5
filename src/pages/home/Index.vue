@@ -18,7 +18,7 @@
             <img v-lazy="item.img && item.img.ossimg()" class="goods-img" alt="">
             <p class="goods-title">{{item.name}}</p>
             <p class="goods-price">
-              <span class="price-now">${{returnFloat(item.price || 0)}}</span>
+              <span class="price-now">{{returnFloat(item.price || 0) | price}}</span>
               <!-- <span class="price-origin">$102</span> -->
               <!-- <span class="price-rebate">$102</span> -->
             </p>
@@ -76,7 +76,7 @@
 import Banner from './Banner';
 import Navs from './Navs'
 // import { setTimeout } from 'timers';
-import { mapState, mapMutations } from 'vuex'
+// import { mapState, mapMutations } from 'vuex'
 import FloatTop from 'common/FloatTop';
 export default {
   data() {
@@ -104,7 +104,7 @@ export default {
     FloatTop
   },
   computed: {
-    ...mapState(['currencyCode','currencySymbol'])
+    // ...mapState(['currencyCode','currencySymbol'])
   },
   created(){
     this.getCurrency();
@@ -128,7 +128,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['changeCurrency']),
+    // ...mapMutations(['changeCurrency']),
     // 获取货币列表
     getCurrency(){
       this.request('Currency',{}).then((res)=>{
@@ -138,16 +138,18 @@ export default {
       })
     },
     // 展示这个弹窗，有右滑的动画效果
-    showCurrency(){
+    showCurrency () {
       this.isShow = true;
       var back = document.getElementsByClassName("back-background")[0];
       back.classList.add("actived");
     },
     // 隐藏这个弹出的面板
-    hiddeSelect(){
+    hiddeSelect () {
+      this.getCurrency()
       this.isShow = false;
       var back = document.getElementsByClassName("back-background")[0];
       back.classList.remove("actived")
+      
     },
     // 获取页面除推荐列表外的数据
     getHomeData () {
@@ -187,7 +189,9 @@ export default {
       this.isShowSub = false;
       const currencyCode = item.currency_code;
       const currencySymbol = item.currency_symbol;
-      this.changeCurrency(currencyCode,currencySymbol);
+      localStorage.currencyCode = currencyCode
+      localStorage.currencySymbol = currencySymbol
+      // this.changeCurrency(currencyCode,currencySymbol);
     },
     // 去搜索
     goToSearch () {

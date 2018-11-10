@@ -30,22 +30,22 @@
       </li>
       <li>
         <div class="label">Products Price</div>
-        <div class="pos-abs">${{returnFloat(data.price)}}</div>
+        <div class="pos-abs">{{returnFloat(data.price) | price}}</div>
       </li>
       <li>
         <div class="label">Express Delivery</div>
-        <div class="pos-abs">{{+data.shipping > 0 ? ('$' + returnFloat(data.shipping)) : 'Free'}}</div>
+        <div class="pos-abs">{{+data.shipping > 0 ? (returnFloat(data.shipping) | price) : 'Free'}}</div>
       </li>
       <li>
         <div class="label">Available Balance</div>
         <div class="pos-abs red">
-          ${{returnFloat(data.money)}}
+          {{returnFloat(data.money) | price}}
           <mt-switch v-model="isBalance" @change="changeBalance"></mt-switch>
         </div>
       </li>
       <li>
         <div class="label">Order Subtotal</div>
-        <div class="pos-abs red">${{returnFloat(totalPrice)}}</div>
+        <div class="pos-abs red">{{returnFloat(totalPrice) | price}}</div>
       </li>
     </ul>
 
