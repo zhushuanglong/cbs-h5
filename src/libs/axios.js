@@ -27,7 +27,7 @@ AxiosInst.interceptors.request.use((config) => {
     // if (window.localStorage.getItem('userToken')) {
     //     config.headers.Authorization = 'Bearer ' + `${window.localStorage.getItem('userToken')}`;
     // }
-    // config.url = domain + config.url;
+    config.url = domain + config.url;
     if(config.method=='get'){
        config.params.token = window.localStorage.getItem('userToken') || '';
        config.params['currency_code'] = window.localStorage.getItem('currencyCode') || '';
