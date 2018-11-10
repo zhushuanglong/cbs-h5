@@ -18,7 +18,7 @@
             <img v-lazy="item.img && item.img.ossimg()" class="goods-img" alt="">
             <p class="goods-title">{{item.name}}</p>
             <p class="goods-price">
-              <span class="price-now">{{symbol}}{{item.price}}</span>
+              <span class="price-now">${{returnFloat(item.price || 0)}}</span>
               <!-- <span class="price-origin">$102</span> -->
               <!-- <span class="price-rebate">$102</span> -->
             </p>
@@ -27,10 +27,11 @@
       </ul>
     </div>
     <div class="loading" v-show="recommends.length"><span>{{loadingContent}}</span></div>
+    <FloatTop :show="isShowFloatTop"></FloatTop>
   </div>
     <div class="back-background"></div>
     <transition name="right-slide" :duration="1000">
-    <div class="showSelect" v-show="isShow">
+      <div class="showSelect" v-show="isShow">
          <div class="back"  @click="hiddeSelect"></div>
           <div class="left">
         <header class="head">
@@ -74,8 +75,9 @@
 <script>
 import Banner from './Banner';
 import Navs from './Navs'
-import { setTimeout } from 'timers';
+// import { setTimeout } from 'timers';
 import { mapState, mapMutations } from 'vuex'
+import FloatTop from 'common/FloatTop';
 export default {
   data() {
     return {
@@ -103,7 +105,8 @@ export default {
   },
   components: {
     Banner,
-    Navs
+    Navs,
+    FloatTop
   },
   computed: {
     ...mapState(['currencyCode','currencySymbol'])
@@ -121,6 +124,15 @@ export default {
     this.getHomeData();//获取页面数据
     this.getRecommend(this.requestParams);//获取推荐数据
     this.loadMore();
+  },
+  computed: {
+    'isShowFloatTop': function () {
+      if (this.params.page > 1) {
+        return true;
+      } else {
+        return false
+      }
+    }
   },
   methods: {
     ...mapMutations(['changeCurrency']),

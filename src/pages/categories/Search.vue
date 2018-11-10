@@ -13,7 +13,7 @@
       </div>
     </div>
     <!-- 热门关键词 -->
-    <div class="search-history" v-show="dataSearch.length === 0">
+    <div class="search-history" v-show="isShowSearchHistory">
       <div v-show="historyArr.length" class="label gray2">History</div>
       <ul v-show="historyArr.length">
         <li v-for="item in historyArr" @click="getProductsList({title: item, page: 1})"><a href="javascript:;">{{item}}</a></li>
@@ -52,7 +52,7 @@
 
     <div class="filter-con a-fadeinR" v-show="isShowFilterCon">
       <div class="filter-title">
-        <i class="iconfont" @click="closeFilter">&#xe63f;</i>
+        <i class="iconfont gray2" @click="closeFilter">&#xe63f;</i>
         <p>Filter</p>
       </div>
       <ul class="filter-detail">
@@ -98,7 +98,7 @@
           <router-link :to="{path: '/detail?id=' + item.id + '&from=' + encodeURIComponent('categories/search?name=' + $route.params.name)}">
             <img v-lazy="item.img && item.img.ossimg()">
             <p class="p1">{{item.name}}</p>
-            <p class="p2">${{item.price}}</p>
+            <p class="p2 red">${{returnFloat(item.price)}}</p>
           </router-link>
         </li>
       </ul>
@@ -130,7 +130,7 @@ export default {
       dataSearch: [], // 搜索内容
       filterParams: {}, // 过滤条件
       historyArr: localStorage.getItem('cbs_history') && localStorage.getItem('cbs_history').split(',') || [],
-      isShowSearchHistory: true, // 搜索历史
+      isShowSearchHistory: false, // 搜索历史
       conditionsName: 'sort', // 条件
       clickSortIndex: 0, // 排序搜索条件
       isFinishedLoading: false, // 是否完成loading
@@ -191,10 +191,11 @@ export default {
     // }
   },
   mounted () {
-    if (this.$route.query.name === 'fromcate') {
-      this.$refs.inputSearchRef.focus();
-      this.isShowSearchMask = true;
-    }
+    // if (this.$route.query.cateId === '') { // 点击分类页面的搜索框，展示历史记录
+    //   this.$refs.inputSearchRef.focus();
+    //   this.isShowSearchMask = true;
+    //   return;
+    // }
     const query = this.$route.query;
     let options = {
       page: 1,
@@ -456,7 +457,7 @@ export default {
         &.hot {
           background-color: #FEE4E7;
           a {
-            color: @red;
+            color: @orange;
           }
         }
       }
@@ -489,7 +490,7 @@ export default {
         border-right: 0;
       }
       &.cur {
-        color: @red;
+        color: @orange;
       }
       i {
         font-size: 32/@rem;
@@ -535,10 +536,10 @@ export default {
         }
         &.cur {
           a {
-            color: @red;
+            color: @orange;
           }
           i {
-            color: @red;
+            color: @orange;
             display: block;
           }
         }
@@ -570,16 +571,15 @@ export default {
       }
     }
     p {
-      .line1();
-      .height(50);
       text-align: center;
     }
     .p1 {
-      margin-top: 30/@rem;
+      .line2();
+      margin-top: 20/@rem;
       padding: 0 10/@rem;
     }
     .p2 {
-      color: @red;
+      .height(50);
     }
     img {
       display: block;
@@ -600,7 +600,7 @@ export default {
       border-bottom: 1px solid #d3d3db;
       p {
         font-size: 30/@rem;
-        color: @red;
+        color: @orange;
         .height(90);
         text-align: center;
       }
@@ -625,7 +625,7 @@ export default {
         }
         input {
           .whl(260, 70);
-          border: 1px solid @gray2;
+          border: 1px solid #d3d3db;
           margin-bottom: 30/@rem;
           border-radius: 2px;
           padding: 0 10/@rem;
@@ -639,7 +639,7 @@ export default {
           left: 270/@rem;
           height: 2px;
           width: 50/@rem;
-          border-bottom: 1px solid @gray2;
+          border-bottom: 1px solid #d3d3db;
         }
 
         i {
@@ -665,7 +665,7 @@ export default {
       .value {
         position: relative;
         i {
-          color: @red;
+          color: @orange;
           position: absolute;
           top: 0;
           right: 80/@rem;
@@ -681,13 +681,13 @@ export default {
       .btn-reset {
         .whl(280, 70);
         background-color: #fff;
-        color: @red;
-        border: 1px solid @red;
+        color: @orange;
+        border: 1px solid @orange;
         text-align: center;
       }
       .btn-apply {
         .whl(280, 70);
-        background-color: @red;
+        background-color: @orange;
         color: #fff;
         margin-left: 30/@rem;
         text-align: center;

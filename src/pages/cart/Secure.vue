@@ -62,12 +62,12 @@
           <div class="card-number">
             <div class="card-top">
               <router-link class="fl" :to="{path: '/cart/addCard', query: {orderId: $route.query.orderId || '', cardId: item.id}}">
-                <span>Card No. :</span>
+                <span> * Card No. :</span>
                 <span class="gray2">{{item.number}}</span>
               </router-link>
               <div class="fr" @click="clickCardDel(item.id)">
                 <i class="iconfont">&#xe63d;</i>
-                <i class="iconfont">&#xe611;</i>
+                <!-- <i class="iconfont">&#xe611;</i> -->
               </div>
             </div>
             <div class="card-info" v-show="index == showCardNum">
@@ -77,7 +77,7 @@
                 <input class="gray2" type="text" placeholder="06/23" v-model="exp">
               </p>
             </div>
-            <div class="fl pl">
+            <div class="fl">
               <p class="p1">CVC</p>
               <p class="p2">
                 <input class="gray2" type="text" placeholder="000" v-model="cvc">
@@ -168,10 +168,10 @@ export default {
     computePice () {
       this.totalPrice = 0;
       // 邮费
-      this.totalPrice = (+this.data.price * 100 + +this.data.shipping * 100) / 100;
+      this.totalPrice = this.accAdd(+this.data.price, this.data.shipping); // 加
       // 余额
       if (this.isBalance) {
-        this.totalPrice = (this.totalPrice * 100 - +this.data.money * 100) / 100;
+        this.totalPrice = this.accSub(this.totalPrice, this.data.money); // 减
       }
     },
     // 获取银行卡信息
@@ -229,7 +229,7 @@ export default {
       // 如果是卡支付
       if (this.payType === 3) {
         if (!this.exp) {
-          this.$Toast('Please fill in exp');
+          this.$Toast('Please fill in expire');
           return;
         }
         if (!this.cvc) {
@@ -328,21 +328,6 @@ export default {
             self.$Toast(err);
           });
         }
-      }
-    },
-    // 自动补0
-    returnFloat (value) {
-      value = Math.round(parseFloat(value) * 100) / 100;
-      let xsd = value.toString().split('.');
-      if (xsd.length === 1) {
-        value = value.toString() + '.00';
-        return value;
-      }
-      if (xsd.length > 1 ) {
-        if (xsd[1].length < 2) {
-          value = value.toString() + '0';
-        }
-        return value;
       }
     }
   },

@@ -31,13 +31,6 @@ body {
   font-size: 24/@rem;
   letter-spacing: -0.01rem;
 }
-#app {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
 
 ul, li, p {
   list-style: none;
@@ -139,7 +132,8 @@ input[type="radio"] {
   margin: 0 auto;
   position: relative;
   width: 100%;
-  height: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   // background-color: #fff;
 }
 
@@ -224,7 +218,7 @@ input[type="radio"] {
       }
       a.cur {
         i, p {
-          color: @red;
+          color: @orange;
         }
       }
     }
@@ -245,19 +239,19 @@ input[type="radio"] {
     color: #ffffff;
     text-align: center;
     .height(98);
-    background-color: @red;
+    background-color: @orange;
     font-size: 28/@rem;
   }
 }
 
 // 常用灰
 .gray2 {
-  color: #939399;
+  color: #939399!important;
 }
 
 // 常用红
 .red {
-  color: #ff473c;
+  color: #ff473c!important;
 }
 
 // transition .3s
