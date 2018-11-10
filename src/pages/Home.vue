@@ -43,7 +43,7 @@ export default {
     height: 40/@rem;
     line-height: 40/@rem;
     font-size: 28/@rem;
-    color: @red;
+    color: @orange;
     padding-right: 10/@rem;
   }
 }
