@@ -94,7 +94,7 @@ export default {
       },
       isShow: false,
       isShowSub: false,
-      code:'USD',
+      code: localStorage.currencyCode,
       symbol: ''
     }
   },
