@@ -229,7 +229,7 @@ export default {
       // 如果是卡支付
       if (this.payType === 3) {
         if (!this.exp) {
-          this.$Toast('Please fill in exp');
+          this.$Toast('Please fill in expire');
           return;
         }
         if (!this.cvc) {
