@@ -4,7 +4,7 @@
     <div class="top-bar">
       <i class="iconfont search-icon fl" @click="goToSearch">&#xe620;</i>
       <img src="../../images/home/logo.png" class="logo" alt="">    
-      <i class="share iconfont fr" @click="showCurrency">&#xe628;</i>
+      <i class="share iconfont fr" @click="() => {this.isShow = true}">&#xe628;</i>
     </div>
     <Banner :list="banners" v-if="banners && banners.length"></Banner>
     <Navs :list="navList"  v-if="navList && navList.length"></Navs>
@@ -29,10 +29,11 @@
     <div class="loading" v-show="recommends.length"><span>{{loadingContent}}</span></div>
     <FloatTop :show="isShowFloatTop"></FloatTop>
   </div>
-    <div class="back-background"></div>
+  <div v-if="isShow">
+    <div class="back-background" :class="{'actived': isShow}"></div>
     <transition name="right-slide" :duration="1000">
-      <div class="showSelect" v-show="isShow">
-         <div class="back"  @click="hiddeSelect"></div>
+      <div class="showSelect" >
+         <div class="back"  @click="() => {this.isShow = false}"></div>
           <div class="left">
         <header class="head">
             <p class="head-title">My Settings</p>
@@ -54,7 +55,7 @@
                     :key="index">{{item.currency_code}}
                     </option>
                    </select> -->
-                  <p class="content-option" id="selectedCurrency" @click="showSub">{{code}}</p>
+                  <p class="content-option" id="selectedCurrency" @click="showSub">{{currencyCode}}</p>
                   <ul v-show="isShowSub">
                      <li class="content-option"
                     v-for="(item, index) in currencyList" :key="index"
@@ -67,9 +68,10 @@
             <p class="btn">SAVE</p>
         </div>
         </div>
+      </div>
     </div>
-  </div>
   </transition>
+  </div>
 </div>
 </template>
 <script>
@@ -94,8 +96,9 @@ export default {
       },
       isShow: false,
       isShowSub: false,
-      code: localStorage.currencyCode,
-      symbol: ''
+      currencyCode: localStorage.currencyCode,
+      currencySymbol: localStorage.currencySymbol,
+      symbol: '',
     }
   },
   components: {
@@ -138,18 +141,13 @@ export default {
       })
     },
     // 展示这个弹窗，有右滑的动画效果
-    showCurrency () {
-      this.isShow = true;
-      var back = document.getElementsByClassName("back-background")[0];
-      back.classList.add("actived");
-    },
     // 隐藏这个弹出的面板
     hiddeSelect () {
-      this.getCurrency()
+      localStorage.currencyCode = this.currencyCode;
+      localStorage.currencySymbol = this.currencySymbol;
       this.isShow = false;
-      var back = document.getElementsByClassName("back-background")[0];
-      back.classList.remove("actived")
-      
+      this.params.page = 1;
+      this.getHomeData();
     },
     // 获取页面除推荐列表外的数据
     getHomeData () {
@@ -187,10 +185,8 @@ export default {
     handleCurrency(item){
       this.code = item.currency_code;
       this.isShowSub = false;
-      const currencyCode = item.currency_code;
-      const currencySymbol = item.currency_symbol;
-      localStorage.currencyCode = currencyCode
-      localStorage.currencySymbol = currencySymbol
+      this.currencyCode = item.currency_code;
+      this.currencySymbol = item.currency_symbol;
       // this.changeCurrency(currencyCode,currencySymbol);
     },
     // 去搜索
