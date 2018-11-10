@@ -348,6 +348,11 @@ var setOnline = [
     name: 'couponsRecive',
     type: 'post',
     url: '/coupons/receive'
+  },
+  {
+    name: 'currency',
+    type: 'post',
+    url: '/currency'
   }
 
 ];

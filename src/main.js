@@ -3,6 +3,7 @@ import App from "./App";
 import router from "./router";
 import initComponents from "./initComponents";
 import Http from "./libs/http";
+import store from './store'
 initComponents(Vue);
 Vue.use(Http);
 // rem 换算
@@ -22,8 +23,9 @@ Vue.prototype.accDiv = accDiv;
 Vue.prototype.accMul = accMul;
 
 // 组件库
-import { Switch, Toast, Indicator, Lazyload } from "mint-ui";
+import { Switch, Toast, Indicator, Lazyload, Picker } from "mint-ui";
 Vue.component(Switch.name, Switch);
+Vue.component(Picker.name, Picker);
 Vue.use(Lazyload);
 
 Vue.prototype.$Toast = Toast;
@@ -33,6 +35,7 @@ Vue.prototype.$Indicator = Indicator;
 new Vue({
   el: "#app",
   router,
+  store,
   template: "<App/>",
   components: { App }
 });

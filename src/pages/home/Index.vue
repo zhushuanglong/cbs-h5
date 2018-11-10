@@ -55,7 +55,7 @@
                     </option>
                    </select> -->
                   <p class="content-option" id="selectedCurrency" @click="showSub">{{code}}</p>
-                   <ul v-show="isShowSub">
+                  <ul v-show="isShowSub">
                      <li class="content-option"
                     v-for="(item, index) in currencyList" :key="index"
                     @click="handleCurrency(item)">{{item.currency_code}}</li>
@@ -82,11 +82,7 @@ export default {
   data() {
     return {
       currencyList: [],//货币列表
-      languageList: [
-        {language:'english'},
-        {language:'chinese'},
-        {language:'french'}
-      ],
+      languageList: [],
       banners: [],
       recommends: [],
       navList: [],
@@ -138,7 +134,6 @@ export default {
       this.request('Currency',{}).then((res)=>{
         if (res.status === 200 && res.content) {
           this.currencyList = res.content.currency;
-          var showItem = document.get
         }
       })
     },
@@ -147,7 +142,6 @@ export default {
       this.isShow = true;
       var back = document.getElementsByClassName("back-background")[0];
       back.classList.add("actived");
-
     },
     // 隐藏这个弹出的面板
     hiddeSelect(){
@@ -190,30 +184,10 @@ export default {
     // 获取数据
     handleCurrency(item){
       this.code = item.currency_code;
-      // console.log("code",this.code)
       this.isShowSub = false;
-      var currencyCode = item.currency_code;
-      // console.log("lc",currencyCode)
-      var currencySymbol = item.currency_symbol;
+      const currencyCode = item.currency_code;
+      const currencySymbol = item.currency_symbol;
       this.changeCurrency(currencyCode,currencySymbol);
-
-    },
-    // 上拉刷新
-    loadMore() {
-      let self = this;
-      window.onscroll = function() {
-        var a = document.documentElement.scrollTop || document.body.scrollTop; // 滚动条y轴上的距离
-        var b = document.documentElement.clientHeight || document.body.clientHeight; // 可视区域的高度
-        var c = document.documentElement.scrollHeight || document.body.scrollHeight; // 可视化的高度与溢出的距离（总高度）
-        if (a + b >=  c - 220  && self.isFinishedLoading && !self.loadingEmpty) {
-          let page = self.requestParams.page + 1;
-          Object.assign(self.requestParams, {
-            page: page
-          })
-          // console.log("page",page)
-          self.getRecommend(self.requestParams);
-        }
-      }
     },
     // 去搜索
     goToSearch () {
