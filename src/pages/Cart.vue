@@ -82,7 +82,8 @@ export default {
       cartEmpty: false,
       couponPrice: 0, // 券价
       touchEvent: {}, // touch事件
-      addReduceSt: null // 函数节流
+      addReduceSt: null, // 函数节流
+      rate: 0
     };
   },
   computed: {},
@@ -92,10 +93,11 @@ export default {
   watch: {
     'isUsePoint': function (value) {
       // 积分的使用
+      console.log("this.rate",this.rate)
       if (value) {
-        this.totalPrice = this.accSub(this.totalPrice, this.cartsData.integral / 100); // 减
+        this.totalPrice = this.accSub(this.totalPrice, (this.cartsData.integral / 100 * this.rate)); // 减
       } else {
-        this.totalPrice = this.accAdd(this.totalPrice, this.cartsData.integral / 100); // 加
+        this.totalPrice = this.accAdd(this.totalPrice, (this.cartsData.integral / 100 * this.rate)); // 加
       }
     }
   },
@@ -105,6 +107,8 @@ export default {
       this.request('Carts', {}).then((res) => {
         if (res.status === 200 && res.content) {
           this.cartsData = res.content;
+          this.rate = res.content.currency_rate; //获取汇率
+          console.log("rate",this.rate)
           if (!localStorage.userToken) {
             // 认定是游客访问
             localStorage.setItem('userToken', res.content.token);
