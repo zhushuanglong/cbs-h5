@@ -2,23 +2,18 @@
   <div class="home-main" ref="indexMain">
     <homeindex></homeindex>
     <bottombar></bottombar>
-    <FloatTop :show="isShowFloatTop"></FloatTop>
   </div>
 </template>
 
 <script>
 import homeindex from './home/Index';
-import FloatTop from 'common/FloatTop';
 export default {
   name: 'home',
   components: {
-    homeindex,
-    FloatTop
+    homeindex
   },
   data () {
     return {
-      store_goods: [], // 商品数据
-      isShowFloatTop: false
     };
   },
   computed: {},

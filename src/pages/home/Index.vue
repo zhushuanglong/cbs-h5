@@ -25,11 +25,13 @@
         </li>
       </ul>
     </div>
+    <FloatTop :show="isShowFloatTop"></FloatTop>
   </div>
 </template>
 <script>
 import Banner from './Banner';
 import Navs from './Navs'
+import FloatTop from 'common/FloatTop';
 export default {
   data() {
     return {
@@ -47,11 +49,21 @@ export default {
   },
   components: {
     Banner,
-    Navs
+    Navs,
+    FloatTop
   },
   mounted() {
     this.getHomeData();
     this.loadMore();
+  },
+  computed: {
+    'isShowFloatTop': function () {
+      if (this.params.page > 1) {
+        return true;
+      } else {
+        return false
+      }
+    }
   },
   methods: {
     getHomeData () {
