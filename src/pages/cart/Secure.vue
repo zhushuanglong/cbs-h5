@@ -74,13 +74,13 @@
              <div class="fl br">
               <p class="p1">EXPIRE</p>
               <p class="p2">
-                <input class="gray2" type="text" placeholder="06/23" v-model="exp">
+                <input class="gray2" type="text" placeholder="06/23" @keyup="handleInputExp" maxlength="5" v-model="exp">
               </p>
             </div>
             <div class="fl">
               <p class="p1">CVC</p>
               <p class="p2">
-                <input class="gray2" type="text" placeholder="000" v-model="cvc">
+                <input class="gray2" type="text" placeholder="000" @keyup="handleInputCvc" maxlength="3" v-model="cvc">
               </p>
             </div>
             </div>
@@ -214,6 +214,17 @@ export default {
           payType: this.payType || 3
         }});
       }
+    },
+    // Exp助手
+    handleInputExp (e) {
+      this.exp = e.target.value.replace(/[^(\/)\d]/g,'');
+      if (this.exp > 2 && this.exp.indexOf('/') === -1) {
+        this.exp += '/';
+      }
+    },
+    // cvc助手
+    handleInputCvc (e) {
+      this.cvc = e.target.value.replace(/[^\d]/g,'');
     },
     // 订单支付
     orderPay () {
