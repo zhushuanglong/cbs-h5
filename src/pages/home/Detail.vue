@@ -516,7 +516,7 @@ export default {
             }
           }
           img.cur {
-            border: 1px solid @red;
+            border: 1px solid @orange;
           }
         }
       }
@@ -561,7 +561,7 @@ export default {
         color: #1EBDFD;
       }
       .span2 {
-        color: @red;
+        color: @orange;
       }
       i {
         position: absolute;
@@ -642,7 +642,7 @@ export default {
       margin: 0 auto;
       max-width: 750px;
       padding: 0 20/@rem;
-      background-color: @red;
+      background-color: @orange;
       color: #fff;
       .price {
         font-size: 36/@rem;
@@ -691,7 +691,7 @@ export default {
           height: 50/@rem;
           line-break: 50/@rem;
           font-size: 30/@rem;
-          color: @red;
+          color: @orange;
         }
         .stock {
           height: 48/@rem;
@@ -730,8 +730,8 @@ export default {
               transition: transform .3s;
               transition: transform .3s, -webkit-transform .3s;
               &.cur {
-                border: 1px solid @red;
-                color: @red;
+                border: 1px solid @orange;
+                color: @orange;
               }
               &.disabled {
                 border: 1px solid #eee;
@@ -791,7 +791,7 @@ export default {
       line-height: 99/@rem;
       left: 0;
       bottom: 0;
-      background-color: @red;
+      background-color: @orange;
       text-align: center;
       color: #fff;
       font-size: 36/@rem;

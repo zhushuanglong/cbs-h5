@@ -455,7 +455,7 @@ export default {
         &.hot {
           background-color: #FEE4E7;
           a {
-            color: @red;
+            color: @orange;
           }
         }
       }
@@ -488,7 +488,7 @@ export default {
         border-right: 0;
       }
       &.cur {
-        color: @red;
+        color: @orange;
       }
       i {
         font-size: 32/@rem;
@@ -534,10 +534,10 @@ export default {
         }
         &.cur {
           a {
-            color: @red;
+            color: @orange;
           }
           i {
-            color: @red;
+            color: @orange;
             display: block;
           }
         }
@@ -598,7 +598,7 @@ export default {
       border-bottom: 1px solid #d3d3db;
       p {
         font-size: 30/@rem;
-        color: @red;
+        color: @orange;
         .height(90);
         text-align: center;
       }
@@ -663,7 +663,7 @@ export default {
       .value {
         position: relative;
         i {
-          color: @red;
+          color: @orange;
           position: absolute;
           top: 0;
           right: 80/@rem;
@@ -679,13 +679,13 @@ export default {
       .btn-reset {
         .whl(280, 70);
         background-color: #fff;
-        color: @red;
-        border: 1px solid @red;
+        color: @orange;
+        border: 1px solid @orange;
         text-align: center;
       }
       .btn-apply {
         .whl(280, 70);
-        background-color: @red;
+        background-color: @orange;
         color: #fff;
         margin-left: 30/@rem;
         text-align: center;

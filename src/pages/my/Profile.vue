@@ -236,11 +236,11 @@ export default {
     left: 60/@rem;
     bottom: 60/@rem;
     width: 630/@rem;
-    border: 1px solid @red;
+    border: 1px solid @orange;
     border-radius: 5px;
     .height(98);
     font-size: 28/@rem;
-    color: @red;
+    color: @orange;
     text-align: center;
   }
 }
