@@ -52,7 +52,7 @@
 
     <div class="filter-con a-fadeinR" v-show="isShowFilterCon">
       <div class="filter-title">
-        <i class="iconfont" @click="closeFilter">&#xe63f;</i>
+        <i class="iconfont gray2" @click="closeFilter">&#xe63f;</i>
         <p>Filter</p>
       </div>
       <ul class="filter-detail">
@@ -623,7 +623,7 @@ export default {
         }
         input {
           .whl(260, 70);
-          border: 1px solid @gray2;
+          border: 1px solid #d3d3db;
           margin-bottom: 30/@rem;
           border-radius: 2px;
           padding: 0 10/@rem;
@@ -637,7 +637,7 @@ export default {
           left: 270/@rem;
           height: 2px;
           width: 50/@rem;
-          border-bottom: 1px solid @gray2;
+          border-bottom: 1px solid #d3d3db;
         }
 
         i {

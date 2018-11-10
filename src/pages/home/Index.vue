@@ -17,7 +17,7 @@
             <img v-lazy="item.img && item.img.ossimg()" class="goods-img" alt="">
             <p class="goods-title">{{item.name}}</p>
             <p class="goods-price">
-              <span class="price-now">${{item.price}}</span>
+              <span class="price-now">${{returnFloat(item.price || 0)}}</span>
               <!-- <span class="price-origin">$102</span> -->
               <!-- <span class="price-rebate">$102</span> -->
             </p>
