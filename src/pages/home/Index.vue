@@ -93,9 +93,8 @@ export default {
       diypage:'',
       loadingContent:'', // 加载提示
       isFinishedLoading: false, // 是否完成loading
-      requestParams: {
-        page: 1,
-        currency_code: 'USD'
+      params: {
+        page: 1
       },
       isShow: false,
       isShowSub: false,
@@ -117,12 +116,10 @@ export default {
   watch: {
     code() {
       this.getHomeData();//获取页面数据
-      this.getRecommend(this.requestParams);//获取推荐数据
     }
   },
   mounted() {
     this.getHomeData();//获取页面数据
-    this.getRecommend(this.requestParams);//获取推荐数据
     this.loadMore();
   },
   computed: {
@@ -141,7 +138,6 @@ export default {
       this.request('Currency',{}).then((res)=>{
         if (res.status === 200 && res.content) {
           this.currencyList = res.content.currency;
-          // console.log("list",this.currencyList)
           var showItem = document.get
         }
       })
@@ -201,45 +197,6 @@ export default {
       var currencySymbol = item.currency_symbol;
       this.changeCurrency(currencyCode,currencySymbol);
 
-    },
-    // 获取推荐列表的数据
-    getRecommend(params) {
-      this.loadingContent = 'loading...'
-      this.isFinishedLoading = false;
-      this.loadingEmpty = false;
-       if (params.page === 1) {
-         this.recommends = []
-       }
-       console.log("this.cure",this.currencyCode)
-       let requestCode = this.currencyCode
-        console.log("this.request",requestCode)
-        this.code = requestCode;
-      // this.code = this.currencyCode;
-      this.request('Home', {
-        page: params.page,
-        currency_code: requestCode
-      }).then((res)=>{
-        if (res.status === 200 && res.content) {
-          this.loadingContent = '';
-          this.symbol = res.content.currency_symbol;
-          console.log("symbol",this.symbol)
-          // 滚动加载
-          if(params.page < res.content.total_page) {
-            this.loadingEmpty = false;
-          }else{
-            this.loadingContent = 'No More';
-            this.loadingEmpty = true;
-          }
-          this.recommends = this.recommends.concat(res.content.goods)
-        }else{
-            this.loadingContent = 'No More';
-            this.loadingEmpty = true;
-        }
-        this.isFinishedLoading = true
-      },err => {
-        this.$Toast(err)
-        this.isFinishedLoading = true;
-      })
     },
     // 上拉刷新
     loadMore() {
