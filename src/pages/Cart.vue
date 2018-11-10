@@ -206,7 +206,7 @@ export default {
               cart_id: item.cart_id
             }).then((res) => {
               if (res.status === 200) {
-                if (self.cartsData.goods && self.cartsData.goods.length) {
+                if (res.content && res.content.goods && res.content.goods.length) {
                   self.cartsData = res.content;
                   // 重新计算价格
                   self.computeTotalPrice();
