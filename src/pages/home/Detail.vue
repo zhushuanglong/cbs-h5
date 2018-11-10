@@ -63,7 +63,7 @@
 
     <div class="detail-foot" @click="footCartClick">
       <div class="pos-rel">
-        <div class="price">${{goodsData.price}}</div>
+        <div class="price">${{returnFloat(goodsData.price || 0)}}</div>
         <i class="iconfont">&#xe624;</i>
       </div>
     </div>
@@ -77,7 +77,7 @@
         <div class="sku-info">
           <img class="fl" v-lazy="goodsData.img && goodsData.img.ossimg()">
           <div class="des fl">
-            <div class="price">${{goodsData.price}}</div>
+            <div class="price red">${{returnFloat(goodsData.price || 0)}}</div>
             <div class="stock">Stock：> {{goodsData.stock}} Pieces</div>
           </div>
         </div>
@@ -478,7 +478,7 @@ export default {
 @import "~less/tool.less";
 .detail-main {
   padding-top: 90/@rem;
-  padding-bottom: 90/@rem;
+  padding-bottom: 96/@rem;
   .detail-swipe {
     .big-img-swipe {
       height: 750/@rem;
@@ -607,13 +607,14 @@ export default {
         height: 44/@rem;
         line-height: 44/@rem;
         .label {
-          width: 200/@rem;
+          width: 230/@rem;
           color: #535353;
           .line1();
         }
         .des {
-          width: 500/@rem;
+          width: 450/@rem;
           color: @gray2;
+          .line1();
         }
       }
     }
@@ -716,9 +717,10 @@ export default {
             float: left;
             a {
               display: block;
-              width: 140/@rem;
+              min-width: 140/@rem;
               height: 54/@rem;
-              line-height: 54/@rem;
+              line-height: 52/@rem;
+              padding: 0 25/@rem;
               margin: 25/@rem 25/@rem 0 0;
               text-align: center;
               border: 1px solid @gray2;

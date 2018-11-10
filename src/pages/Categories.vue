@@ -25,7 +25,7 @@
         </div> -->
         <ul>
           <li v-for="ele in secondCate">
-            <router-link :to="{path: '/categories/search', query: { cate:  + ele.id }}">
+            <router-link :to="{path: '/categories/search', query: { cate:  + ele.id }}" title="ele.name">
               <img v-lazy="ele.img && ele.img.ossimg()">
               <p>{{ele.name}}</p>
             </router-link>
@@ -180,20 +180,21 @@ export default {
         li {
           float: left;
           width: 180/@rem;
-          height: 180/@rem;
+          height: 220/@rem;
           text-align: center;
           margin-left: 6/@rem;
-          margin-bottom: 30/@rem;
+          margin-bottom: 10/@rem;
           img {
-            display: block;
+            display: inline-block;
             width: auto;
             height: 140/@rem;
-            margin-left: 20/@rem;
             background: auto 100%;
           }
           p {
-            margin-top: 10/@rem;
             .height(35);
+            // word-break: break-all;
+            text-align: center;
+            // .line1();
           }
         }
       }
