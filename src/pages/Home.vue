@@ -23,28 +23,9 @@ export default {
   },
   computed: {},
   mounted () {
-    this.getHomeData();
-    // 滚动事件
-    let self = this;
-    let t = document.documentElement.scrollTop || document.body.scrollTop;
-    let h = document.documentElement.clientHeight || document.body.clientHeight;
-    window.onscroll = function () {
-      t = document.documentElement.scrollTop || document.body.scrollTop;
-      self.isShowFloatTop = t >= h * 1.5;
-    }
-    self.isShowFloatTop = t >= h * 1.5;
   },
   watch: {},
   methods: {
-    getHomeData () {
-      this.request('Home', {}).then((res) => {
-        if (res.status === 200 && res.content) {
-          this.store_goods = res.content.store_goods; // 商品数据
-        }
-      }, err => {
-        this.$Toast(err);
-      });
-    }
   },
   beforeDestroy () {}
 };
