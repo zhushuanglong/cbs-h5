@@ -123,7 +123,8 @@ export default {
       addressData: {}, // 地址数据
       exp: '', // 卡日期
       cvc: '', // 卡到期
-      showCardNum: null // 显示卡
+      showCardNum: null, // 显示卡
+      addSlash: null
     };
   },
   computed: {},
@@ -217,10 +218,14 @@ export default {
     },
     // Exp助手
     handleInputExp (e) {
-      this.exp = e.target.value.replace(/[^(\/)\d]/g,'');
-      if (this.exp > 2 && this.exp.indexOf('/') === -1) {
-        this.exp += '/';
-      }
+      let self = this;
+      clearTimeout(self.addSlash);
+      self.addSlash = setTimeout(function() {
+        self.exp = e.target.value.replace(/[^(\/)\d]/g,'');
+        if (self.exp > 2 && self.exp.indexOf('/') === -1) {
+          self.exp = self.exp.substring(0,2) + '/' + self.exp.substring(2, 4);
+        }
+      }, 800);
     },
     // cvc助手
     handleInputCvc (e) {
