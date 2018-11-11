@@ -49,7 +49,7 @@ export function accSub (arg1, arg2) {
   return ((arg1 * m - arg2 * m) / m).toFixed(n);
 };
 
-// 浮点数 - 乘
+// 浮点数 - 除以
 export function accDiv (arg1, arg2) {
   var t1 = 0, t2 = 0, r1, r2;
   try {
@@ -60,10 +60,10 @@ export function accDiv (arg1, arg2) {
   } catch (e) {}
   r1 = Number(arg1.toString().replace(".", ""));
   r2 = Number(arg2.toString().replace(".", ""));
-  return (r1 * r2) / Math.pow(10, t2 - t1);
+  return (r1 / r2) / Math.pow(10, t2 - t1);
 };
 
-// 浮点数 - 除以
+// 浮点数 - 乘以
 export function accMul (arg1, arg2) {
   var m = 0,
     s1 = arg1.toString(),

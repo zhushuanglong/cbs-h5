@@ -27,7 +27,7 @@
               <div class="title">{{item.name}}</div>
               <div class="sku" v-for="(prop, key, index) in item.props" :class="{'mt': index === 1}">{{prop}}</div>
               <div class="num">{{item.num}} x {{item.price | price}}</div>
-              <div class="price">{{returnFloat(accDiv(item.num, item.price) || 0) | price}}</div>
+              <div class="price">{{returnFloat(accMul(item.num, item.price) || 0) | price}}</div>
               <div class="reduce" @click="reduce(item)" :class="{'ban': item.num <= 1}"><i class="iconfont">&#xe62a;</i></div>
               <div class="add" @click="add(item)"><i class="iconfont">&#xe66f;</i></div>
             </div>
@@ -51,7 +51,7 @@
         </div>
         <div class="cart-points cart-rel">
           <div class="cart-label">Activity Discounts <span class="label-des">( {{cartsData.integral}} points to use )</span></div>
-          <div class="cart-pos">-{{cartsData.integral / 100 | price}}<mt-switch v-model="isUsePoint"></mt-switch></div>
+          <div class="cart-pos">-{{accDiv(cartsData.integral, 100) | price}}<mt-switch v-model="isUsePoint"></mt-switch></div>
         </div>
       </div>
       <div class="global-fixed-btn">
@@ -140,8 +140,7 @@ export default {
       let goods = this.cartsData.goods;
       let len = goods.length;
       for (let i = 0; i < len; i++) {
-        this.totalPrice += this.accDiv(goods[i].num, goods[i].price);
-        console.log(goods[i].num, goods[i].price, this.totalPrice);
+        this.totalPrice += this.accMul(goods[i].num, goods[i].price);
       }
       // 浮点数处理
       this.totalPrice = this.accSub(this.totalPrice, this.cartsData.specialoffer); // 减
