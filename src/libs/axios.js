@@ -31,7 +31,6 @@ AxiosInst.interceptors.request.use((config) => {
     if(config.method=='get'){
        config.params.token = window.localStorage.getItem('userToken') || '';
        config.params['currency_code'] = window.localStorage.getItem('currencyCode') || '';
-
     }
     return config;
 }, (err) => {
