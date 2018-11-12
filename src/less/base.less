@@ -70,10 +70,30 @@ input {
 }
 input[type="radio"] {
   margin: 0;
-  -webkit-appearance: radio;
   width: 42/@rem;
   height: 42/@rem;
+  border-radius: 50%;
   vertical-align: middle;
+  background-color: transparent;
+  border: 0;
+  outline: 0 !important;
+  &:after {
+    content: "";
+    display: block;
+    width: 42/@rem;
+    height: 42/@rem;
+    border-radius: 50%;
+    text-align: center;
+    color: #fff;
+    border: 1px solid #47DC68;
+    background-color: #fff;
+    box-sizing: border-box;
+  }
+  &:checked:after {
+    // background-color: #fff;
+    background-color: #47DC68;
+
+  }
 }
 :focus {
   outline: 0;
