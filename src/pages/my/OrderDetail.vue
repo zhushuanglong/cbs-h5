@@ -28,9 +28,9 @@
         </router-link>
       </div>
       <div>
-        <p class="o-price"><span class="fl">Subtotal:</span><span class="fr">{{finalAmount | price(currencySymbol))}}</span></p>
+        <p class="o-price"><span class="fl">Subtotal:</span><span class="fr">{{finalAmount | price(currencySymbol)}}</span></p>
         <p class="o-price"><span class="fl">Shipping:</span><span class="fr"> {{shipping}}</span></p>
-        <p class="o-price total"><span class="fl">All Total：</span><span class="fr">{{(parseFloat(finalAmount) + parseFloat(shipping)).toFixed(2)| price(currencySymbol)}}</span></p>
+        <p class="o-price total"><span class="fl">All Total：</span><span class="fr">{{(parseFloat(finalAmount) + parseFloat(shipping)).toFixed(2) | price(currencySymbol)}}</span></p>
       </div>
       <div class="operate clearfix">
         <!-- 订单状态(订单状态 1-待付款 3-待发货 4-待收货 5-交易完成 6-交易取消 ) -->
