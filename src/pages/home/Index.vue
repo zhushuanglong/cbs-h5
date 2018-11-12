@@ -47,8 +47,8 @@
               <div class="currency">
                 <p class="content-title">Currencies</p>
                 <div>
-                  <p class="content-option" id="selectedCurrency" @click="showSub">{{currencyCode}}</p>
-                  <ul v-show="isShowSub">
+                  <p class="content-option" id="selectedCurrency" @click="showSub">{{currencyCode}}<i class="iconfont" id="icon">&#xe62e;</i></p>
+                  <ul v-show="isShowSub" id='content-sub'>
                     <li class="content-option" v-for="(item, index) in newList" :key="index" @click="handleCurrency(item)">{{item.currency_code}}</li>
                   </ul>
                 </div>
@@ -169,22 +169,24 @@
       },
       // 展示下拉列表
       showSub() {
-        this.isShowSub = true;
-        console.log(this.currencyList)
+        this.isShowSub = true;                       
         this.newList = []
         this.currencyList.forEach((item, index) => {
           if (item.currency_code != this.currencyCode) {
             this.newList.push(item);
           }
         })
+        var arrowEle = document.getElementById("icon");
+        arrowEle.classList.add('icon-trans');
       },
       // 获取数据
       handleCurrency(item) {
         this.code = item.currency_code;
-        this.isShowSub = false;
+        this.isShowSub = false;   
         this.currencyCode = item.currency_code;
         this.currencySymbol = item.currency_symbol;
-        // this.changeCurrency(currencyCode,currencySymbol);
+        var arrowEle = document.getElementById("icon");
+        var subEle = document.getElementById("content-sub");
       },
       // 去搜索
       goToSearch() {
@@ -264,21 +266,30 @@
           background: #fff;
           font-size: 32/@rem;
           position: relative;
-          text-align: center;
-          padding: 23/@rem 0;
+          padding: 23/@rem 36/@rem;
         }
         .content-option {
           border: 1px solid #979797;
+          border-top: none;
           width: 536/@rem;
           height: 100/@rem;
           margin-left: 32/@rem;
           background: #fff;
           font-size: 32/@rem;
           position: relative;
-          text-align: center;
-          padding: 23/@rem 0;
+          padding: 23/@rem 36/@rem;
           &:hover {
             background: #ccc;
+          }
+          .iconfont {
+            position: absolute;
+            right: 26/@rem;
+          }
+          .icon-trans {
+            position: absolute;
+            right: 26/@rem;
+            transform: rotate(90deg);
+            transition: all .3s;
           }
         }
         .btn-wrapper {
