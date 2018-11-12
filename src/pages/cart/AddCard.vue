@@ -6,20 +6,20 @@
       <div class="card-num">
         <p>CARD NUMBER</p>
         <p class="gray2 mt">
-          <input class="gray2" type="text" placeholder="0000 0000 0000"  v-model="data.number">
+          <input class="gray2" type="text" placeholder="0000 0000 0000" v-model="data.number" @keyup="handleInputNumber">
         </p>
       </div>
       <div class="card-info">
         <div class="fl br">
           <p class="p1">EXPIRE</p>
           <p class="p2">
-            <input class="gray2" type="text" placeholder="06/23" v-model="data.exp">
+            <input class="gray2" type="text" placeholder="06/23" v-model="data.exp" @keyup="handleInputExp" maxlength="5">
           </p>
         </div>
         <div class="fl pl">
           <p class="p1">CVC</p>
           <p class="p2">
-            <input class="gray2" type="text" placeholder="000" v-model="data.cvc">
+            <input class="gray2" type="text" placeholder="000" v-model="data.cvc" @keyup="handleInputCvc" maxlength="3">
           </p>
         </div>
       </div>
@@ -62,7 +62,8 @@ export default {
       data: {},
       address: {},
       isEdit: false,
-      isShowLockedDom: false
+      isShowLockedDom: false,
+      addSlash: null
     };
   },
   computed: {},
@@ -218,6 +219,25 @@ export default {
       }, err => {
         this.$Toast(err);
       });
+    },
+    // number
+    handleInputNumber (e) {
+      this.data.number = e.target.value.replace(/[^\d]/g,'');
+    },
+    // Exp助手
+    handleInputExp (e) {
+      let self = this;
+      self.data.exp = e.target.value.replace(/[^(\/)\d]/g,'');
+      clearTimeout(self.addSlash);
+      self.addSlash = setTimeout(function() {
+        if (self.data.exp > 2 && self.data.exp.indexOf('/') === -1) {
+          self.data.exp = self.data.exp.substring(0,2) + '/' + self.data.exp.substring(2, 4);
+        }
+      }, 800);
+    },
+    // cvc助手
+    handleInputCvc (e) {
+      this.data.cvc = e.target.value.replace(/[^\d]/g,'');
     }
   },
   beforeDestroy () {}
