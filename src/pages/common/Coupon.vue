@@ -70,7 +70,7 @@ export default {
       this.checkedId = item.id;
 
       // 未使用 领取优惠券
-      if (item.datestatus === 1 && !isCart) {
+      if (item.datestatus === 1 && !this.isCart) {
         this.request('CouponReceive', {
           id: item.id
         }).then((res) => {

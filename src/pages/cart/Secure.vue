@@ -34,7 +34,8 @@
       </li>
       <li>
         <div class="label">Express Delivery</div>
-        <div class="pos-abs">{{+data.shipping > 0 ? (returnFloat(data.shipping) | price) : 'Free'}}</div>
+        <div class="pos-abs" v-if="data.shipping > 0">{{returnFloat(data.shipping)  | price}}</div>
+        <div class="pos-abs" v-else>Free</div>
       </li>
       <li>
         <div class="label">Available Balance</div>

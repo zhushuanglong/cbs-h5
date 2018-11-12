@@ -45,7 +45,7 @@
             <span v-else class="gray2">( no coupons )</span>
           </div>
           <div class="cart-pos">
-            <span>-{{this.couponPrice}}</span>
+            <span v-if="this.couponPrice">-{{this.couponPrice}}</span>
             <i class="iconfont gray2">&#xe62e;</i>
           </div>
         </div>
@@ -83,7 +83,7 @@ export default {
       couponPrice: 0, // 券价
       touchEvent: {}, // touch事件
       addReduceSt: null, // 函数节流
-      rate: 0
+      rate: 1 // 汇率
     };
   },
   computed: {},
@@ -93,7 +93,6 @@ export default {
   watch: {
     'isUsePoint': function (value) {
       // 积分的使用
-      console.log("this.rate",this.rate)
       if (value) {
         this.totalPrice = this.accSub(this.totalPrice, (this.cartsData.integral / 100 * this.rate)); // 减
       } else {
@@ -107,7 +106,7 @@ export default {
       this.request('Carts', {}).then((res) => {
         if (res.status === 200 && res.content) {
           this.cartsData = res.content;
-          this.rate = res.content.currency_rate; //获取汇率
+          this.rate = res.content.currency_rate || 1; //获取汇率
           console.log("rate",this.rate)
           if (!localStorage.userToken) {
             // 认定是游客访问
