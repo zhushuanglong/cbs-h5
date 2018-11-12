@@ -380,7 +380,7 @@ export default {
       color: @orange;
     }
     .img {
-      .wh(60, 28);
+      .wh(86, 30);
       background: url('~img/detail/s2.png');
       background-size: 100% auto;
       margin: 22/@rem;

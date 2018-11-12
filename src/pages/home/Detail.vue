@@ -23,7 +23,7 @@
     <ul class="detail-something">
       <li class="detail-coupon" @click="clickShowCouponModal" v-show="data.coupon && data.coupon.length">
         <img src="~img/detail/s1.png">
-        <span class="gray2">（Rewards {{data.coupon && data.coupon.length}}）</span>
+        <span class="gray2">(Rewards {{data.coupon && data.coupon.length}})</span>
         <span class="span1">Recive</span>
         <i class="iconfont">&#xe62e;</i>
       </li>
@@ -295,8 +295,8 @@ export default {
           }
         }
       }, 50);
-    
-     
+
+
     },
     // 第二个sku属性信息
     getTwoSkuData (num) {
@@ -432,7 +432,7 @@ export default {
     submitClick () {
       // 判定是否选择完毕
       console.log(this.skuId)
-      
+
       if (!this.skuId ) {
         this.$Toast('Please select your ' + this.goodsData.subArr[0].name);
         return;
@@ -557,9 +557,10 @@ export default {
       background-color: #fff;
       border-bottom: 1px solid @gray3;
       img {
-        .wh(60, 28);
+        .wh(86, 30);
         vertical-align: top;
         margin-top: 27/@rem;
+        margin-right: 5/@rem;
       }
       .span1, .span2 {
         position: absolute;
