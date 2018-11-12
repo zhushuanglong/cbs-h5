@@ -30,22 +30,22 @@
       </li>
       <li>
         <div class="label">Products Price</div>
-        <div class="pos-abs">${{returnFloat(data.price)}}</div>
+        <div class="pos-abs">{{returnFloat(data.price) | price}}</div>
       </li>
       <li>
         <div class="label">Express Delivery</div>
-        <div class="pos-abs">{{+data.shipping > 0 ? ('$' + returnFloat(data.shipping)) : 'Free'}}</div>
+        <div class="pos-abs">{{+data.shipping > 0 ? (returnFloat(data.shipping) | price) : 'Free'}}</div>
       </li>
       <li>
         <div class="label">Available Balance</div>
         <div class="pos-abs red">
-          ${{returnFloat(data.money)}}
+          {{returnFloat(data.money) | price}}
           <mt-switch v-model="isBalance" @change="changeBalance"></mt-switch>
         </div>
       </li>
       <li>
         <div class="label">Order Subtotal</div>
-        <div class="pos-abs red">${{returnFloat(totalPrice)}}</div>
+        <div class="pos-abs red">{{returnFloat(totalPrice) | price}}</div>
       </li>
     </ul>
 
@@ -74,13 +74,13 @@
              <div class="fl br">
               <p class="p1">EXPIRE</p>
               <p class="p2">
-                <input class="gray2" type="text" placeholder="06/23" v-model="exp">
+                <input class="gray2" type="text" placeholder="06/23" @keyup="handleInputExp" maxlength="5" v-model="exp">
               </p>
             </div>
             <div class="fl">
               <p class="p1">CVC</p>
               <p class="p2">
-                <input class="gray2" type="text" placeholder="000" v-model="cvc">
+                <input class="gray2" type="text" placeholder="000" @keyup="handleInputCvc" maxlength="3" v-model="cvc">
               </p>
             </div>
             </div>
@@ -101,7 +101,7 @@
     </ul>
 
     <div class="global-fixed-btn">
-      <div class="fixed-btn" @click="orderPay">PLACE ORDER ( ${{returnFloat(totalPrice)}} )</div>
+      <div class="fixed-btn" @click="orderPay">PLACE ORDER ( {{returnFloat(totalPrice) | price}} )</div>
     </div>
 
     <confirm :show.sync="confirmModal.show" :title="confirmModal.title"  :content="confirmModal.content" :on-ok="confirmModal.action"  okText="Yes"></confirm>
@@ -123,7 +123,8 @@ export default {
       addressData: {}, // 地址数据
       exp: '', // 卡日期
       cvc: '', // 卡到期
-      showCardNum: null // 显示卡
+      showCardNum: null, // 显示卡
+      addSlash: null
     };
   },
   computed: {},
@@ -214,6 +215,21 @@ export default {
           payType: this.payType || 3
         }});
       }
+    },
+    // Exp助手
+    handleInputExp (e) {
+      let self = this;
+      clearTimeout(self.addSlash);
+      self.addSlash = setTimeout(function() {
+        self.exp = e.target.value.replace(/[^(\/)\d]/g,'');
+        if (self.exp > 2 && self.exp.indexOf('/') === -1) {
+          self.exp = self.exp.substring(0,2) + '/' + self.exp.substring(2, 4);
+        }
+      }, 800);
+    },
+    // cvc助手
+    handleInputCvc (e) {
+      this.cvc = e.target.value.replace(/[^\d]/g,'');
     },
     // 订单支付
     orderPay () {

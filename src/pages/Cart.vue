@@ -26,8 +26,8 @@
             <div class="info fl">
               <div class="title">{{item.name}}</div>
               <div class="sku" v-for="(prop, key, index) in item.props" :class="{'mt': index === 1}">{{prop}}</div>
-              <div class="num">{{item.num}} x ${{item.price}}</div>
-              <div class="price">${{returnFloat(accDiv(item.num, item.price) || 0)}}</div>
+              <div class="num">{{item.num}} x {{item.price | price}}</div>
+              <div class="price">{{returnFloat(accMul(item.num, item.price) || 0) | price}}</div>
               <div class="reduce" @click="reduce(item)" :class="{'ban': item.num <= 1}"><i class="iconfont">&#xe62a;</i></div>
               <div class="add" @click="add(item)"><i class="iconfont">&#xe66f;</i></div>
             </div>
@@ -51,11 +51,11 @@
         </div>
         <div class="cart-points cart-rel">
           <div class="cart-label">Activity Discounts <span class="label-des">( {{cartsData.integral}} points to use )</span></div>
-          <div class="cart-pos">-${{cartsData.integral / 100}}<mt-switch v-model="isUsePoint"></mt-switch></div>
+          <div class="cart-pos">-{{accDiv(cartsData.integral, 100) | price}}<mt-switch v-model="isUsePoint"></mt-switch></div>
         </div>
       </div>
       <div class="global-fixed-btn">
-        <div @click="submitCart()" class="fixed-btn">CONTINUE CHECKOUT ( <span>${{returnFloat(totalPrice)}}</span> )</div>
+        <div @click="submitCart()" class="fixed-btn">CONTINUE CHECKOUT ( <span>{{returnFloat(totalPrice) | price}}</span> )</div>
       </div>
 
       <confirm :show.sync="confirmModal.show" :title="confirmModal.title"  :content="confirmModal.content" :on-ok="confirmModal.action"  okText="Yes"></confirm>
@@ -82,7 +82,8 @@ export default {
       cartEmpty: false,
       couponPrice: 0, // 券价
       touchEvent: {}, // touch事件
-      addReduceSt: null // 函数节流
+      addReduceSt: null, // 函数节流
+      rate: 0
     };
   },
   computed: {},
@@ -92,10 +93,11 @@ export default {
   watch: {
     'isUsePoint': function (value) {
       // 积分的使用
+      console.log("this.rate",this.rate)
       if (value) {
-        this.totalPrice = this.accSub(this.totalPrice, this.cartsData.integral / 100); // 减
+        this.totalPrice = this.accSub(this.totalPrice, (this.cartsData.integral / 100 * this.rate)); // 减
       } else {
-        this.totalPrice = this.accAdd(this.totalPrice, this.cartsData.integral / 100); // 加
+        this.totalPrice = this.accAdd(this.totalPrice, (this.cartsData.integral / 100 * this.rate)); // 加
       }
     }
   },
@@ -105,6 +107,8 @@ export default {
       this.request('Carts', {}).then((res) => {
         if (res.status === 200 && res.content) {
           this.cartsData = res.content;
+          this.rate = res.content.currency_rate; //获取汇率
+          console.log("rate",this.rate)
           if (!localStorage.userToken) {
             // 认定是游客访问
             localStorage.setItem('userToken', res.content.token);
@@ -136,8 +140,7 @@ export default {
       let goods = this.cartsData.goods;
       let len = goods.length;
       for (let i = 0; i < len; i++) {
-        this.totalPrice += this.accDiv(goods[i].num, goods[i].price);
-        console.log(goods[i].num, goods[i].price, this.totalPrice);
+        this.totalPrice += this.accMul(goods[i].num, goods[i].price);
       }
       // 浮点数处理
       this.totalPrice = this.accSub(this.totalPrice, this.cartsData.specialoffer); // 减
@@ -206,7 +209,7 @@ export default {
               cart_id: item.cart_id
             }).then((res) => {
               if (res.status === 200) {
-                if (self.cartsData.goods && self.cartsData.goods.length) {
+                if (res.content && res.content.goods && res.content.goods.length) {
                   self.cartsData = res.content;
                   // 重新计算价格
                   self.computeTotalPrice();

@@ -1,13 +1,18 @@
-import Vue from 'vue';
-import App from './App';
-import router from './router';
-import initComponents from './initComponents';
-import Http from './libs/http';
-import Mint from 'mint-ui';
-import store from './store'
+import Vue from "vue";
+import App from "./App";
+import router from "./router";
+import initComponents from "./initComponents";
+import Http from "./libs/http";
+// import store from './store'
+Vue.filter('price', function(value, reset) {
+  let currencySymbol = localStorage.currencySymbol;
+  if (reset) {
+    currencySymbol = reset
+  }
+  return currencySymbol + value;
+});
 initComponents(Vue);
 Vue.use(Http);
-Vue.use(Mint)
 // rem 换算
 import { remChange } from "./components/basic/remChange";
 remChange();
@@ -25,8 +30,9 @@ Vue.prototype.accDiv = accDiv;
 Vue.prototype.accMul = accMul;
 
 // 组件库
-import { Switch, Toast, Indicator, Lazyload } from "mint-ui";
+import { Switch, Toast, Indicator, Lazyload, Picker } from "mint-ui";
 Vue.component(Switch.name, Switch);
+Vue.component(Picker.name, Picker);
 Vue.use(Lazyload);
 
 Vue.prototype.$Toast = Toast;
@@ -36,7 +42,7 @@ Vue.prototype.$Indicator = Indicator;
 new Vue({
   el: "#app",
   router,
-  store,
-  template: '<App/>',
+  // store,
+  template: "<App/>",
   components: { App }
 });

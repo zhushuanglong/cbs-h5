@@ -5,7 +5,9 @@ try {
         defaultCurrencyCode = localStorage.currencyCode
         defaultCurrencySymbol = localStorage.currencySymbol
     }
-} catch (e) {}
+} catch (e) {
+    console.log(e)
+}
 export default {
     currencyCode: defaultCurrencyCode,
     currencySymbol: defaultCurrencySymbol

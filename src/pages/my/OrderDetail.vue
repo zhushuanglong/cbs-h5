@@ -22,15 +22,15 @@
           <div class="info fl">
             <div class="title">{{item.name}}</div>
             <div class="sku" v-for="(ele, index) in item.sku_value">{{ele}}</div>
-            <div class="price">${{item.price}}</div>
+            <div class="price">{{item.price| price(currencySymbol)}}</div>
             <div class="num">x {{item.num}}</div>
           </div>
         </router-link>
       </div>
       <div>
-        <p class="o-price"><span class="fl">Subtotal:</span><span class="fr">${{parseFloat(finalAmount - shipping).toFixed(2)}}</span></p>
-        <p class="o-price"><span class="fl">Shipping:</span><span class="fr">$ {{shipping}}</span></p>
-        <p class="o-price total"><span class="fl">All Total：</span><span class="fr">${{finalAmount}}</span></p>
+        <p class="o-price"><span class="fl">Subtotal:</span><span class="fr">{{finalAmount | price(currencySymbol)}}</span></p>
+        <p class="o-price"><span class="fl">Shipping:</span><span class="fr"> {{shipping}}</span></p>
+        <p class="o-price total"><span class="fl">All Total：</span><span class="fr">{{(parseFloat(finalAmount) + parseFloat(shipping)).toFixed(2) | price(currencySymbol)}}</span></p>
       </div>
       <div class="operate clearfix">
         <!-- 订单状态(订单状态 1-待付款 3-待发货 4-待收货 5-交易完成 6-交易取消 ) -->
@@ -50,6 +50,7 @@ export default {
   components: { order },
   data() {
     return {
+      currencySymbol: '',
       orders: [],
       ordergoods: [],
       orderid: '',
@@ -154,6 +155,7 @@ export default {
           this.ordertime = res.content.ordertime;
           this.finalAmount = res.content.final_amount;
           this.shipping = res.content.shipping;
+          this.currencySymbol = res.content.currency_symbol;
           this.name = res.content.name;
           this.telephone = res.content.telephone;
           this.address = res.content.address;

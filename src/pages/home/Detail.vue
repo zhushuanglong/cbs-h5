@@ -37,7 +37,7 @@
       </li>
       <li class="detail-point" @click="clickShowPointModal">
         <img src="~img/detail/s3.png">
-        Earn {{data.max_integral}} Points，100 points equals to U.S. $1.00
+        Earn {{data.max_integral}} Points，100 points equals to U.S. {{1.00|price}}
         <i class="iconfont">&#xe62e;</i>
       </li>
     </ul>
@@ -63,7 +63,7 @@
 
     <div class="detail-foot" @click="footCartClick">
       <div class="pos-rel">
-        <div class="price">${{returnFloat(goodsData.price || 0)}}</div>
+        <div class="price">{{returnFloat(goodsData.price || 0)|price}}</div>
         <i class="iconfont">&#xe624;</i>
       </div>
     </div>
@@ -77,7 +77,7 @@
         <div class="sku-info">
           <img class="fl" v-lazy="goodsData.img && goodsData.img.ossimg()">
           <div class="des fl">
-            <div class="price red">${{returnFloat(goodsData.price || 0)}}</div>
+            <div class="price red">{{returnFloat(goodsData.price || 0) | price}}</div>
             <div class="stock">Stock：> {{goodsData.stock}} Pieces</div>
           </div>
         </div>

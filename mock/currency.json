@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "msg": "success",
+  "content": {
+      "currency": [
+          {
+              "currency_code":"CNY",
+              "currency_symbol":"￥",
+              "flag":"http://patpatdev.s3.amazonaws.com/national_flag/58eb6beda1e35/1491823597.png",
+              "threshold":19,
+              "fare":10
+          },
+          {
+              "currency_code":"USD",
+              "currency_symbol":"$",
+              "flag":"http://patpatdev.s3.amazonaws.com/national_flag/58eb6beda1e35/1491823597.png",
+              "threshold":19,
+              "fare":10
+          }
+      ]
+  }
+}
