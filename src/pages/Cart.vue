@@ -107,7 +107,6 @@ export default {
         if (res.status === 200 && res.content) {
           this.cartsData = res.content;
           this.rate = res.content.currency_rate || 1; //获取汇率
-          console.log("rate",this.rate)
           if (!localStorage.userToken) {
             // 认定是游客访问
             localStorage.setItem('userToken', res.content.token);
@@ -178,7 +177,7 @@ export default {
       let self = this;
       clearTimeout(self.addReduceSt);
       self.addReduceSt = setTimeout(function() {
-        self.request('CartsAdd', {
+        self.request('CartsUpdate', {
           good_id: item.id,
           sku_id: item.sku_id,
           num: item.num
@@ -225,6 +224,7 @@ export default {
           }, 1000);
         }
       }
+     
     },
     // 删除助手 - 手势
     removeGoodsHandler () {
