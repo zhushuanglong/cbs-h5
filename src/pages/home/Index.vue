@@ -4,7 +4,8 @@
       <div class="top-bar">
         <i class="iconfont search-icon fl" @click="goToSearch">&#xe620;</i>
         <img src="../../images/home/logo.png" class="logo" alt="">
-        <i class="share iconfont fr" @click="() => {this.isShow = true}">&#xe628;</i>
+        <i class="share iconfont" @click="showShare">&#xe64f;</i>
+        <i class="currency iconfont fr" @click="() => {this.isShow = true}">&#xe628;</i>
       </div>
       <Banner :list="banners" v-if="banners && banners.length"></Banner>
       <Navs :list="navList" v-if="navList && navList.length"></Navs>
@@ -28,6 +29,32 @@
       </div>
       <div class="loading" v-show="recommends.length"><span>{{loadingContent}}</span></div>
       <FloatTop :show="isShowFloatTop"></FloatTop>
+    </div>
+    <!-- 展示分享弹窗 -->
+    <div v-show="isShowShare">
+      <div class="share-back"></div>
+      <div class="rect"></div>
+      <div class="share-wrapper">
+        <div class="share-container">
+          <div class="share-head">
+            <i class="iconfont share-link">&#xe654;</i>
+            <div class="share-header-text">
+              <p class="share-title">Public sharing</p>
+              <p class="share-subTitle">Anyone who gets the link can access</p>
+            </div>
+          </div>
+          <div class="copy-text">
+            <input type="text" class="url-text" placeholder="url" id="url" readonly="readonly">
+            <div class="btn-copy" @click="copyLink" ref="btnCopy" data-clipboard-target="#url">Copy</div>
+          </div>
+          <p class="share-intro">Inviting links to people who need to know, you will get rebates when they buy</p>
+          <p class="share-others-title">Or clivk the bottons blow to share</p>
+          <div class="share-others">
+            <div class="fb"><span class="share-others-text">share</span><i class="iconfont others-fb">&#xe652;</i></div>
+            <div class="tw"><span class="share-others-text">share</span><i class="iconfont others-tw">&#xe656;</i></div>
+          </div>
+        </div>
+      </div>
     </div>
     <div v-if="isShow">
       <div class="back-background" :class="{'actived': isShow}"></div>
@@ -69,6 +96,9 @@
   // import { setTimeout } from 'timers';
   // import { mapState, mapMutations } from 'vuex'
   import FloatTop from 'common/FloatTop';
+  import {
+    setTimeout
+  } from 'timers';
   export default {
     data() {
       return {
@@ -88,7 +118,8 @@
         currencyCode: localStorage.currencyCode,
         currencySymbol: localStorage.currencySymbol,
         symbol: '',
-        newList: []
+        newList: [],
+        isShowShare: false
       }
     },
     components: {
@@ -110,6 +141,7 @@
     mounted() {
       this.getHomeData(); //获取页面数据
       this.loadMore();
+      this.btnCopy = new this.clipboard(this.$refs.btnCopy);
     },
     computed: {
       'isShowFloatTop': function() {
@@ -121,7 +153,30 @@
       }
     },
     methods: {
-      // ...mapMutations(['changeCurrency']),
+      // 复制链接
+      copyLink() {
+        this.$nextTick(function() {
+          let self = this;
+          let clipboard = self.btnCopy;
+          clipboard.on('success', function() {
+            self.$Toast('copy finished');
+          });
+          clipboard.on('error', function() {
+            self.$Toast('copy failed, please copy by hand');
+          })
+        })
+      },
+      // 展示分享弹窗
+      showShare() {
+        var value = window.location.href; //获取当前页面url
+        //使用isgd进行加密处理
+        // this.isgd.shorten(value,function(res){
+        //   console.log(res)
+        // })
+        var inputEle = document.getElementById('url')
+        inputEle.value = value;
+        this.isShowShare = !this.isShowShare;
+      },
       // 获取货币列表
       getCurrency() {
         this.request('Currency', {}).then((res) => {
@@ -169,7 +224,7 @@
       },
       // 展示下拉列表
       showSub() {
-        this.isShowSub = true;                       
+        this.isShowSub = true;
         this.newList = []
         this.currencyList.forEach((item, index) => {
           if (item.currency_code != this.currencyCode) {
@@ -182,7 +237,7 @@
       // 获取数据
       handleCurrency(item) {
         this.code = item.currency_code;
-        this.isShowSub = false;   
+        this.isShowSub = false;
         this.currencyCode = item.currency_code;
         this.currencySymbol = item.currency_symbol;
         var arrowEle = document.getElementById("icon");
@@ -211,7 +266,137 @@
   }
 </script>
 <style lang="less">
-  @import '~less/tool.less';
+  @import '~less/tool.less'; // 分享链接
+  .share-back {
+    background: rgba(0, 0, 0, 0.5);
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 88/@rem;
+    left: 0;
+  }
+  .rect {
+    border-bottom: 15/@rem solid #fff;
+    border-top: 15/@rem solid transparent;
+    border-left: 15/@rem solid transparent;
+    border-right: 15/@rem solid transparent;
+    position: absolute;
+    right: 100/@rem;
+    top: 65/@rem;
+    z-index: 999;
+  }
+  .share-wrapper {
+    z-index: 999;
+    position: absolute;
+    top: 95/@rem;
+    right: 62/@rem;
+    width: 500/@rem;
+    height: 290/@rem;
+    font-size: 12/@rem;
+    padding: 0!important;
+    text-align: left;
+    background: #fff;
+    line-height: 23/@rem;
+    border-radius: 5/@rem;
+    .share-wrapper>div,
+    p {
+      margin: 0;
+      padding: 0;
+    }
+    .share-container {
+      padding: 15/@rem 10/@rem;
+      .share-head {
+        display: flex;
+        .share-link {
+          display: inline-block;
+          width: 38/@rem;
+          height: 38/@rem;
+          text-align: center;
+          color: #fff;
+          background: @orange;
+          font-size: 12/@rem;
+          padding: 8/@rem 2/@rem 8/@rem 0/@rem;
+          border-radius: 19/@rem;
+          margin-top: 5/@rem;
+        }
+        .share-header-text {
+          padding: 5/@rem 0;
+          margin-left: 10/@rem;
+          .share-subTitle {
+            color: #9B9B9B;
+          }
+        }
+      }
+      .copy-text {
+        border: 1px solid #EFEFEF;
+        width: 90%;
+        height: 46/@rem;
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 6/@rem;
+        margin-left: 20/@rem;
+        margin-top: 12/@rem;
+        .url-text {
+          width: 180px;
+        }
+        .btn-copy {
+          border: 1px solid #EFEFEF;
+          height: 100%;
+          width: 86/@rem;
+          background: #FDFDFD;
+          padding: 10/@rem 16/@rem;
+        }
+      }
+      .share-intro {
+        margin-top: 12/@rem;
+      }
+      .share-others-title {
+        font-size: 10/@rem;
+        margin-top: 18/@rem;
+        white-space: nowrap;
+        font-weight: bold;
+      }
+      .share-others {
+        border: 1px solid;
+        display: flex;
+        color: #fff;
+        margin-top: 6/@rem;
+        .fb {
+          width: 180/@rem;
+          border: 1px solid;
+          background: #4E6CAA;
+          padding: 8/@rem 0;
+          text-align: right;
+          border-radius: 6/@rem;
+          .share-others-text {
+            margin-right: 30/@rem;
+          }
+          .others-fb {
+            font-size: 12/@rem;
+            padding: 4/@rem 10/@rem;
+            background: #3B5999;
+          }
+        }
+        .tw {
+          width: 180/@rem;
+          border: 1px solid;
+          background: #61BBF7;
+          padding: 8/@rem 0;
+          text-align: right;
+          border-radius: 6/@rem;
+          margin-left: 22/@rem;
+          .share-others-text {
+            margin-right: 30/@rem;
+          }
+          .others-tw {
+            font-size: 12/@rem;
+            padding: 5/@rem 10/@rem;
+            background: #38A1F3;
+          }
+        }
+      }
+    }
+  }
   .back-background {
     position: absolute;
     left: 0;
@@ -319,8 +504,15 @@
       line-height: 88/@rem;
       text-align: center;
       background-color: #fff;
+      position: relative;
       .search-icon {
         font-size: 40/@rem;
+      }
+      .share {
+        position: absolute;
+        right: 80/@rem;
+        top: 0;
+        padding: 0 5/@rem;
       }
       .logo {
         width: 268/@rem;

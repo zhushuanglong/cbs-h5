@@ -1,6 +1,7 @@
 <template>
   <div class="detail-main">
-    <topbar title="Product Details" :detailId="$route.query.id"></topbar>
+    <div class="background" v-show="isShowBack" @click="()=>{this.toShare=false}"></div>
+    <topbar title="Product Details" :detailId="$route.query.id" v-on:showBack="showBack" :urlValue="urlValue"></topbar>
     <div class="detail-swipe">
       <Swipe class="my-swipe big-img-swipe" ref="bigImgSwipeRef" :nextCallback="nextCallback" :showIndicators="false" :showNum="true">
         <SwipeItem v-for="img in imgSwipe">
@@ -157,7 +158,10 @@ export default {
       el: {}, // dom 集合
       skuId: null, // sku id
       submitLocked: false, // 提交锁
-      backUrl: 'home' // 返回路径
+      backUrl: 'home', // 返回路径,
+      isShowBack: false,
+      toShare: false,
+      urlValue: ''
     }
   },
   created () {
@@ -180,6 +184,7 @@ export default {
     // overflow重置
     document.documentElement.style.overflow = 'auto';
     // console.log(this.imgSwipe)
+    this.urlValue = window.location.href;
   },
   watch: {
     'isPopupSkuShow': function(value) {
@@ -187,6 +192,10 @@ export default {
     }
   },
   methods: {
+    // 显出黑色蒙层
+    showBack(isShowBack){
+      this.isShowBack = isShowBack;
+    },
     // 获取详情页基础数据
     getDetailData () {
       this.request('ProductsDetail', {
@@ -488,6 +497,15 @@ export default {
 .detail-main {
   padding-top: 90/@rem;
   padding-bottom: 96/@rem;
+  .background{
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top:-88/@rem;
+    left:0;
+    background: rgba(0,0,0,0.5);
+    z-index: 99;
+  }
   .detail-swipe {
     .big-img-swipe {
       height: 750/@rem;

@@ -203,7 +203,7 @@
             self.confirmModal.show = false;
             self.reduceSt = setTimeout(function() {
               self.request('CartsDelete', {
-                // cart_id: item.cart_id
+                // cart_id: item.cart_id,
                 good_id: item.id,
                 sku_id: item.sku_id,
                 num: item.num
@@ -215,6 +215,7 @@
                     self.computeTotalPrice();
                   } else {
                     self.cartEmpty = true;
+                    window.location.reload();
                   }
                 }
               }, err => {
