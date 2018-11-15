@@ -6,7 +6,7 @@
         <i class="iconfont">&#xe602;</i>
         Successful Payment
       </div>
-      <p class="f32">Order amount: {{data.price}}</p>
+      <p class="f32">Order amount: {{currencySymbol}}{{data.price}}</p>
       <p>Thank you for your order, we will deliver the goods soon</p>
     </div>
     <router-link :to="{path: '/my/orderDetail?orderid=' + data.order_id}" class="btn-order">VIEW THE ORDER</router-link>
@@ -18,7 +18,8 @@
 export default {
   data () {
     return {
-      data: {}
+      data: {},
+       currencySymbol: localStorage.currencySymbol
     }
   },
   computed: {},

@@ -143,6 +143,7 @@ export default {
       }).then((res) => {
         if (res.status === 200 && res.content) {
           this.data = res.content;
+          console.log(this.data)
           // 计算总价
           this.computePice();
           // addressId
