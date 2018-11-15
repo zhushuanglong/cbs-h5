@@ -4,7 +4,6 @@ import router from "./router";
 import initComponents from "./initComponents";
 import Http from "./libs/http";
 import clipboard from 'Clipboard'; //复制粘贴板
-import isgd from 'isgd'; //处理分享的url
 // import store from './store'
 Vue.filter('price', function(value, reset) {
   let currencySymbol = localStorage.currencySymbol;
@@ -33,8 +32,7 @@ Vue.prototype.accMul = accMul;
 
 // 复制粘贴
 Vue.prototype.clipboard = clipboard;
-// 处理分享的url地址
-Vue.prototype.isgd = isgd;
+
 // 组件库
 import { Switch, Toast, Indicator, Lazyload, Picker } from "mint-ui";
 Vue.component(Switch.name, Switch);

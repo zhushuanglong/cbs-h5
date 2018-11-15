@@ -77,7 +77,8 @@ export default {
               first_name: res.content.first_name,
               last_name: res.content.last_name,
               member_since: res.content.member_since,
-              email: res.content.email
+              email: res.content.email,
+              inviteCode: res.content.invite_code
             }))
             this.$router.go(-1);
           } else {

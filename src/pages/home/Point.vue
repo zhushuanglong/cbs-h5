@@ -7,7 +7,8 @@
       <ul>
         <li>
           <div class="fl">1.</div>
-          <p>You can get the relevant points, after you paying the order. For example, if you place an order for $75.63, you can get 75 points. The value of the points will be accurate to unit digit, and the value after the decimal point is not included in the rounding.</p>
+          <p>You can get 1 point for every dollar spent on your purchase. For example, if you placed an order for $75.63 then when you confirm the delivery of your order, you can get 75 points. The value of the points will be accurate to the unit digit, and
+            the value after the decimal point is not included in the rounding. </p>
         </li>
         <li>
           <div class="fl">2.</div>
@@ -27,81 +28,81 @@
 </template>
 
 <script>
-export default {
-  props: {
-    showPoint: {
-      type: Boolean,
-      default: false
+  export default {
+    props: {
+      showPoint: {
+        type: Boolean,
+        default: false
+      }
+    },
+    created() {},
+    mounted() {},
+    methods: {
+      clickPointClose() {
+        this.$emit('update:showPoint', false);
+      }
     }
-  },
-  created () {},
-  mounted () {},
-  methods: {
-    clickPointClose () {
-      this.$emit('update:showPoint', false);
-    }
-  }
-};
+  };
 </script>
 
 <style lang="less">
-@import "~less/tool.less";
-.point-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 222;
-  background-color: rgba(0, 0, 0, 0.5);
-  .info{
-    position: absolute;
+  @import "~less/tool.less";
+  .point-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
     bottom: 0;
-    width: 100%;
-    background:rgba(246,247,246,1);
-    height: 897/@rem;
-    padding: 0 38/@rem;
-    text-align: left;
-    .detail{
-      color: #020100;
-      font-size: 30/@rem;
-      font-weight: bold;
-      padding: 20/@rem  0 20/@rem 0;
-      text-align: center;
-      border-bottom: 1px solid @gray3;
-    }
-    .title {
-      .height(80);
-      font-size: 28/@rem;
-      font-weight: bold;
-      margin: 10/@rem 0;
-    }
-    ul {
-      display: block;
-      li {
-        .clearfix();
-        font-size: 26/@rem;
+    z-index: 222;
+    background-color: rgba(0, 0, 0, 0.5);
+    .info {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      background: rgba(246, 247, 246, 1);
+      height: 897/@rem;
+      padding: 0 38/@rem;
+      text-align: left;
+      .detail {
+        color: #020100;
+        font-size: 30/@rem;
         font-weight: bold;
-        line-height: 40/@rem;
-        margin-bottom: 35/@rem;
-        .fl {
-          width: 30/@rem;
-        }
-        p {
-          margin-left: 30/@rem;
+        padding: 20/@rem 0 20/@rem 0;
+        text-align: center;
+        border-bottom: 1px solid @gray3;
+      }
+      .title {
+        .height(80);
+        font-size: 28/@rem;
+        font-weight: bold;
+        margin: 10/@rem 0;
+      }
+      ul {
+        display: block;
+        li {
+          .clearfix();
+          font-size: 26/@rem;
+          font-weight: bold;
+          line-height: 40/@rem;
+          margin-bottom: 35/@rem;
+          .fl {
+            width: 30/@rem;
+          }
+          p {
+            margin-left: 30/@rem;
+          }
         }
       }
-    }
-    .close{
-      position: absolute;
-      right: 23/@rem;
-      top: 23/@rem;
-      i {
-        color: #939399;
-        font-size: 32/@rem;
+      .close {
+        position: absolute;
+        right: 23/@rem;
+        top: 23/@rem;
+        i {
+          color: #939399;
+          font-size: 32/@rem;
+        }
       }
     }
   }
-}
 </style>
 

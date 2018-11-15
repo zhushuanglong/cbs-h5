@@ -322,8 +322,10 @@
       // 提交购物车
       submitCart() {
         // 判定是否有登录token
+        
         if (!localStorage.userToken) {
           // 去登录页面
+          console.log("localStorage.userToken");
           this.$router.push({
             path: '/my/sign'
           });

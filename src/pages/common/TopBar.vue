@@ -88,11 +88,6 @@
           this.isShowShare = false;
         }
         var value = this.urlValue //获取当前页面url
-        console.log("val", value)
-        //使用isgd进行加密处理
-        // this.isgd.shorten(value,function(res){
-        //   console.log(res)
-        // })
         var inputEle = document.getElementById('url')
         inputEle.value = value;
         this.isShowShare = !this.isShowShare;

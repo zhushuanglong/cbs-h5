@@ -42,7 +42,7 @@
           </div>
           <div class="copy-text">
             <input type="text" class="url-text" placeholder="url" id="url" readonly="readonly">
-            <div class="btn-copy" @click="copyLink" ref="btnCopy" data-clipboard-target="#url">Copy</div>
+            <input class="btn-copy" type="button" @click="copyLink" ref="btnCopy" data-clipboard-target="#url" value="Copy">
           </div>
           <p class="share-intro">Inviting links to people who need to know, you will get rebates when they buy</p>
           <p class="share-others-title">Or clivk the bottons blow to share</p>
@@ -116,7 +116,8 @@
         currencySymbol: localStorage.currencySymbol,
         symbol: '',
         newList: [],
-        isShowShare: false
+        isShowShare: false,
+        inviteCode: '' //邀请码
       }
     },
     components: {
@@ -138,7 +139,6 @@
     mounted() {
       this.getHomeData(); //获取页面数据
       this.loadMore();
-      this.btnCopy = new this.clipboard(this.$refs.btnCopy);
     },
     computed: {
       'isShowFloatTop': function() {
@@ -150,36 +150,50 @@
       }
     },
     methods: {
-      rebate(rebatePrice){
+      rebate(rebatePrice) {
         let value = parseFloat(rebatePrice);
-        if(value > 0){
+        if (value > 0) {
           return true;
-        }else{
+        } else {
           return false;
         }
       },
       // 复制链接
       copyLink() {
-        this.$nextTick(function() {
+        // 判断有没有登录，没有登录的话，不可以分享
+        if (!localStorage.userToken) {
+          this.$Toast('please log in!');
+          let btn = document.getElementsByClassName('btn-copy');
+          btn.disabled = true;
+          return;
+        } else {
           let self = this;
-          let clipboard = self.btnCopy;
-          clipboard.on('success', function() {
-            self.$Toast('copy finished');
-          });
-          clipboard.on('error', function() {
-            self.$Toast('copy failed, please copy by hand');
+          this.inviteCode = JSON.parse(localStorage.userInfo).inviteCode // 邀请码
+          this.btnCopy = new this.clipboard(this.$refs.btnCopy);
+          this.$nextTick(function() {
+            let clipboard = self.btnCopy;
+            clipboard.on('success', function() {
+              self.$Toast('copy finished');
+            });
+            clipboard.on('error', function() {
+              self.$Toast('copy failed, please copy by hand');
+            })
           })
-        })
+        }
       },
       // 展示分享弹窗
       showShare() {
+        let Base64 = require('js-base64').Base64;
         var value = window.location.href; //获取当前页面url
-        // 使用isgd进行加密处理
-        // this.isgd.shorten(value,function(res){
-        //   console.log(res)
-        // })
         var inputEle = document.getElementById('url')
-        inputEle.value = value;
+        if (!localStorage.userToken) {
+          inputEle.value = value;
+        } else {
+          this.inviteCode = JSON.parse(localStorage.userInfo).inviteCode // 邀请码
+          let baseURL = Base64.encode(this.inviteCode);
+          let url = value + '?inviteCode=' + this.inviteCode; //拼接邀请码
+          inputEle.value = url;
+        }
         this.isShowShare = !this.isShowShare;
       },
       // 获取货币列表
@@ -272,7 +286,7 @@
 </script>
 <style lang="less">
   @import '~less/tool.less'; // 分享链接
-  .rebate{
+  .rebate {
     height: 32/@rem;
     background: @orange;
     color: #fff;
