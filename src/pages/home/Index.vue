@@ -20,7 +20,7 @@
               <p class="goods-title">{{item.name}}</p>
               <p class="goods-price">
                 <span class="price-now">{{returnFloat(item.price || 0) | price}}</span>
-                <!-- <span class="price-origin">$102</span> -->
+                <span class="rebate" v-show="rebate(item.rebate)">Rebate {{currencySymbol}}{{item.rebate}}</span>
                 <!-- <span class="price-rebate">$102</span> -->
               </p>
             </router-link>
@@ -38,10 +38,7 @@
         <div class="share-container">
           <div class="share-head">
             <i class="iconfont share-link">&#xe654;</i>
-            <div class="share-header-text">
-              <p class="share-title">Public sharing</p>
-              <p class="share-subTitle">Anyone who gets the link can access</p>
-            </div>
+            <p class="share-title">Public sharing</p>
           </div>
           <div class="copy-text">
             <input type="text" class="url-text" placeholder="url" id="url" readonly="readonly">
@@ -50,8 +47,8 @@
           <p class="share-intro">Inviting links to people who need to know, you will get rebates when they buy</p>
           <p class="share-others-title">Or clivk the bottons blow to share</p>
           <div class="share-others">
-            <div class="fb"><span class="share-others-text">share</span><i class="iconfont others-fb">&#xe652;</i></div>
-            <div class="tw"><span class="share-others-text">share</span><i class="iconfont others-tw">&#xe656;</i></div>
+            <div class="fb others"><span class="share-others-text">share</span><i class="iconfont others-fb">&#xe652;</i></div>
+            <div class="tw others"><span class="share-others-text">share</span><i class="iconfont others-tw">&#xe656;</i></div>
           </div>
         </div>
       </div>
@@ -153,6 +150,14 @@
       }
     },
     methods: {
+      rebate(rebatePrice){
+        let value = parseFloat(rebatePrice);
+        if(value > 0){
+          return true;
+        }else{
+          return false;
+        }
+      },
       // 复制链接
       copyLink() {
         this.$nextTick(function() {
@@ -169,7 +174,7 @@
       // 展示分享弹窗
       showShare() {
         var value = window.location.href; //获取当前页面url
-        //使用isgd进行加密处理
+        // 使用isgd进行加密处理
         // this.isgd.shorten(value,function(res){
         //   console.log(res)
         // })
@@ -267,6 +272,13 @@
 </script>
 <style lang="less">
   @import '~less/tool.less'; // 分享链接
+  .rebate{
+    height: 32/@rem;
+    background: @orange;
+    color: #fff;
+    padding: 5/@rem 10/@rem;
+    border-radius: 3/@rem;
+  }
   .share-back {
     background: rgba(0, 0, 0, 0.5);
     height: 100%;
@@ -291,12 +303,12 @@
     top: 95/@rem;
     right: 62/@rem;
     width: 500/@rem;
-    height: 290/@rem;
+    height: 298/@rem;
     font-size: 12/@rem;
     padding: 0!important;
     text-align: left;
     background: #fff;
-    line-height: 23/@rem;
+    line-height: 25/@rem;
     border-radius: 5/@rem;
     .share-wrapper>div,
     p {
@@ -304,9 +316,10 @@
       padding: 0;
     }
     .share-container {
-      padding: 15/@rem 10/@rem;
+      padding: 15/@rem 0;
       .share-head {
         display: flex;
+        padding-left: 20/@rem;
         .share-link {
           display: inline-block;
           width: 38/@rem;
@@ -319,18 +332,17 @@
           border-radius: 19/@rem;
           margin-top: 5/@rem;
         }
-        .share-header-text {
-          padding: 5/@rem 0;
+        .share-title {
+          padding-top: 10/@rem;
           margin-left: 10/@rem;
-          .share-subTitle {
-            color: #9B9B9B;
-          }
+          font-weight: bold;
+          text-align: center;
         }
       }
       .copy-text {
         border: 1px solid #EFEFEF;
         width: 90%;
-        height: 46/@rem;
+        height: 53/@rem;
         display: flex;
         justify-content: space-between;
         margin-bottom: 6/@rem;
@@ -345,14 +357,18 @@
           width: 86/@rem;
           background: #FDFDFD;
           padding: 10/@rem 16/@rem;
+          font-weight: bold;
         }
       }
       .share-intro {
         margin-top: 12/@rem;
+        color: #BCBCBC;
+        padding: 0 20/@rem;
       }
       .share-others-title {
         font-size: 10/@rem;
-        margin-top: 18/@rem;
+        margin-top: 25/@rem;
+        padding: 0 20/@rem;
         white-space: nowrap;
         font-weight: bold;
       }
@@ -361,37 +377,36 @@
         display: flex;
         color: #fff;
         margin-top: 6/@rem;
-        .fb {
-          width: 180/@rem;
-          border: 1px solid;
-          background: #4E6CAA;
+        padding-left: 20/@rem;
+        .others {
+          width: 126/@rem;
           padding: 8/@rem 0;
           text-align: right;
           border-radius: 6/@rem;
+        }
+        .fb {
+          background: #4E6CAA;
           .share-others-text {
-            margin-right: 30/@rem;
+            margin-right: 12/@rem;
           }
           .others-fb {
             font-size: 12/@rem;
-            padding: 4/@rem 10/@rem;
+            padding: 8/@rem 10/@rem;
             background: #3B5999;
+            border-radius: 6/@rem;
           }
         }
         .tw {
-          width: 180/@rem;
-          border: 1px solid;
           background: #61BBF7;
-          padding: 8/@rem 0;
-          text-align: right;
-          border-radius: 6/@rem;
           margin-left: 22/@rem;
           .share-others-text {
-            margin-right: 30/@rem;
+            margin-right: 12/@rem;
           }
           .others-tw {
             font-size: 12/@rem;
-            padding: 5/@rem 10/@rem;
+            padding: 8/@rem 10/@rem;
             background: #38A1F3;
+            border-radius: 6/@rem;
           }
         }
       }

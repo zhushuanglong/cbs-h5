@@ -41,6 +41,10 @@
         Earn {{data.max_integral}} Points，100 points equals to U.S. {{1.00|price}}
         <i class="iconfont">&#xe62e;</i>
       </li>
+      <li class="detail-rebate">
+        <img src="~img/detail/s4.png">
+        Rebate {{data.currency_symbol}} after buy
+      </li>
     </ul>
 
     <div class="detail-sku" @click="footCartClick">
@@ -203,6 +207,7 @@ export default {
       }).then((res) => {
         if (res.status === 200 && res.content) {
           this.data = res.content;
+          console.log(this.data)
         }
       }, err => {
         this.$Toast(err);
