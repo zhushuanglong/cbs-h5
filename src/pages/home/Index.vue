@@ -4,7 +4,7 @@
       <div class="top-bar">
         <i class="iconfont search-icon fl" @click="goToSearch">&#xe620;</i>
         <img src="../../images/home/logo.png" class="logo" alt="">
-        <i class="share iconfont" @click="showShare">&#xe64f;</i>
+        <i class="share iconfont" @click="showShare">&#xe658;</i>
         <i class="currency iconfont fr" @click="() => {this.isShow = true}">&#xe628;</i>
       </div>
       <Banner :list="banners" v-if="banners && banners.length"></Banner>
@@ -191,7 +191,7 @@
         } else {
           this.inviteCode = JSON.parse(localStorage.userInfo).inviteCode // 邀请码
           let baseURL = Base64.encode(this.inviteCode);
-          let url = value + '?inviteCode=' + this.inviteCode; //拼接邀请码
+          let url = value + '?inviteCode=' + baseURL; //拼接邀请码
           inputEle.value = url;
         }
         this.isShowShare = !this.isShowShare;

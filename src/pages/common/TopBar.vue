@@ -2,7 +2,7 @@
   <div class="global-topbar">
     <div class="global-center">
       <template v-if="close">
-                    <a class="back" href="javascript:;" @click="pageBack"><i class="iconfont">&#xe63f;</i></a>
+                        <a class="back" href="javascript:;" @click="pageBack"><i class="iconfont">&#xe63f;</i></a>
 </template>
 <template v-else>
   <router-link class="back" v-if="backUrl" :to="{path: '/' + backUrl}">
@@ -10,7 +10,7 @@
   <a class="back" href="javascript:;" v-else @click="pageBack"><i class="iconfont" id="icon-back">&#xe62f;</i></a>
 </template>
       <div class="title">{{title}}</div>
-      <i class="share iconfont" @click="showShare" v-show="showIcon">&#xe64f;</i>
+      <i class="share iconfont" @click="showShare" v-show="showIcon">&#xe658;</i>
 
       <router-link :to="{path: '/cart?id=' + detailId}" v-if="$route.name === 'detail'">
         <i class="iconfont cart">&#xe624;</i>
@@ -68,13 +68,17 @@
     data() {
       return {
         isShowShare: false,
-        showIcon: true
+        showIcon: false,
+        inviteCode: '' //邀请码
       }
     },
     mounted() {
       this.btnCopy = new this.clipboard(this.$refs.btnCopy);
       // 是否展示分享图标
-      if (this.title === 'Shopping Cart') {
+      console.log(this.title != "Product Details")
+      if (this.title === "Product Details") {
+        this.showIcon = true;
+      }else{
         this.showIcon = false;
       }
     },
@@ -84,27 +88,42 @@
       },
       // 点击展示分享弹窗
       showShare() {
-        if (this.title === 'Shopping Cart') {
-          this.isShowShare = false;
-        }
+        let Base64 = require('js-base64').Base64;
         var value = this.urlValue //获取当前页面url
         var inputEle = document.getElementById('url')
-        inputEle.value = value;
+        if (!localStorage.userToken) {
+          inputEle.value = value;
+        } else {
+          this.inviteCode = JSON.parse(localStorage.userInfo).inviteCode // 邀请码
+          let baseURL = Base64.encode(this.inviteCode);
+          let url = value + '%inviteCode=' + baseURL; //拼接邀请码
+          inputEle.value = url;
+        }
         this.isShowShare = !this.isShowShare;
         this.$emit('showBack', this.isShowShare);
       },
       // 复制链接
       copyLink() {
-        this.$nextTick(function() {
+        // 判断有没有登录，没有登录的话，不可以分享
+        if (!localStorage.userToken) {
+          this.$Toast('please log in!');
+          let btn = document.getElementsByClassName('btn-copy');
+          btn.disabled = true;
+          return;
+        } else {
           let self = this;
-          let clipboard = self.btnCopy;
-          clipboard.on('success', function() {
-            self.$Toast('copy finished');
-          });
-          clipboard.on('error', function() {
-            self.$Toast('copy failed, please copy by hand');
+          this.inviteCode = JSON.parse(localStorage.userInfo).inviteCode // 邀请码
+          this.btnCopy = new this.clipboard(this.$refs.btnCopy);
+          this.$nextTick(function() {
+            let clipboard = self.btnCopy;
+            clipboard.on('success', function() {
+              self.$Toast('copy finished');
+            });
+            clipboard.on('error', function() {
+              self.$Toast('copy failed, please copy by hand');
+            })
           })
-        })
+        }
       },
     }
   };
