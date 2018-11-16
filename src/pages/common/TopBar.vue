@@ -2,7 +2,7 @@
   <div class="global-topbar">
     <div class="global-center">
       <template v-if="close">
-                        <a class="back" href="javascript:;" @click="pageBack"><i class="iconfont">&#xe63f;</i></a>
+                                <a class="back" href="javascript:;" @click="pageBack"><i class="iconfont">&#xe63f;</i></a>
 </template>
 <template v-else>
   <router-link class="back" v-if="backUrl" :to="{path: '/' + backUrl}">
@@ -10,7 +10,7 @@
   <a class="back" href="javascript:;" v-else @click="pageBack"><i class="iconfont" id="icon-back">&#xe62f;</i></a>
 </template>
       <div class="title">{{title}}</div>
-      <i class="share iconfont" @click="showShare" v-show="showIcon">&#xe658;</i>
+      <i class="share iconfont" v-show="showIcon" @mouseover="showShare" @mouseout="()=>{this.isShowShare = false}">&#xe658;</i>
 
       <router-link :to="{path: '/cart?id=' + detailId}" v-if="$route.name === 'detail'">
         <i class="iconfont cart">&#xe624;</i>
@@ -30,10 +30,10 @@
             <div class="btn-copy" @click="copyLink" ref="btnCopy" data-clipboard-target="#url">Copy</div>
           </div>
           <p class="share-intro">Inviting links to people who need to know, you will get rebates when they buy</p>
-          <p class="share-others-title">Or clivk the bottons blow to share</p>
+          <p class="share-others-title">Or click the bottons blow to share</p>
           <div class="share-others">
-            <div class="fb others"><span class="share-others-text">share</span><i class="iconfont others-fb">&#xe652;</i></div>
-            <div class="tw others"><span class="share-others-text">share</span><i class="iconfont others-tw">&#xe656;</i></div>
+            <div class="fb others" @click="toFacebook"><span class="share-others-text">share</span><i class="iconfont others-fb">&#xe652;</i></div>
+            <div class="tw others" @click="toTwitter"><span class="share-others-text">share</span><i class="iconfont others-tw">&#xe656;</i></div>
           </div>
         </div>
       </div>
@@ -63,68 +63,90 @@
         type: Boolean,
         default: false
       },
-      urlValue: ''
     },
     data() {
       return {
         isShowShare: false,
         showIcon: false,
-        inviteCode: '' //邀请码
+        inviteCode: '', //邀请码
+        shareUrl: '',
+        shortUrl: '' //短链接
       }
     },
     mounted() {
+      this.getUrl();
+      this.getShortenUrl();
       this.btnCopy = new this.clipboard(this.$refs.btnCopy);
       // 是否展示分享图标
-      console.log(this.title != "Product Details")
       if (this.title === "Product Details") {
         this.showIcon = true;
-      }else{
+      } else {
         this.showIcon = false;
       }
     },
     methods: {
+      mouseoutShare(){
+        this.isShowShare = false;
+        this.$emit('showBack', this.isShowShare);
+      },
+      getShortenUrl() {
+
+        let self = this;
+        this.request('ShortUrl', {
+          url: self.shareUrl
+        }).then((res) => {
+          if (res.status === 200) {
+            this.shortUrl = res.content.shortUrl;
+          }
+        })
+      },
       pageBack() {
         this.$router.go(-1);
       },
+      // 获得shareUrl
+      getUrl() {
+        let Base64 = require('js-base64').Base64;
+        var value = window.location.href; //获取当前页面url
+        this.inviteCode = JSON.parse(localStorage.userInfo).inviteCode // 邀请码
+        console.log("invite code",this.inviteCode)
+        let baseURL = Base64.encode(this.inviteCode);
+        console.log("baseURL code",baseURL)
+        this.shareUrl = value + '&inviteCode=' + baseURL; //拼接邀请码
+      },
       // 点击展示分享弹窗
       showShare() {
-        let Base64 = require('js-base64').Base64;
-        var value = this.urlValue //获取当前页面url
         var inputEle = document.getElementById('url')
-        if (!localStorage.userToken) {
-          inputEle.value = value;
-        } else {
-          this.inviteCode = JSON.parse(localStorage.userInfo).inviteCode // 邀请码
-          let baseURL = Base64.encode(this.inviteCode);
-          let url = value + '%inviteCode=' + baseURL; //拼接邀请码
-          inputEle.value = url;
-        }
+        inputEle.value = this.shortUrl;
         this.isShowShare = !this.isShowShare;
         this.$emit('showBack', this.isShowShare);
+        
       },
       // 复制链接
       copyLink() {
-        // 判断有没有登录，没有登录的话，不可以分享
-        if (!localStorage.userToken) {
-          this.$Toast('please log in!');
-          let btn = document.getElementsByClassName('btn-copy');
-          btn.disabled = true;
-          return;
-        } else {
-          let self = this;
-          this.inviteCode = JSON.parse(localStorage.userInfo).inviteCode // 邀请码
-          this.btnCopy = new this.clipboard(this.$refs.btnCopy);
-          this.$nextTick(function() {
-            let clipboard = self.btnCopy;
-            clipboard.on('success', function() {
-              self.$Toast('copy finished');
-            });
-            clipboard.on('error', function() {
-              self.$Toast('copy failed, please copy by hand');
-            })
-          })
-        }
+        //不管有没有登录，都可以分享
+        let self = this;
+        let clipboard = self.btnCopy;
+        clipboard.on('success', function() {
+          self.$Toast('copy finished');
+        });
+        clipboard.on('error', function() {
+          self.$Toast('copy failed, please copy by hand');
+        })
       },
+      // 发布到facebook
+      toFacebook() {
+        let shareUrl = this.shortUrl; // 分享的链接
+        let app_id = '883175368431883';
+        let url = "https://www.facebook.com/share?display=popup&" + 'app_id=' + app_id + '&url=' + this.shortUrl;
+        window.open(url, '_blank');
+      },
+      //发布到twitter
+      toTwitter() {
+        let shareUrl = this.shortUrl; // 分享的链接
+        let title = 'WaiWaiMall'
+        let url = "https://twitter.com/share?" + 'text=' + title + '&url=' + shareUrl;
+        window.open(url, '_blank');
+      }
     }
   };
 </script>
@@ -139,7 +161,7 @@
     padding: 0 5/@rem;
   }
   .rect {
-    border-bottom: 15/@rem solid #fff;
+    border-bottom: 15/@rem solid #eee;
     border-top: 15/@rem solid transparent;
     border-left: 15/@rem solid transparent;
     border-right: 15/@rem solid transparent;
@@ -156,11 +178,12 @@
     width: 500/@rem;
     height: 298/@rem;
     font-size: 12/@rem;
-    padding: 0!important;
     text-align: left;
     background: #fff;
     line-height: 25/@rem;
     border-radius: 5/@rem;
+    padding: 0 10/@rem;
+    border: 1px solid #eee;
     .share-wrapper>div,
     p {
       margin: 0;
@@ -196,7 +219,7 @@
         display: flex;
         justify-content: space-between;
         margin-bottom: 6/@rem;
-        margin-left: 20/@rem;
+        margin-left: 10/@rem;
         margin-top: 12/@rem;
         .url-text {
           width: 180px;
@@ -211,12 +234,14 @@
       }
       .share-intro {
         margin-top: 12/@rem;
+        padding-left: 10/@rem;
       }
       .share-others-title {
         font-size: 10/@rem;
         margin-top: 18/@rem;
         white-space: nowrap;
         font-weight: bold;
+        padding-left: 10/@rem;
       }
       .share-others {
         border: 1px solid;
