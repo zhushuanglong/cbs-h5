@@ -11,28 +11,56 @@
       <bottombar></bottombar>
     </template>
     <!-- 有 -->
-    <template v-if="cartsData && cartsData.goods && cartsData.goods.length">
+    <template v-if="cartsData && ((cartsData.goods && cartsData.goods.length) || (cartsData.promotion && cartsData.promotion.length))">
       <div class="cart-have">
-        <router-link :to="{path: '/activity?activity_id=' + cartsData.promotion_id}" class="cart-enjoy">
-          <span class="img"></span>
-          <span>{{cartsData.promotion_msg}}</span>
-          <i class="iconfont">&#xe62e;</i>
-        </router-link>
-        <div class="cart-list">
-          <div class="detail" v-for="item in cartsData.goods">
-            <router-link :to="{path: '/detail?id=' + item.id}" class="img fl">
-              <img v-lazy="item.img && item.img.ossimg()">
+        <div v-if="cartsData && cartsData.promotion && cartsData.promotion.length">
+          <div v-for="(item,inde) in cartsData.promotion" :key="inde">
+            <router-link :to="{path: '/activity?activity_id=' + item.promotion_id}" class="cart-enjoy">
+              <span class="img"></span>
+              <span>{{item.promotion_msg}}</span>
+              <i class="iconfont">&#xe62e;</i>
             </router-link>
-            <div class="info fl">
-              <div class="title">{{item.name}}</div>
-              <div class="sku" v-for="(prop, key, index) in item.props" :class="{'mt': index === 1}">{{prop}}</div>
-              <div class="num">{{item.num}} x {{item.price | price}}</div>
-              <div class="price">{{returnFloat(accMul(item.num, item.price) || 0) | price}}</div>
-              <div class="reduce" @click="reduce(item)" :class="{'ban': item.num <= 1}"><i class="iconfont">&#xe62a;</i></div>
-              <div class="add" @click="add(item)"><i class="iconfont">&#xe66f;</i></div>
+            <div class="cart-list">
+              <div class="detail" v-for="it in item.goods">
+                <router-link :to="{path: '/detail?id=' + it.id}" class="img fl">
+                  <img v-lazy="it.img && it.img.ossimg()">
+                </router-link>
+                <div class="info fl">
+                  <div class="title">{{it.name}}</div>
+                  <div class="sku" v-for="(prop, key, index) in it.props" :class="{'mt': index === 1}">{{prop}}</div>
+                  <div class="num">{{it.num}} x {{it.price | price}}</div>
+                  <div class="price">{{returnFloat(accMul(it.num, it.price) || 0) | price}}</div>
+                  <div class="reduce" @click="reduce(it)" :class="{'ban': it.num <= 1}"><i class="iconfont">&#xe62a;</i></div>
+                  <div class="add" @click="add(it)"><i class="iconfont">&#xe66f;</i></div>
+                </div>
+                <!-- delete -->
+                <div class="btn-delete" @click.sync="removeGoods(it)">Remove</div>
+              </div>
             </div>
-            <!-- delete -->
-            <div class="btn-delete" @click.sync="removeGoods(item)">Remove</div>
+          </div>
+        </div>
+        <div v-if="cartsData && cartsData.goods && cartsData.goods.length">
+          <router-link :to="{path: '/activity?activity_id=' + cartsData.promotion_id}" class="cart-enjoy">
+            <span class="img"></span>
+            <span>{{cartsData.promotion_msg}}</span>
+            <i class="iconfont">&#xe62e;</i>
+          </router-link>
+          <div class="cart-list">
+            <div class="detail" v-for="item in cartsData.goods">
+              <router-link :to="{path: '/detail?id=' + item.id}" class="img fl">
+                <img v-lazy="item.img && item.img.ossimg()">
+              </router-link>
+              <div class="info fl">
+                <div class="title">{{item.name}}</div>
+                <div class="sku" v-for="(prop, key, index) in item.props" :class="{'mt': index === 1}">{{prop}}</div>
+                <div class="num">{{item.num}} x {{item.price | price}}</div>
+                <div class="price">{{returnFloat(accMul(item.num, item.price) || 0) | price}}</div>
+                <div class="reduce" @click="reduce(item)" :class="{'ban': item.num <= 1}"><i class="iconfont">&#xe62a;</i></div>
+                <div class="add" @click="add(item)"><i class="iconfont">&#xe66f;</i></div>
+              </div>
+              <!-- delete -->
+              <div class="btn-delete" @click.sync="removeGoods(item)">Remove</div>
+            </div>
           </div>
         </div>
         <div class="cart-discounts cart-rel">
@@ -56,9 +84,11 @@
           </div>
         </div>
       </div>
-      <div class="global-fixed-btn">
-        <div @click="submitCart()" class="fixed-btn">CONTINUE CHECKOUT ( <span>{{returnFloat(totalPrice) | price}}</span> )</div>
-      </div>
+      <router-link :to="{path: '/carts/checkout?coupon_id='+couponId+'&integral='+isUsePoint}">
+        <div class="global-fixed-btn">
+          <div class="fixed-btn">CONTINUE CHECKOUT ( <span>{{returnFloat(totalPrice) | price}}</span> )</div>
+        </div>
+      </router-link>
       <confirm :show.sync="confirmModal.show" :title="confirmModal.title" :content="confirmModal.content" :on-ok="confirmModal.action" okText="Yes"></confirm>
       <Coupon :show.sync="isShowCoupon" :coupons="cartsData.coupon || []" :isClick="true" :clickCallback="clickCoupon" :isCart="true"></Coupon>
     </template>
@@ -139,6 +169,17 @@
         let len = goods.length;
         for (let i = 0; i < len; i++) {
           this.totalPrice += this.accMul(goods[i].num, goods[i].price);
+        }
+        let promotions = this.cartsData.promotion;
+        let promotion_len = promotions.length;
+        for (let i = 0; i < promotion_len; i++) {
+          if(promotions[i].goods) {
+            let promotion_goods = promotions[i].goods;
+            let promotion_goods_len = promotion_goods.length;
+            for (let j = 0; j< promotion_goods_len; j++) {
+              this.totalPrice += this.accMul(promotion_goods[j].num, promotion_goods[j].price);
+            }
+          }
         }
         // 浮点数处理
         this.totalPrice = this.accSub(this.totalPrice, this.cartsData.specialoffer); // 减
@@ -326,30 +367,35 @@
         if (!localStorage.userToken) {
           // 去登录页面
           this.$router.push({
-            path: '/my/sign'
+            path: '/cart/checkout'
           });
           return;
         }
-        this.request('OrdersCheckout', {
-          type: 2, // 是	Number	单订来源(1：PC端，2：H5，4：APP)
-          coupon_id: this.couponId, // 是	String或者null	优惠券id 没有则为空
-          integral: this.isUsePoint, // 是	Boolean	积分是否选择 ture或者false
-          date: Date.parse(new Date()) // 否	string	用户本地时间
-        }).then((res) => {
-          if (res.status === 200 && res.content) {
-            this.$router.push({
-              path: '/cart/secure?orderId=' + res.content
-            });
-          } else if (res.status === 403 || res.status === 402) {
-            this.$router.push({
-              name: 'sign'
-            })
-          } else {
-            this.$Toast(res.msg)
-          }
-        }, err => {
-          this.$Toast(err);
+        // 跳转到订单确认页
+        this.$router.push({
+          path: '/aaa'
         });
+        return;
+        // this.request('OrdersCheckout', {
+        //   type: 2, // 是	Number	单订来源(1：PC端，2：H5，4：APP)
+        //   coupon_id: this.couponId, // 是	String或者null	优惠券id 没有则为空
+        //   integral: this.isUsePoint, // 是	Boolean	积分是否选择 ture或者false
+        //   date: Date.parse(new Date()) // 否	string	用户本地时间
+        // }).then((res) => {
+        //   if (res.status === 200 && res.content) {
+        //     this.$router.push({
+        //       path: '/cart/secure?orderId=' + res.content
+        //     });
+        //   } else if (res.status === 403 || res.status === 402) {
+        //     this.$router.push({
+        //       name: 'sign'
+        //     })
+        //   } else {
+        //     this.$Toast(res.msg)
+        //   }
+        // }, err => {
+        //   this.$Toast(err);
+        // });
       }
     },
     beforeDestroy() {

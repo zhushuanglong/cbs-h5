@@ -52,6 +52,15 @@ export default new Router({
       }
     },
     {
+      name: 'cartCheckout',
+      path: '/carts/checkout',
+      component: function (resolve) {
+        require.ensure([], function () {
+          resolve(require('pages/cart/CartCheckout'));
+        }, 'cartCheckout');
+      }
+    },
+    {
       name: 'secure',
       path: '/cart/secure',
       component: function (resolve) {

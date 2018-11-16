@@ -10,12 +10,14 @@ const methodMap = {
     ProductsList: {url: '/products/list', method: 'post'},
     /** 购物车 **/
     Carts: {url: '/carts', method: 'post'},
+    /** 购物车确认 **/
+    CartsCheckout: {url: '/carts/checkout', method: 'post'},
     /** 购物车 **/
     CartsAdd: {url: '/carts/add', method: 'post'},
     /** 购物车添加 **/
     CartsUpdate: {url: '/carts/update', method: 'post'},
     /** 购物车删除 **/
-    CartsDelete: {url: '/carts/update', method: 'post'},
+    CartsDelete: {url: '/carts/delete', method: 'post'},
     /** 银行卡列表 **/
     CardsList: {url: '/cards/list', method: 'post'},
     /** 银行卡信息 **/
