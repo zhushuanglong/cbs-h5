@@ -147,7 +147,6 @@
         if (this.totalPrice < 0) {
           this.totalPrice = 0;
         }
-        console.log(this.totalPrice);
       },
       // 增加 - 登录后
       add(item) {
