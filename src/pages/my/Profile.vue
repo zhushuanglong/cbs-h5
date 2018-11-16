@@ -147,6 +147,8 @@ export default {
       localStorage.removeItem('userToken');
       localStorage.removeItem('touristToken');
       this.$router.go(-1)
+
+      localStorage.removeItem('yym_cartNumber');
     },
     toAddress() {
       this.$router.push({
