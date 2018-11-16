@@ -359,7 +359,6 @@ var setOnline = [
     type: 'post',
     url: '/currency'
   }
-
 ];
 
 // 输出配置项
