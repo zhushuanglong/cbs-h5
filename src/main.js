@@ -3,7 +3,7 @@ import App from "./App";
 import router from "./router";
 import initComponents from "./initComponents";
 import Http from "./libs/http";
-import clipboard from 'Clipboard'; //复制粘贴板
+import clipboard from 'clipboard'; //复制粘贴板
 // import store from './store'
 Vue.filter('price', function(value, reset) {
   let currencySymbol = localStorage.currencySymbol;
