@@ -149,6 +149,8 @@ export default {
       // }
       Object.assign(payData, {
         order_id: this.$route.query.orderId,
+        coupon_id: this.$route.query.coupon_id,
+        integral: this.$route.query.integral,
         address_id:this.$route.query.addressId,
         balance: this.$route.query.balance,
         pay_type: this.$route.query.payType,
@@ -166,27 +168,36 @@ export default {
         this.$Toast('CVC can not be empty');
         return;
       }
-      this.request('OrdersPay', payData).then((res) => {
+      let url = 'CartsPay';
+      if(this.$route.query.orderId) {
+        url = 'OrdersPay';
+      }
+      this.request(url, payData).then((res) => {
         let self = this;
+        let order_id = '';
+        if(res.content) {
+          order_id = res.content.orderId;
+        }
         if (res.status === 200) {
           self.$Toast({
             message: 'Payment Success',
             duration: 1200
           });
           setTimeout(function() {
-            self.$router.push({path: '/cart/successful?orderId=' + self.$route.query.orderId});
+            self.$router.push({path: '/cart/successful?orderId=' + order_id});
           }, 1000);
         } else {
           self.$Toast({
             message: res.msg || 'Payment Failure',
             duration: 1200
           });
-          setTimeout(function() {
-            self.$router.push({path: '/cart/failure?orderId=' + self.$route.query.orderId});
-          }, 1000);
-
+          if (order_id) {
+            setTimeout(function() {
+              self.$router.push({path: '/cart/failure?orderId=' + order_id});
+            }, 1000);
+          }
           // 清空购物车数量
-          localStorage.yym_cartNumber = 0;
+          // localStorage.yym_cartNumber = 0;
         }
       }, err => {
         this.$Toast(err);

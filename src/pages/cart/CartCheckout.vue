@@ -139,11 +139,11 @@ export default {
     // 获取订单信息
     getOrdersData () {
       this.request('CartsCheckout', {
-        order_id: this.$route.query.orderId
+        coupon_id: this.$route.query.coupon_id,
+        integral: this.$route.query.integral
       }).then((res) => {
         if (res.status === 200 && res.content) {
           this.data = res.content;
-          console.log(this.data)
           // 计算总价
           this.computePice();
           // addressId
@@ -212,6 +212,8 @@ export default {
       } else {
         this.$router.push({path: '/cart/addCard', query: {
           orderId: this.$route.query.orderId,
+          coupon_id: this.$route.query.coupon_id,
+          integral: this.$route.query.integral,
           addressId: +this.addressId,
           balance: this.isBalance,
           payType: this.payType || 3
@@ -258,7 +260,8 @@ export default {
       // 若有卡或者使用Paypal支付，并选择了Credit／Debit card
 
       this.request('OrdersPay', {
-        order_id: this.$route.query.orderId, // 订单号
+        coupon_id: this.$route.query.coupon_id, // 订单号
+        integral: this.$route.query.integral, // 
         address_id:	this.addressId, // 地址id
         balance: this.isBalance, // 是否使用余额
         pay_type: this.payType, //	是	Number	支付方式 2-paypal 3-stripe

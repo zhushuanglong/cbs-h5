@@ -12,6 +12,8 @@ const methodMap = {
     Carts: {url: '/carts', method: 'post'},
     /** 购物车确认 **/
     CartsCheckout: {url: '/carts/checkout', method: 'post'},
+    /** 购物车支付 **/
+    CartsPay: {url: '/orders/cartPay', method: 'post'},
     /** 购物车 **/
     CartsAdd: {url: '/carts/add', method: 'post'},
     /** 购物车添加 **/

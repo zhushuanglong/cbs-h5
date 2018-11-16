@@ -40,11 +40,6 @@
           </div>
         </div>
         <div v-if="cartsData && cartsData.goods && cartsData.goods.length">
-          <router-link :to="{path: '/activity?activity_id=' + cartsData.promotion_id}" class="cart-enjoy">
-            <span class="img"></span>
-            <span>{{cartsData.promotion_msg}}</span>
-            <i class="iconfont">&#xe62e;</i>
-          </router-link>
           <div class="cart-list">
             <div class="detail" v-for="item in cartsData.goods">
               <router-link :to="{path: '/detail?id=' + item.id}" class="img fl">
@@ -142,7 +137,7 @@
               // 认定是游客访问
               localStorage.setItem('userToken', res.content.token);
             }
-            if (this.cartsData && this.cartsData.goods && this.cartsData.goods.length) {
+            if (this.cartsData && ((this.cartsData.goods && this.cartsData.goods.length) || (this.cartsData.promotion && this.cartsData.promotion.length))) {
               this.cartEmpty = false;
               this.computeTotalPrice();
             } else {
