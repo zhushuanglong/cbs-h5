@@ -4,7 +4,7 @@
       <div class="top-bar">
         <i class="iconfont search-icon fl" @click="goToSearch">&#xe620;</i>
         <img src="../../images/home/logo.png" class="logo" alt="">
-        <i class="share iconfont" @click="showShare">&#xe658;</i>
+        <i class="share iconfont" @mouseover="showShare" @mouseout="mouseoutShare">&#xe658;</i>
         <i class="currency iconfont fr" @click="() => {this.isShow = true}">&#xe628;</i>
       </div>
       <Banner :list="banners" v-if="banners && banners.length"></Banner>
@@ -45,10 +45,10 @@
             <input class="btn-copy" type="button" @click="copyLink" ref="btnCopy" data-clipboard-target="#url" value="Copy">
           </div>
           <p class="share-intro">Inviting links to people who need to know, you will get rebates when they buy</p>
-          <p class="share-others-title">Or clivk the bottons blow to share</p>
+          <p class="share-others-title">Or click the bottons blow to share</p>
           <div class="share-others">
-            <div class="fb others"><span class="share-others-text">share</span><i class="iconfont others-fb">&#xe652;</i></div>
-            <div class="tw others"><span class="share-others-text">share</span><i class="iconfont others-tw">&#xe656;</i></div>
+            <div class="fb others" @click="toFacebook"><span class="share-others-text">share</span><i class="iconfont others-fb">&#xe652;</i></div>
+            <div class="tw others" @click="toTwitter"><span class="share-others-text">share</span><i class="iconfont others-tw">&#xe656;</i></div>
           </div>
         </div>
       </div>
@@ -117,7 +117,9 @@
         symbol: '',
         newList: [],
         isShowShare: false,
-        inviteCode: '' //邀请码
+        inviteCode: '', //邀请码
+        shareUrl: '', //传递的参数
+        shortUrl: '' //短链接
       }
     },
     components: {
@@ -138,7 +140,10 @@
     },
     mounted() {
       this.getHomeData(); //获取页面数据
+      this.getUrl(); //获取页面链接
+      this.getShortenUrl(); //获取短链接
       this.loadMore();
+      this.btnCopy = new this.clipboard(this.$refs.btnCopy);
     },
     computed: {
       'isShowFloatTop': function() {
@@ -150,6 +155,85 @@
       }
     },
     methods: {
+      mouseoutShare() {
+        this.isShowShare = false;
+      },
+      getShortenUrl() {
+        let self = this;
+        this.request('ShortUrl', {
+          url: self.shareUrl
+        }).then((res) => {
+          if (res.status === 200) {
+            this.shortUrl = res.content.shortUrl;
+          }
+        })
+      },
+      // 获得shareUrl
+      getUrl() {
+        let Base64 = require('js-base64').Base64;
+        var value = window.location.href; //获取当前页面url
+        if (!localStorage.userInfo) {
+          this.inviteCode = '';
+          this.shareUrl = value;
+        } else {
+          this.inviteCode = JSON.parse(localStorage.userInfo).inviteCode // 邀请码
+          let baseURL = Base64.encode(this.inviteCode);
+          this.shareUrl = value + '&inviteCode=' + baseURL; //拼接邀请码
+        }
+      },
+      // 发布到facebook
+      toFacebook() {
+        // let redirectUrl = window.location.href; //分享后要跳转的链接，跳转回当前页面
+        let shareUrl = this.shortUrl; // 分享的链接
+        let app_id = '883175368431883';
+        let url = "https://www.facebook.com/dialog/share?display=popup&" + 'app_id=' + app_id + '&href=' + shareUrl;
+        window.open(url, '_blank');
+      },
+      //发布到twitter
+      toTwitter() {
+        let shareUrl = this.shortUrl; // 分享的链接
+        let title = 'WaiWaiMall'
+        let url = "https://twitter.com/share?" + 'text=' + title + '&url=' + shareUrl;
+        window.open(url, '_blank');
+      },
+      // 展示分享弹窗
+      showShare() {
+        var inputEle = document.getElementById('url')
+        inputEle.value = this.shortUrl;
+        this.isShowShare = !this.isShowShare;
+      },
+      // 复制链接
+      copyLink() {
+        // // 判断有没有登录，没有登录的话，不可以分享
+        // if (!localStorage.userToken) {
+        //   this.$Toast('please log in!');
+        //   let btn = document.getElementsByClassName('btn-copy');
+        //   btn.disabled = true;
+        //   return;
+        // } else {
+        //   let self = this;
+        //   this.inviteCode = JSON.parse(localStorage.userInfo).inviteCode // 邀请码
+        //   this.btnCopy = new this.clipboard(this.$refs.btnCopy);
+        //   this.$nextTick(function() {
+        //     let clipboard = self.btnCopy;
+        //     clipboard.on('success', function() {
+        //       self.$Toast('copy finished');
+        //     });
+        //     clipboard.on('error', function() {
+        //       self.$Toast('copy failed, please copy by hand');
+        //     })
+        //   })
+        // }
+        //不管有没有登录，都可以分享
+        let self = this;
+        let clipboard = self.btnCopy;
+        clipboard.on('success', function() {
+          self.$Toast('copy finished');
+        });
+        clipboard.on('error', function() {
+          self.$Toast('copy failed, please copy by hand');
+        })
+      },
       rebate(rebatePrice) {
         let value = parseFloat(rebatePrice);
         if (value > 0) {
@@ -157,44 +241,6 @@
         } else {
           return false;
         }
-      },
-      // 复制链接
-      copyLink() {
-        // 判断有没有登录，没有登录的话，不可以分享
-        if (!localStorage.userToken) {
-          this.$Toast('please log in!');
-          let btn = document.getElementsByClassName('btn-copy');
-          btn.disabled = true;
-          return;
-        } else {
-          let self = this;
-          this.inviteCode = JSON.parse(localStorage.userInfo).inviteCode // 邀请码
-          this.btnCopy = new this.clipboard(this.$refs.btnCopy);
-          this.$nextTick(function() {
-            let clipboard = self.btnCopy;
-            clipboard.on('success', function() {
-              self.$Toast('copy finished');
-            });
-            clipboard.on('error', function() {
-              self.$Toast('copy failed, please copy by hand');
-            })
-          })
-        }
-      },
-      // 展示分享弹窗
-      showShare() {
-        let Base64 = require('js-base64').Base64;
-        var value = window.location.href; //获取当前页面url
-        var inputEle = document.getElementById('url')
-        if (!localStorage.userToken) {
-          inputEle.value = value;
-        } else {
-          this.inviteCode = JSON.parse(localStorage.userInfo).inviteCode // 邀请码
-          let baseURL = Base64.encode(this.inviteCode);
-          let url = value + '?inviteCode=' + baseURL; //拼接邀请码
-          inputEle.value = url;
-        }
-        this.isShowShare = !this.isShowShare;
       },
       // 获取货币列表
       getCurrency() {
