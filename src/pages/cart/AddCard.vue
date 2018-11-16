@@ -1,6 +1,6 @@
 <template>
   <div class="add-card-main">
-    <topbar :title="topbarTitle" :backUrl="'cart/secure?orderId=' + $route.query.orderId"></topbar>
+    <topbar :title="topbarTitle"></topbar>
     <div class="card-con">
       <div class="card-img"><div class="img"></div></div>
       <div class="card-num">
