@@ -69,7 +69,8 @@
     <div class="detail-foot" @click="footCartClick">
       <div class="pos-rel">
         <div class="price">{{returnFloat(goodsData.price || 0)|price}}</div>
-        <i class="iconfont">&#xe624;</i>
+        <i class="iconfont i-cart">&#xe624;</i>
+        <i class="iconfont i-add">&#xe659;</i>
       </div>
     </div>
 
@@ -673,11 +674,21 @@ export default {
         font-size: 36/@rem;
         line-height: 96/@rem;
       }
-      i {
+      i.i-cart {
         position: absolute;
         top: 20/@rem;
         right: 20/@rem;
         font-size: 50/@rem;
+      }
+      i.i-add {
+        position: absolute;
+        top: 15/@rem;
+        right: 15/@rem;
+        font-size: 15/@rem;
+        color: #FFB283;
+        background-color: #fff;
+        border-radius: 50%;
+        .whl(20, 20);
       }
     }
   }

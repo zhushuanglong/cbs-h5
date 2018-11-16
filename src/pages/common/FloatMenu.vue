@@ -14,6 +14,7 @@
         <li>
           <div class="name">CART</div>
           <router-link :to="{path: '/cart'}"><i class="iconfont">&#xe624;</i></router-link>
+          <div class="cart-number" v-if="cartNumber">{{cartNumber}}</div>
         </li>
         <li>
           <div class="name">Account</div>
@@ -36,7 +37,15 @@ export default {
   data () {
     return {
       isBackMenuShow: false, // back菜单按钮
-      isMaskShow: false
+      isMaskShow: false,
+      cartNumber: 0 // 购物车数量
+    }
+  },
+  mounted() {
+    if (localStorage.yym_cartNumber) {
+      this.cartNumber = +localStorage.yym_cartNumber;
+    } else {
+      this.cartNumber = 0;
     }
   },
   methods: {
@@ -125,6 +134,20 @@ export default {
           margin-left: -.01rem;
         }
       }
+    }
+
+    .cart-number {
+      position: absolute;
+      z-index: 96;
+      right: 7/@rem;
+      top: 10/@rem;
+      .whl(32, 32);
+      border-radius: 50%;
+      background-color: @orange;
+      color: #fff;
+      font-size: 12/@rem;
+      text-align: center;
+      transform: scale(.7);
     }
   }
 }

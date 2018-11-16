@@ -287,6 +287,9 @@ export default {
               self.$router.push({path: '/cart/successful?orderId=' + self.$route.query.orderId});
             }, 1000);
           }
+
+          // 清空购物车数量
+          localStorage.yym_cartNumber = 0;
         } else {
           self.$Toast({
             message: res.msg || 'Payment Failure',

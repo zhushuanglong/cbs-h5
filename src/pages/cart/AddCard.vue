@@ -184,6 +184,9 @@ export default {
           setTimeout(function() {
             self.$router.push({path: '/cart/failure?orderId=' + self.$route.query.orderId});
           }, 1000);
+
+          // 清空购物车数量
+          localStorage.yym_cartNumber = 0;
         }
       }, err => {
         this.$Toast(err);
