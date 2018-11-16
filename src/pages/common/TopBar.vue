@@ -98,6 +98,8 @@
         }).then((res) => {
           if (res.status === 200) {
             this.shortUrl = res.content.shortUrl;
+          }else{
+            this.shortUrl = self.shareUrl;
           }
         })
       },
