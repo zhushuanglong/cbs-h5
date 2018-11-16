@@ -3,65 +3,65 @@
     <topbar title="Shopping Cart"></topbar>
     <!-- 空 -->
     <template v-if="cartEmpty">
-        <div class="cart-empty">
-          <div class="img"></div>
-          <p>Your shopping cart is currently empty</p>
-          <router-link :to="{path: '/home'}" class="btn">SHOP NOW</router-link>
-        </div>
-        <bottombar></bottombar>
-</template>
+      <div class="cart-empty">
+        <div class="img"></div>
+        <p>Your shopping cart is currently empty</p>
+        <router-link :to="{path: '/home'}" class="btn">SHOP NOW</router-link>
+      </div>
+      <bottombar></bottombar>
+    </template>
     <!-- 有 -->
-<template v-if="cartsData && cartsData.goods && cartsData.goods.length">
-  <div class="cart-have">
-    <router-link :to="{path: '/activity?activity_id=' + cartsData.promotion_id}" class="cart-enjoy">
-      <span class="img"></span>
-      <span>{{cartsData.promotion_msg}}</span>
-      <i class="iconfont">&#xe62e;</i>
-    </router-link>
-    <div class="cart-list">
-      <div class="detail" v-for="item in cartsData.goods">
-        <router-link :to="{path: '/detail?id=' + item.id}" class="img fl">
-          <img v-lazy="item.img && item.img.ossimg()">
+    <template v-if="cartsData && cartsData.goods && cartsData.goods.length">
+      <div class="cart-have">
+        <router-link :to="{path: '/activity?activity_id=' + cartsData.promotion_id}" class="cart-enjoy">
+          <span class="img"></span>
+          <span>{{cartsData.promotion_msg}}</span>
+          <i class="iconfont">&#xe62e;</i>
         </router-link>
-        <div class="info fl">
-          <div class="title">{{item.name}}</div>
-          <div class="sku" v-for="(prop, key, index) in item.props" :class="{'mt': index === 1}">{{prop}}</div>
-          <div class="num">{{item.num}} x {{item.price | price}}</div>
-          <div class="price">{{returnFloat(accMul(item.num, item.price) || 0) | price}}</div>
-          <div class="reduce" @click="reduce(item)" :class="{'ban': item.num <= 1}"><i class="iconfont">&#xe62a;</i></div>
-          <div class="add" @click="add(item)"><i class="iconfont">&#xe66f;</i></div>
+        <div class="cart-list">
+          <div class="detail" v-for="item in cartsData.goods">
+            <router-link :to="{path: '/detail?id=' + item.id}" class="img fl">
+              <img v-lazy="item.img && item.img.ossimg()">
+            </router-link>
+            <div class="info fl">
+              <div class="title">{{item.name}}</div>
+              <div class="sku" v-for="(prop, key, index) in item.props" :class="{'mt': index === 1}">{{prop}}</div>
+              <div class="num">{{item.num}} x {{item.price | price}}</div>
+              <div class="price">{{returnFloat(accMul(item.num, item.price) || 0) | price}}</div>
+              <div class="reduce" @click="reduce(item)" :class="{'ban': item.num <= 1}"><i class="iconfont">&#xe62a;</i></div>
+              <div class="add" @click="add(item)"><i class="iconfont">&#xe66f;</i></div>
+            </div>
+            <!-- delete -->
+            <div class="btn-delete" @click.sync="removeGoods(item)">Remove</div>
+          </div>
         </div>
-        <!-- delete -->
-        <div class="btn-delete" @click.sync="removeGoods(item)">Remove</div>
+        <div class="cart-discounts cart-rel">
+          <div class="cart-label">Activity Discounts</div>
+          <div class="cart-pos">{{cartsData.specialoffer}}</div>
+        </div>
+        <div class="cart-coupon cart-rel" @click="clickShowCoupon">
+          <div class="cart-label">
+            Coupon<span v-if="cartsData.coupon">（Rewards {{cartsData.coupon.length}})</span>
+            <span v-else class="gray2">( no coupons )</span>
+          </div>
+          <div class="cart-pos">
+            <span v-if="this.couponPrice">-{{this.couponPrice}}</span>
+            <i class="iconfont gray2">&#xe62e;</i>
+          </div>
+        </div>
+        <div class="cart-points cart-rel">
+          <div class="cart-label">Activity Discounts <span class="label-des">( {{cartsData.integral}} points to use )</span></div>
+          <div class="cart-pos">-{{accDiv(cartsData.integral, 100) | price}}
+            <mt-switch v-model="isUsePoint"></mt-switch>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="cart-discounts cart-rel">
-      <div class="cart-label">Activity Discounts</div>
-      <div class="cart-pos">{{cartsData.specialoffer}}</div>
-    </div>
-    <div class="cart-coupon cart-rel" @click="clickShowCoupon">
-      <div class="cart-label">
-        Coupon<span v-if="cartsData.coupon">（Rewards {{cartsData.coupon.length}})</span>
-        <span v-else class="gray2">( no coupons )</span>
+      <div class="global-fixed-btn">
+        <div @click="submitCart()" class="fixed-btn">CONTINUE CHECKOUT ( <span>{{returnFloat(totalPrice) | price}}</span> )</div>
       </div>
-      <div class="cart-pos">
-        <span v-if="this.couponPrice">-{{this.couponPrice}}</span>
-        <i class="iconfont gray2">&#xe62e;</i>
-      </div>
-    </div>
-    <div class="cart-points cart-rel">
-      <div class="cart-label">Activity Discounts <span class="label-des">( {{cartsData.integral}} points to use )</span></div>
-      <div class="cart-pos">-{{accDiv(cartsData.integral, 100) | price}}
-        <mt-switch v-model="isUsePoint"></mt-switch>
-      </div>
-    </div>
-  </div>
-  <div class="global-fixed-btn">
-    <div @click="submitCart()" class="fixed-btn">CONTINUE CHECKOUT ( <span>{{returnFloat(totalPrice) | price}}</span> )</div>
-  </div>
-  <confirm :show.sync="confirmModal.show" :title="confirmModal.title" :content="confirmModal.content" :on-ok="confirmModal.action" okText="Yes"></confirm>
-  <Coupon :show.sync="isShowCoupon" :coupons="cartsData.coupon || []" :isClick="true" :clickCallback="clickCoupon" :isCart="true"></Coupon>
-</template>
+      <confirm :show.sync="confirmModal.show" :title="confirmModal.title" :content="confirmModal.content" :on-ok="confirmModal.action" okText="Yes"></confirm>
+      <Coupon :show.sync="isShowCoupon" :coupons="cartsData.coupon || []" :isClick="true" :clickCallback="clickCoupon" :isCart="true"></Coupon>
+    </template>
   </div>
 </template>
 
@@ -214,8 +214,8 @@
                     // 重新计算价格
                     self.computeTotalPrice();
                   } else {
+                    self.cartsData = res.content;
                     self.cartEmpty = true;
-                    window.location.reload();
                   }
                 }
               }, err => {
@@ -322,7 +322,7 @@
       // 提交购物车
       submitCart() {
         // 判定是否有登录token
-        
+
         if (!localStorage.userToken) {
           // 去登录页面
           console.log("localStorage.userToken");
