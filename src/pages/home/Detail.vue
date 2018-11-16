@@ -80,7 +80,7 @@
     <div class="detail-popup-sku" :class="{'a-fadeinT': isPopupSkuShow}" v-show="isPopupSkuShow">
       <div class="popup-sku">
         <div class="sku-info">
-          <img class="fl" v-lazy="goodsData.img && goodsData.img.ossimg()">
+          <img class="fl" :src="goodsData.img&& goodsData.img.ossimg()">
           <div class="des fl">
             <div class="price red">{{returnFloat(goodsData.price || 0) | price}}</div>
             <div class="stock">Stock：> {{goodsData.stock}} Pieces</div>
@@ -207,7 +207,6 @@ export default {
       }).then((res) => {
         if (res.status === 200 && res.content) {
           this.data = res.content;
-          console.log(this.data)
         }
       }, err => {
         this.$Toast(err);
@@ -289,11 +288,6 @@ export default {
       let subArr = oneSku.sub || [];
       let subLen = subArr.length;
       this.goodsData.subArr = subLen && subArr || [];
-        // if (this.subLen) {
-        //   this.skuId = null
-        // } else {
-        //   this.skuId = this.goodsData.id
-        // }
 
       // SKUID 如果有第二属性 则赋值为null
       this.skuId = subLen ? null : oneSku.id;
@@ -445,8 +439,6 @@ export default {
     // OK - 提交表单
     submitClick () {
       // 判定是否选择完毕
-      console.log(this.skuId)
-
       if (!this.skuId ) {
         this.$Toast('Please select your ' + this.goodsData.subArr[0].name);
         return;
