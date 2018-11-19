@@ -6,3 +6,4 @@ npm-debug.log
 package-lock.json
 .vscode
 src/libs/api.js
+yarn.lock

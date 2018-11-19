@@ -12,7 +12,7 @@
         <li v-for="item in (couponList.length && couponList || coupons)" :class="{'disable': item.datestatus === 2 || item.datestatus === 3}" class="coupon-item" @click="clickCoupon(item)">
           <p class="price">{{item.price}} OFF</p>
           <p class="desc">For a purchase over {{item.use_price}}</p>
-          <p class="time">{{item.startdate}} - {{item.enddate}}</p>
+          <p class="time">Validaty {{item.startdate}} - {{item.enddate}}</p>
           <p v-if="!isCart" class="coupon-status" :class="{'use-able': item.datestatus === 1}">
             {{item.datestatus === 1 ? 'Get it': item.datestatus === 2 ? 'Received' : 'Run out'}}
           </p>
@@ -87,7 +87,7 @@ export default {
     },
     getCouponApply() {
       this.request('CouponsApply', {
-        redeemCode: this.redeemCode
+        key: this.redeemCode
       }).then((res) => {
         if (res.status === 200 && res.content) {
           this.couponList = res.content.coupons || [];

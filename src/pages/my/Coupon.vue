@@ -11,7 +11,7 @@
         <div class="coupon-item" :class="item.datestatus === 1 ? 'able': 'disable'" v-for="item in couponList" :key="item.id">
           <p class="title">{{item.price | price(item.currency_symbol)}} OFF</p>
           <p class="desc">For a purchase over {{item.use_price | price(item.currency_symbol)}}</p>
-          <p class="use-time">{{item.startdate}} - {{item.enddate}}</p>
+          <p class="use-time">Validaty {{item.startdate}} - {{item.enddate}}</p>
           <div class="use-flag-img" :class="{'expired': item.datestatus === 3, 'used': item.datestatus === 4}"></div>
         </div>
       </div>
@@ -35,7 +35,7 @@ export default {
   methods: {
     getCouponList() {
       this.request('CouponList', {
-        redeemCode: this.redeemCode
+        key: this.redeemCode
       }).then((res) => {
         if(res.status === 200 && res.content) {
           this.couponList = res.content.coupons || [];
