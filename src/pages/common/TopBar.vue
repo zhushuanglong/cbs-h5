@@ -162,7 +162,7 @@
     color: #000;
     position: absolute;
     right: 95/@rem;
-    top: 20/@rem;
+    top: 16/@rem;
     padding: 0 5/@rem;
   }
   .rect {

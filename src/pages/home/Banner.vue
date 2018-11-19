@@ -32,7 +32,7 @@ export default {
 .g-banner {
   width: 750/@rem;
   height: 400/@rem;
-  
+
   .my-swipe {
     width: 100%;
     height: 100%;

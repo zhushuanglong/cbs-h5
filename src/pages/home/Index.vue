@@ -606,7 +606,7 @@
       .home-recommend-title {
         height: 146/@rem;
         font-size: 36/@rem;
-        color: #000000;
+        color: #333;
         line-height: 146/@rem;
         text-align: center;
       }
@@ -627,7 +627,7 @@
           width: 310/@rem;
           font-weight: bold;
           font-size: 24/@rem;
-          color: #000;
+          color: #333;
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;

@@ -5,10 +5,10 @@
         <a href="javascript:;" @click="$router.go(-1)">
           <i class="iconfont fl back-url">&#xe62f;</i>
         </a>
-        <form action="" class="input fl">
+        <div class="input fl">
           <i class="iconfont">&#xe66e;</i>
           <input ref="inputSearchRef" class="w660 t3s J_searchInput" v-model="serachTitle" type="text" name="search" placeholder="What are you looking for?" @focus="inputFocus" @blur="inputBlur">
-        </form>
+        </div>
         <div class="btn-search" @click="clickSearchResult">Search</div>
       </div>
     </div>
@@ -206,6 +206,17 @@ export default {
     this.getProductsList(options);
     this.loadMore();
     this.getHotWords();
+
+    // input keydown事件 - 只在手机端有效
+    this.$refs.inputSearchRef.addEventListener('keydown', function(e){
+      var keywd = e.target.value;
+      if(event.keyCode == 13 && keywd) { 
+        this.getProductsList({
+          page: 1,
+          title: keywd
+        });
+      } 
+    });
 
     // 滚动事件
     let self = this;

@@ -581,7 +581,7 @@ export default {
         top: 0;
         right: 60/@rem;
         // font-size: 10/@rem;
-        transform: scale(.85);
+        // transform: scale(.85);
         color: #1EBDFD;
       }
       .span2 {
@@ -681,12 +681,12 @@ export default {
       i.i-add {
         position: absolute;
         top: 15/@rem;
-        right: 15/@rem;
-        font-size: 15/@rem;
+        right: 8/@rem;
+        font-size: 24/@rem;
         color: #FFB283;
-        background-color: #fff;
-        border-radius: 50%;
-        .whl(20, 20);
+        // background-color: #fff;
+        // border-radius: 50%;
+        // .whl(20, 20);
       }
     }
   }

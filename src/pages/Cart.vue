@@ -458,7 +458,7 @@
         .info {
           position: relative;
           margin-left: 20/@rem;
-          width: 430/@rem;
+          width: 400/@rem;
           .title {
             font-size: 28/@rem;
             .height(50);
@@ -474,14 +474,14 @@
           .price {
             position: absolute;
             top: 142/@rem;
-            right: -80/@rem;
+            right: -110/@rem;
             text-algin: right;
             color: @fred;
           }
           .num {
             position: absolute;
             top: 100/@rem;
-            right: -80/@rem;
+            right: -110/@rem;
             text-algin: right;
             color: @gray2;
           }
@@ -490,7 +490,7 @@
             position: absolute;
             z-index: 2;
             top: 0;
-            right: -50/@rem;
+            right: -60/@rem;
             .wh(50,
             50);
           }
@@ -502,7 +502,7 @@
           .add {
             position: absolute;
             top: -6/@rem;
-            right: -95/@rem;
+            right: -125/@rem;
             i {
               font-size: 50/@rem;
             }
