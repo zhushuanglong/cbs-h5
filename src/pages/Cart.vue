@@ -453,7 +453,7 @@
         }
         .img img {
           display: block;
-          border: 1px solid @gray2;
+          border: 1px solid #e8e8e8;
         }
         .info {
           position: relative;

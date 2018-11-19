@@ -7,7 +7,7 @@
           <img class="head" :src="avator" v-if="avator">
           <img class="head" src="~img/my/head.png" v-if="!avator">
         </a>
-        <div class="nickname fl">{{username}}</div>
+        <div class="nickname fl">{{name}}</div>
       </div>
       <ul class="my-top-des">
         <li v-for="item in tabs">
@@ -48,8 +48,6 @@ export default {
     Order
   },
   data () {
-    let userToken = window.localStorage.getItem('userToken');
-    let username = !userToken ? 'Sign In / Register' : ''
     return {
       tabs: [{
         name: 'Points',
@@ -72,28 +70,37 @@ export default {
         funs: '0'
       },
       orders: [],
-      username: username,
+      name: '',
       isLogin: false,
       loadingContent:'',
       isFinishedLoading: false,
       pageParams: {
         page: 1
-      }
+      },
+      username: ''
     };
   },
   computed: {},
   mounted () {
     this.getPersonalIndex();//获取主页数据
     this.getOrderList(this.pageParams); //获取订单列表数据
+    this.getName(); //获取用户名字，无名字就用email代替
     this.loadMore();
   },
-  watch: {
-    // 'isLogin': function () {
-    //   this.pageInit();
-    //   this.popupShow();
-    // }
-  },
+  watch: {},
   methods: {
+    getName(){
+      let userToken = window.localStorage.getItem('userToken');
+      if(!userToken){
+        this.name = 'Sign In / Register'
+      }else if(this.username === ''){
+        let email = JSON.parse(window.localStorage.userInfo).email;
+        let emailName = email.split('@')
+        this.name = emailName[0];
+      }else{
+        this.name = this.username;
+      }
+    },
     userLogin() {
       if (!this.isLogin) {
         this.$router.push({
@@ -116,8 +123,6 @@ export default {
           this.cardData.income = res.content.income; // 收入
           this.cardData.funs = res.content.funs;
           this.username = res.content.username;
-          // this.orders = res.content.orders;
-          // console.log("orders",this.orders.length)
           this.isLogin = true;
         } else{
           this.username = 'Sign In / Register';
