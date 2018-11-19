@@ -35,6 +35,7 @@ export default {
     float: left;
     width: 25%;
     text-align: center;
+    padding-bottom: 20/@rem;
     .nav-img{
       width: 105/@rem;
       height: 105/@rem;
