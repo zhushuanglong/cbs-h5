@@ -32,7 +32,7 @@
           <p class="share-intro">Inviting links to people who need to know, you will get rebates when they buy</p>
           <p class="share-others-title">Or click the bottons blow to share</p>
           <div class="share-others">
-            <div class="fb others" @click="toFacebook"><span class="share-others-text">share</span><i class="iconfont others-fb">&#xe652;</i></div>
+            <!-- <div class="fb others" @click="toFacebook"><span class="share-others-text">share</span><i class="iconfont others-fb">&#xe652;</i></div> -->
             <div class="tw others" @click="toTwitter"><span class="share-others-text">share</span><i class="iconfont others-tw">&#xe656;</i></div>
           </div>
         </div>
@@ -139,12 +139,12 @@
         })
       },
       // 发布到facebook
-      toFacebook() {
-        let shareUrl = this.shortUrl; // 分享的链接
-        let app_id = '883175368431883';
-        let url = "https://www.facebook.com/share?display=popup&" + 'app_id=' + app_id + '&url=' + this.shortUrl;
-        window.open(url, '_blank');
-      },
+      // toFacebook() {
+      //   let shareUrl = this.shortUrl; // 分享的链接
+      //   let app_id = '883175368431883';
+      //   let url = "https://www.facebook.com/share?display=popup&" + 'app_id=' + app_id + '&url=' + this.shortUrl;
+      //   window.open(url, '_blank');
+      // },
       //发布到twitter
       toTwitter() {
         let shareUrl = this.shortUrl; // 分享的链接
