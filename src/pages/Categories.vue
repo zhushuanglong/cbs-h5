@@ -26,7 +26,7 @@
         <ul>
           <li v-for="ele in secondCate">
             <router-link :to="{path: '/categories/search', query: { cate:  + ele.id }}" title="ele.name">
-              <img v-lazy="ele.img && ele.img.ossimg()">
+              <img :src="ele.img && ele.img.ossimg()">
               <p>{{ele.name}}</p>
             </router-link>
           </li>
@@ -81,7 +81,6 @@
       clickCategories(index, item) {
         this.categoriesCur = index;
         this.secondCate = item.sub;
-        console.log(this.secondCate)
       }
     },
     beforeDestroy() {}

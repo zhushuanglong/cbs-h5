@@ -366,7 +366,7 @@
     right: 62/@rem;
     width: 500/@rem;
     height: 298/@rem;
-    font-size: 12/@rem;
+    font-size: 25/@rem;
     padding: 0!important;
     text-align: left;
     background: #fff;
@@ -389,7 +389,7 @@
           text-align: center;
           color: #fff;
           background: @orange;
-          font-size: 12/@rem;
+          font-size: 18/@rem;
           padding: 8/@rem 2/@rem 8/@rem 0/@rem;
           border-radius: 19/@rem;
           margin-top: 5/@rem;
@@ -428,7 +428,7 @@
         padding: 0 20/@rem;
       }
       .share-others-title {
-        font-size: 10/@rem;
+        font-size: 25/@rem;
         margin-top: 25/@rem;
         padding: 0 20/@rem;
         white-space: nowrap;
@@ -452,7 +452,7 @@
             margin-right: 12/@rem;
           }
           .others-fb {
-            font-size: 12/@rem;
+            font-size: 24/@rem;
             padding: 8/@rem 10/@rem;
             background: #3B5999;
             border-radius: 6/@rem;
@@ -465,7 +465,7 @@
             margin-right: 12/@rem;
           }
           .others-tw {
-            font-size: 12/@rem;
+            font-size: 24/@rem;
             padding: 8/@rem 10/@rem;
             background: #38A1F3;
             border-radius: 6/@rem;
