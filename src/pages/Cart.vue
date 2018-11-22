@@ -239,10 +239,10 @@
             self.confirmModal.show = false;
             self.reduceSt = setTimeout(function() {
               self.request('CartsDelete', {
-                // cart_id: item.cart_id,
-                good_id: item.id,
-                sku_id: item.sku_id,
-                num: item.num
+                cart_id: item.cart_id,
+                // good_id: item.id,
+                // sku_id: item.sku_id,
+                // num: item.num
               }).then((res) => {
                 if (res.status === 200) {
                   if (res.content && res.content.goods && res.content.goods.length) {
